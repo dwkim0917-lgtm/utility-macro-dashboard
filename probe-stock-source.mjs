@@ -1,0 +1,2 @@
+const urls=['https://query1.finance.yahoo.com/v8/finance/chart/015760.KS?range=10y&interval=1d&events=div%2Csplits','https://fchart.stock.naver.com/sise.nhn?symbol=015760&timeframe=day&count=4000&requestType=0','https://api.finance.naver.com/siseJson.naver?symbol=015760&requestType=1&startTime=20160101&endTime=20260916&timeframe=day'];
+for(const url of urls){try{const r=await fetch(url,{signal:AbortSignal.timeout(20000)});const text=await r.text();console.log({url,status:r.status,length:text.length,head:text.slice(0,250)});}catch(e){console.log({url,error:e.message});}}

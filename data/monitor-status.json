@@ -1,0 +1,323 @@
+{
+  "checkedAt": "2026-09-29T23:43:13.039Z",
+  "status": "partial",
+  "note": "9/30 공개 수집 12작업 성공. 10/1 적용 KOGAS 예정 요금은 보류하고 9월 유효 요금 유지. 웹 신규 6·수정 3행 및 BigFinance 최근 2개월 10행 검증 반영. 기관 로그인 복구 완료.",
+  "missing": [
+    "jkm",
+    "lpg_cp",
+    "credit"
+  ],
+  "coverage": [
+    {
+      "id": "purchase",
+      "name": "한전 평균 전력 구입단가",
+      "count": 295,
+      "first": "2002-01-01",
+      "last": "2026-07-01"
+    },
+    {
+      "id": "gas_sales",
+      "name": "가스공사 천연가스 판매량",
+      "count": 190,
+      "first": "2010-11-01",
+      "last": "2026-08-01"
+    },
+    {
+      "id": "jkm_futures",
+      "name": "JKM · 최근월 선물",
+      "count": 3113,
+      "first": "2012-09-27",
+      "last": "2026-09-28"
+    },
+    {
+      "id": "jkm",
+      "name": "JKM · 아시아 LNG 현물",
+      "count": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "id": "coal",
+      "name": "Newcastle · 호주 유연탄 선물",
+      "count": 4569,
+      "first": "2008-12-08",
+      "last": "2026-09-29"
+    },
+    {
+      "id": "dubai",
+      "name": "Dubai · 월평균 국제유가",
+      "count": 116,
+      "first": "2017-01-01",
+      "last": "2026-08-01"
+    },
+    {
+      "id": "ttf",
+      "name": "TTF · 유럽 천연가스 선물",
+      "count": 4262,
+      "first": "2010-03-15",
+      "last": "2026-09-29"
+    },
+    {
+      "id": "lpg_cp",
+      "name": "Saudi CP · 프로판",
+      "count": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "id": "smp",
+      "name": "육지 SMP · 월평균",
+      "count": 200,
+      "first": "2010-01-01",
+      "last": "2026-08-01"
+    },
+    {
+      "id": "gas_power",
+      "name": "발전용 가스요금 · 일반",
+      "count": 1,
+      "first": "2026-09-01",
+      "last": "2026-09-01"
+    },
+    {
+      "id": "gas_chp",
+      "name": "발전용 가스요금 · 집단에너지",
+      "count": 1,
+      "first": "2026-09-01",
+      "last": "2026-09-01"
+    },
+    {
+      "id": "tariff",
+      "name": "한전 평균 전기 판매단가",
+      "count": 199,
+      "first": "2010-01-01",
+      "last": "2026-07-01"
+    },
+    {
+      "id": "receivable",
+      "name": "가스공사 민수용 원료비 미수금",
+      "count": 5,
+      "first": "2021-12-31",
+      "last": "2025-12-31"
+    },
+    {
+      "id": "peak",
+      "name": "일일 최대전력",
+      "count": 8231,
+      "first": "2002-07-10",
+      "last": "2026-09-29"
+    },
+    {
+      "id": "reserve",
+      "name": "최대전력 시 공급예비율",
+      "count": 8231,
+      "first": "2002-07-10",
+      "last": "2026-09-29"
+    },
+    {
+      "id": "consumption",
+      "name": "국내 전력 판매량",
+      "count": 199,
+      "first": "2010-01-01",
+      "last": "2026-07-01"
+    },
+    {
+      "id": "nuclear",
+      "name": "원전 이용률 · 연간",
+      "count": 19,
+      "first": "2007-12-31",
+      "last": "2025-12-31"
+    },
+    {
+      "id": "temperature",
+      "name": "서울 일평균 기온",
+      "count": 3660,
+      "first": "2016-09-16",
+      "last": "2026-09-23"
+    },
+    {
+      "id": "usdkrw",
+      "name": "원/달러 · 뉴욕 매입환율",
+      "count": 11362,
+      "first": "1981-04-13",
+      "last": "2026-09-25"
+    },
+    {
+      "id": "kr3y",
+      "name": "한국 국고채 3년",
+      "count": 9068,
+      "first": "1995-05-03",
+      "last": "2026-09-29"
+    },
+    {
+      "id": "credit",
+      "name": "AA− 회사채 3년 금리",
+      "count": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "id": "us10y",
+      "name": "미국 국채 10년",
+      "count": 16170,
+      "first": "1962-01-02",
+      "last": "2026-09-28"
+    },
+    {
+      "id": "hh",
+      "name": "Henry Hub · 미국 현물",
+      "count": 5692,
+      "first": "1997-01-07",
+      "last": "2026-09-22"
+    },
+    {
+      "id": "brent",
+      "name": "Brent · 유럽 현물",
+      "count": 9092,
+      "first": "1987-05-20",
+      "last": "2026-09-22"
+    },
+    {
+      "id": "rec",
+      "name": "REC · 현물 거래일 평균가",
+      "count": 3,
+      "first": "2026-09-17",
+      "last": "2026-09-29"
+    },
+    {
+      "id": "kau",
+      "name": "KAU26 · 배출권 종가",
+      "count": 26,
+      "first": "2026-07-23",
+      "last": "2026-09-29"
+    },
+    {
+      "id": "rec_monthly",
+      "name": "REC · 현물 월평균 이력",
+      "count": 117,
+      "first": "2016-03-01",
+      "last": "2025-12-01"
+    }
+  ],
+  "failures": [
+    {
+      "source": "KOGAS 요금",
+      "ids": [
+        "gas_power",
+        "gas_chp"
+      ],
+      "error": "유효하지 않거나 미래인 관측일: 2026-10-01",
+      "at": "2026-09-29T23:36:42.808Z",
+      "resolution": "10/1 시행 전 예정 요금 입력 보류. 예정 공시는 data/announced-rates-2026-09-29.json 보관."
+    }
+  ],
+  "imported": 19,
+  "importDetails": {
+    "webNew": 6,
+    "webRevised": 3,
+    "bigfinanceVerified": 10,
+    "revisions": [
+      {
+        "id": "kr3y",
+        "date": "2026-09-28",
+        "value": 4.11,
+        "previous": 4.12,
+        "type": "revised"
+      },
+      {
+        "id": "ttf",
+        "date": "2026-09-24",
+        "value": 75.106,
+        "previous": 75.3,
+        "type": "revised"
+      },
+      {
+        "id": "ttf",
+        "date": "2026-09-25",
+        "value": 72.071,
+        "previous": 71.32,
+        "type": "revised"
+      }
+    ],
+    "publicCollectorAt": "2026-09-29T23:36:42.808Z",
+    "publicProcessedRows": 46254
+  },
+  "knownHistoricalLimitations": [
+    {
+      "source": "KOGAS 과거 요금 XLSX",
+      "error": "다운로드 응답이 빈 HTML로 반환되어 과거 요금 미확보"
+    },
+    {
+      "source": "KPX 과거 전력수급",
+      "error": "원천값 범위 오류 6행 제외; demand-backfill-progress.json에 원문 값 보존"
+    }
+  ],
+  "analysis": {
+    "status": "complete",
+    "generatedAt": "2026-09-29T23:46:39.783737+00:00",
+    "asOfMonth": "2026-08",
+    "hypothesisCount": 11264
+  },
+  "maintenance": "8765 서버 PID 확인 후 중단, 원본 백업, 해당 write.lock 제거, 별도 collector 저장 성공 후 서버 재시작. 코드/권한 변경 없음.",
+  "environmental": {
+    "kauVintage": "KAU26",
+    "kauLast": "2026-09-29",
+    "recLast": "2026-09-29",
+    "recMonthlyLast": "2025-12-01"
+  },
+  "telegram": {
+    "date": "2026-09-30",
+    "status": "sent",
+    "messageId": 3656,
+    "at": "2026-09-29T23:37:12.523Z",
+    "messagePath": "C:\\Users\\park jiyeon\\Desktop\\김동욱\\5. 섹터 리서치\\utility-macro-dashboard\\data\\telegram-brief-2026-09-30.txt"
+  },
+  "lastCheck": {
+    "at": "2026-09-29T23:43:13.039Z",
+    "webNew": 6,
+    "webRevised": 3,
+    "bigfinanceVerified": 10
+  },
+  "bigfinanceSession": {
+    "status": "authenticated",
+    "checkedAt": "2026-09-29T23:43:13.039Z",
+    "lastAuthenticatedAt": "2026-09-29T23:43:13.039Z",
+    "mode": "기업 사용자",
+    "note": "만료 세션을 기존 승인 계정으로 정상 로그인해 복구. 차트 툴팁 확인 완료."
+  },
+  "commodityAvailabilityCheck": {
+    "at": "2026-09-21T00:33:54.385Z",
+    "scope": "Industry 유틸리티·인프라 및 에너지·정유화학 표시 목록",
+    "result": "확인한 목록에서 ICI4·우드펠릿·Saudi CP 명시 계열을 찾지 못함. 사이트 전체 미제공을 뜻하지 않음."
+  },
+  "bigfinanceVerification": {
+    "at": "2026-09-29T23:43:13.039Z",
+    "file": "data/manual-verified-2026-09-30.json",
+    "observations": 10,
+    "new": 0,
+    "revised": 0,
+    "tariffLatest": "2026-07",
+    "consumptionLatest": "2026-07",
+    "purchaseLatest": "2026-07",
+    "gasSalesLatest": "2026-08",
+    "dubaiLatest": "2026-08"
+  },
+  "significantMoves": [],
+  "announcedRates": {
+    "file": "data/announced-rates-2026-09-29.json",
+    "effectiveDate": "2026-10-01",
+    "status": "not-effective"
+  },
+  "analysisRecovery": "9/30 주가 수집·원천 대조·분석 갱신 성공",
+  "lastHeartbeatAt": "2026-09-29T23:43:13.039Z",
+  "lastHeartbeatNote": "9/30 브리핑 message_id=3656 성공. 보완 관측은 다음날 브리핑에서 반영.",
+  "corrections": [
+    {
+      "id": "ttf",
+      "date": "2026-09-25",
+      "oldChangePct": -5.285524568393097,
+      "changePct": -4.040955449631179,
+      "reason": "원천 과거 데이터 표 수정으로 기존 5% 하락 경보 기준 미충족",
+      "url": "https://kr.investing.com/commodities/ice-dutch-ttf-gas-c1-futures-historical-data"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {parseRec,parseKau} from '../environmental-source.mjs';
+test('REC uses traded mean, not closing price',()=>{const h=[['거래일','2026.09.17'],['거래량','295,217'],['평균가','71,812'],['종가','71,900']].map(r=>'<tr>'+r.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('');assert.equal(parseRec(h)[0].value,71812);assert.throws(()=>parseRec(h.replace('71,812','')));});
+test('KAU excludes untraded reference quotes and refuses mixed vintages',()=>{const r={isu_eng_abbrv:'KAU26',trd_dd:'2026-08-03',acc_trdvol:'10,000',tdd_clsprc:'30,550'};assert.equal(parseKau({DS1:[r,{...r,acc_trdvol:'0'}]}).length,1);assert.throws(()=>parseKau({DS1:[r,{...r,isu_eng_abbrv:'KAU25'}]}));});

@@ -1,0 +1,821 @@
+[
+  {
+    "id": "rec_monthly",
+    "date": "2016-03-01",
+    "value": 99995,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-04-01",
+    "value": 105856,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-05-01",
+    "value": 122320,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-06-01",
+    "value": 119088,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-07-01",
+    "value": 128028,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-08-01",
+    "value": 139908,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-09-01",
+    "value": 149907,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-10-01",
+    "value": 169074,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-11-01",
+    "value": 147567,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2016-12-01",
+    "value": 167272,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-01-01",
+    "value": 159698,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-02-01",
+    "value": 145963,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-03-01",
+    "value": 130800,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-04-01",
+    "value": 124766,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-05-01",
+    "value": 131175,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-06-01",
+    "value": 130234,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-07-01",
+    "value": 127113,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-08-01",
+    "value": 127046,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-09-01",
+    "value": 127175,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-10-01",
+    "value": 127726,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-11-01",
+    "value": 123483,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2017-12-01",
+    "value": 102386,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-01-01",
+    "value": 112166,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-02-01",
+    "value": 110081,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-03-01",
+    "value": 101015,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-04-01",
+    "value": 108580,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-05-01",
+    "value": 109599,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-06-01",
+    "value": 107917,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-08-01",
+    "value": 96327,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-09-01",
+    "value": 91329,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-10-01",
+    "value": 80482,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-11-01",
+    "value": 75067,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2018-12-01",
+    "value": 78378,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-01-01",
+    "value": 74231,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-02-01",
+    "value": 73641,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-03-01",
+    "value": 74395,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-04-01",
+    "value": 69034,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-05-01",
+    "value": 69749,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-06-01",
+    "value": 68920,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-07-01",
+    "value": 63309,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-08-01",
+    "value": 58264,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-09-01",
+    "value": 57043,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-10-01",
+    "value": 50608,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-11-01",
+    "value": 47816,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2019-12-01",
+    "value": 48409,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-01-01",
+    "value": 43554,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-02-01",
+    "value": 41061,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-03-01",
+    "value": 42490,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-04-01",
+    "value": 44324,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-05-01",
+    "value": 44460,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-06-01",
+    "value": 44264,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-07-01",
+    "value": 44545,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-08-01",
+    "value": 46235,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-09-01",
+    "value": 45659,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-10-01",
+    "value": 40669,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-11-01",
+    "value": 34121,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2020-12-01",
+    "value": 34814,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-01-01",
+    "value": 39031,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-02-01",
+    "value": 40195,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-03-01",
+    "value": 36017,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-04-01",
+    "value": 33843,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-05-01",
+    "value": 31526,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-06-01",
+    "value": 31584,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-07-01",
+    "value": 29542,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-08-01",
+    "value": 29913,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-09-01",
+    "value": 31512,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-10-01",
+    "value": 35215,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-11-01",
+    "value": 38846,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2021-12-01",
+    "value": 38779,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-01-01",
+    "value": 46211,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-02-01",
+    "value": 56036,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-03-01",
+    "value": 47520,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-04-01",
+    "value": 52852,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-05-01",
+    "value": 52971,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-06-01",
+    "value": 54492,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-07-01",
+    "value": 55606,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-08-01",
+    "value": 62161,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-09-01",
+    "value": 63293,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-10-01",
+    "value": 63614,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-11-01",
+    "value": 63801,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2022-12-01",
+    "value": 64292,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-01-01",
+    "value": 61081,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-02-01",
+    "value": 62514,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-03-01",
+    "value": 67866,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-04-01",
+    "value": 72130,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-05-01",
+    "value": 72131,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-06-01",
+    "value": 72938,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-07-01",
+    "value": 73218,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-08-01",
+    "value": 75300,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-09-01",
+    "value": 80732,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-10-01",
+    "value": 80424,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-11-01",
+    "value": 78900,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2023-12-01",
+    "value": 75625,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-01-01",
+    "value": 77939,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-02-01",
+    "value": 79323,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-03-01",
+    "value": 79058,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-04-01",
+    "value": 75584,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-05-01",
+    "value": 74466,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-06-01",
+    "value": 74923,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-07-01",
+    "value": 75817,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-08-01",
+    "value": 78745,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-09-01",
+    "value": 79282,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-10-01",
+    "value": 76866,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-11-01",
+    "value": 75010,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2024-12-01",
+    "value": 67159,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-01-01",
+    "value": 69760,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-02-01",
+    "value": 72160,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-03-01",
+    "value": 72145,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-04-01",
+    "value": 72405,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-05-01",
+    "value": 72385,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-06-01",
+    "value": 71958,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-07-01",
+    "value": 71649,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-08-01",
+    "value": 71859,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-09-01",
+    "value": 71972,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-10-01",
+    "value": 72312,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-11-01",
+    "value": 72144,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  },
+  {
+    "id": "rec_monthly",
+    "date": "2025-12-01",
+    "value": 72294,
+    "source": "KPX · REC 월평균 · 2025 전력시장 통계",
+    "url": "https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4"
+  }
+]

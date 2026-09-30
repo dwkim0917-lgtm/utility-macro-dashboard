@@ -1,0 +1,7 @@
+.pos{color:#166534}.neg{color:#9f2937}.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.grade{display:inline-block;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:4px}.grade.A{background:#e3f4e8;color:#166534}.grade.B{background:#e6eefb;color:#1d4ed8}.grade.C{background:#fdf1dc;color:#92580a}
+.bar{display:inline-block;height:8px;border-radius:2px;vertical-align:middle;margin-left:6px}.bar.pos{background:#4c9a6a}.bar.neg{background:#c25563}
+.inputs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin:10px 0}.inputs label{display:flex;flex-direction:column;gap:3px;font-size:11px}.inputs input{padding:6px 8px;border:1px solid #d5dde3;border-radius:4px;font:inherit}.inputs small{color:#64748b}
+#matrix td,#matrix th{white-space:nowrap}#matrix td.cell{text-align:right}#matrix td small{color:#64748b}
+#evidence td{white-space:normal;vertical-align:top;max-width:520px;line-height:1.6}#gaps{font-size:11px;line-height:1.9;color:#475569}
+tr.total td{font-weight:700;border-top:2px solid #94a3b8}

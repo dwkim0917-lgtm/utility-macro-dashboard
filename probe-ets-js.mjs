@@ -1,0 +1,2 @@
+import fs from 'node:fs/promises';
+for(const [id,url] of [['ets-mainjs','https://ets.krx.co.kr/main/js/main.js?v=20240328'],['ets-func','https://ets.krx.co.kr/res/pc/js/func.js?v=20260910']]){const h=await(await fetch(url)).text();await fs.writeFile('data/'+id+'.js',h);if(id==='ets-mainjs')console.log(h);else for(const key of ['otpCode =','otpCode:','otpCode = function','makeBldSelectBox']){let p=h.indexOf(key);console.log(key,h.slice(Math.max(0,p-30),p+1800));}}

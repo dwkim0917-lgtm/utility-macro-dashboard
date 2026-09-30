@@ -1,0 +1,54 @@
+name: daily-refresh-and-deploy
+on:
+  schedule:
+    - cron: '10 23 * * *'   # 08:10 KST
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install numpy pandas
+      - name: Collect public sources
+        run: node collector.mjs | tail -40
+        continue-on-error: true
+      - name: Refresh price relationship analysis
+        env: {UTILITY_ANALYSIS_PYTHON: python3}
+        run: node refresh-analysis.mjs 2>&1 | tail -20
+        continue-on-error: true
+      - run: node --test tests/*.test.mjs
+      - run: node build-static.mjs
+      - name: Commit refreshed data
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "dashboard-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || git commit -m "data: automated refresh $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase origin main || true
+          git push
+      - uses: actions/upload-pages-artifact@v3
+        with: {path: site}
+  deploy:
+    needs: refresh
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

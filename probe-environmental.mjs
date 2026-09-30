@@ -1,0 +1,2 @@
+import fs from 'node:fs/promises';
+for(const [id,url] of [['krx','https://www.krx.co.kr/contents/ETS/03/03010000/ETS03010000.jsp'],['rec','https://www.kpx.or.kr/recToday.es?mid=a30401000000&device=mbl']]){const r=await fetch(url,{signal:AbortSignal.timeout(30000)}),h=await r.text();await fs.writeFile('data/'+id+'-source.html',h);console.log(id,r.status,h.length);console.log(h.match(/<script[^>]*src[^>]*>/g));if(id==='krx')console.log(h.slice(-13000));}

@@ -1,0 +1,4 @@
+import fs from 'node:fs/promises';import {parseDemand,tables} from './collector.mjs';import {mutate,mergeRows} from './store.mjs';
+const file='data/demand-backfill-progress.json',state=JSON.parse(await fs.readFile(file,'utf8')),out=[],quarantine=[];
+for(const {page} of state.failures){const h=await fs.readFile('data/demand-page-'+page+'.html','utf8');for(const [tr] of h.matchAll(/<tr\b[^>]*>[\s\S]*?<\/tr>/gi)){if(!tables(tr)[0]?.some(x=>/^20\d\d[.]\d\d[.]\d\d$/.test(x)))continue;try{out.push(...parseDemand(tr));}catch(e){quarantine.push({page,row:tables(tr)[0],reason:e.message});}}state.pages.push(page);}
+await mutate(db=>mergeRows(db,out));state.failures=[];state.quarantine=quarantine;state.at=new Date().toISOString();await fs.writeFile(file,JSON.stringify(state,null,2));console.log({recovered:out.length,quarantine});

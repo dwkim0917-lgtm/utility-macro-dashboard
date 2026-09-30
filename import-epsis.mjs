@@ -1,0 +1,2 @@
+import fs from 'node:fs/promises';import {parseEpsisSmp} from './epsis-source.mjs';import {mutate,mergeRows} from './store.mjs';
+const rows=parseEpsisSmp(await fs.readFile('data/epsis-smp.html','utf8'));const db=JSON.parse(await fs.readFile('data/observations.json','utf8'));let overlap=0;for(const r of rows){const old=db.series.smp.find(x=>x.date===r.date);if(old){if(Math.abs(old.value-r.value)>.011)throw Error('원천 정의 불일치 '+r.date);overlap++;}}await mutate(db=>mergeRows(db,rows));console.log({count:rows.length,overlap,first:rows.at(-1),last:rows[0]});

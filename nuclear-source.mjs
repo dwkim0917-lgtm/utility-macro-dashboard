@@ -1,0 +1,2 @@
+import {tables} from './collector.mjs';
+export function parseNuclear(html){let years=[],out=[];for(const r of tables(html)){if(r[0]==='구분')years=r.slice(1);if(r[0]==='이용률(%)')for(let i=1;i<r.length;i++){if(!/^\d{4}$/.test(years[i-1])||!/^\d+(\.\d+)?$/.test(r[i]))continue;const value=Number(r[i]);if(value<0||value>100)throw Error('원전 이용률 범위 오류');out.push({id:'nuclear',date:years[i-1]+'-12-31',value,source:'한수원 · 연간 원전 이용률',url:'https://npp.khnp.co.kr/ON004004002001003'});}}if(out.length<2)throw Error('원전 이용률 표 확인 필요');return out;}

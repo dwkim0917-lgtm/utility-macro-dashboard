@@ -1,0 +1,1 @@
+import fs from 'node:fs/promises';const r=await fetch('https://kpx.or.kr/boardDownload.es?bid=0045&list_no=77084&seq=4');await fs.writeFile('data/rec-2025-statistics.pdf',Buffer.from(await r.arrayBuffer()));

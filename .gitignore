@@ -1,0 +1,27 @@
+# 비밀·세션·로컬 전용
+.env
+*.secret*
+data/telegram-*
+data/morning-brief.*
+data/*.lock
+logs/
+node_modules/
+.venv/
+__pycache__/
+site/
+_backup_*/
+# 데이터: 화면·분석에 필요한 파일만 추적 (아래 ! 목록)
+data/*
+!data/observations.json
+!data/impact-evidence.json
+!data/relationship-analysis.json
+!data/relationship-summary.csv
+!data/relationship-tests.csv
+!data/stock-prices.json
+!data/analysis-refresh-state.json
+!data/analysis-catalog.json
+!data/monitor-status.json
+!data/rec-monthly-verified.json
+!data/demand-backfill-progress.json
+!data/kau26-raw.json
+!data/stock-raw/

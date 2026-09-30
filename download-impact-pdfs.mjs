@@ -1,0 +1,3 @@
+import fs from 'node:fs/promises';
+const docs={skgas:'https://skgas.co.kr/uploaded/ir/17737288451251.pdf',kepcoKB:'https://rdata.kbsec.com/pdf_data/20250324130757153K.pdf',e1:'https://kisrating.com/fileDown.do?fileName=rs20240628-1.pdf&gubun=2&menuCd=R8',kdhiM:'https://www.imfnsec.com/upload/R_E08/2026/02/%5B10190749%5D_071320.pdf'};
+console.log(await Promise.allSettled(Object.entries(docs).map(async([id,url])=>{const r=await fetch(url,{signal:AbortSignal.timeout(30000)});const b=Buffer.from(await r.arrayBuffer());if(!b.subarray(0,5).toString().startsWith('%PDF'))throw Error(id+' not PDF');await fs.writeFile('data/impact-sources/'+id+'.pdf',b);return {id,bytes:b.length};})));

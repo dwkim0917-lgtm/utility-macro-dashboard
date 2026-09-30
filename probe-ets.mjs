@@ -1,0 +1,2 @@
+import fs from 'node:fs/promises';
+for(const [id,url] of [['ets-main','https://ets.krx.co.kr/main/main.jsp'],['ets-data','https://ets.krx.co.kr/contents/ETS/03/03010000/ETS03010000.jsp']]){const h=await(await fetch(url)).text();await fs.writeFile('data/'+id+'.html',h);console.log(id,h.length);console.log(h.match(/<script[^>]*src[^>]*>/g));console.log(h.split('\n').filter(s=>/ajax|KAU26|\.json|\.cmd|\.do|\.jspx|bld|url:|url :|fetch\(/.test(s)).join('\n').slice(0,9000));}
