@@ -169,3 +169,11 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 2026-09-29 08:32 확인: 08:30:04 Telegram 전송 성공(message_id=3647), 금일 중복 수집·발송 생략.
 
 2026-09-30 일일 갱신: 공개 12작업 성공, 10/1 적용 예정 KOGAS 요금은 관측 반영 보류. Telegram message_id=3656 발송 확인. 기관 로그인 정상 복구 후 BigFinance 5계열 최근 2개월 10행 동일값 재검증. 웹 신규 6행·수정 3행 포함 총 19행 import 완료(data/manual-verified-2026-09-30.json, manual-audit-2026-09-30.json). TTF 9/25 하락률은 원천 수정으로 -5.29%에서 -4.04%로 정정. Newcastle Oct 2026 최근월, TTF 일요일 9/27 행은 거래일 정의 확인 전 보류. 주가 원천 대조 및 완료 월 2026-08 기준 분석·검증 완료.
+
+
+## GitHub 정적 배포 (2026-09-30)
+- `payload.mjs`: 서버 `/api/*`와 정적 빌드가 같은 응답 생성기를 쓴다. `build-static.mjs`가 `dist/`+`data/` → `site/`(약 37MB, api/*.json 포함)로 빌드하며 로컬 서버 코드는 수정하지 않는다. 정적 화면에서는 갱신 버튼·CSV 반영 기능이 숨겨진다.
+- `.github/workflows/daily.yml`: 매일 08:10 KST에 공개 원천 수집 → 주가 분석 갱신 → 테스트 → 정적 빌드 → `data/` 커밋 → GitHub Pages 배포. 수동 실행은 Actions 탭 "Run workflow".
+- 클라우드에서 수집 불가: BigFinance 5계열(로그인), Investing.com 4계열(HTTP 차단). 로컬 `start-dashboard.ps1 -Refresh`가 수집 후 `git push`로 반영한다(원격이 설정된 경우에만).
+- `.gitignore`는 data/ 허용목록 방식. 텔레그램 설정·브리핑, 잠금, 백업, PDF/HTML 원문은 추적하지 않는다. KIS 키 파일은 저장소 밖에 있다.
+- Private 저장소의 Pages는 GitHub Free 플랜에서 불가(API 422). 공개 전환 또는 Pro 필요.
