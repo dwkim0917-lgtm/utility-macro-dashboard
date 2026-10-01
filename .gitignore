@@ -25,3 +25,4 @@ data/*
 !data/demand-backfill-progress.json
 !data/kau26-raw.json
 !data/stock-raw/
+!data/scfi-datawrapper.json

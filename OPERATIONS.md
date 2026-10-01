@@ -189,3 +189,10 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - `scfi`: 상하이항운교역소 페이지는 구독 로그인 필요(`/singleIndex/scfi` 500 SubscribeUser)로 자동 수집 불가. 수동 반영: `node import-observations.mjs <csv>` 형식 `id,date,value,source,url` · `scfi,2026-10-02,1234.5,SSE 공시,https://en.sse.net.cn/indices/scfinew.jsp`. 매주 금요일 발표. 평소에는 WCI로 방향만 본다.
 - 민감도(`sensitivity-data.mjs`): 팜유 $10/t당 포스코인터 +27억(CPO 약 20만톤), LX +23억(약 17만톤) — 모두 C등급 자체 산식. 생산량 1차 출처 미확보, 실현가격 공제 미반영. 운임→LX 물류 민감도는 미확보.
 - 미연결 후보: ICI4 인니 저열량탄(LX 광산 실현가), BDI(LX 벌크 물류), 인니 CPO 수출 기준가(Harga Referensi, 매월 재무부 고시 — 수출세·levy 결정, 실현가격 설명력 높음).
+
+
+## SCFI · 인니 CPO 수출 기준가 연결, 화면 정리 (2026-10-02)
+- `scfi`: 상하이항운교역소 원문은 구독 필요. 국내 오픈컨테이너(opencontainer.kr)가 재게시하는 Datawrapper 차트 `xlvuj`의 공개 데이터셋(`datawrapper.dwcdn.net/xlvuj/<버전>/dataset.csv`, 2009-10~주간)을 수집한다. 차트 버전이 갱신될 때마다 번호가 오르므로 `data/scfi-datawrapper.json`에 마지막 버전을 저장하고 그 이후 번호를 404까지 탐색해 최신본을 쓴다. 재게시 지연 시 Drewry WCI로 방향 교차 확인. 2026-10-02 기준 v62, 2026-09-24 3,686.62pt.
+- `cpo_hr`·`cpo_duty`: GIMNI(인니 식용유협회) 집계 표 `gimni.org/harga-cpo`에서 Kemendag 월별 Harga Referensi(USD/t)와 Bea Keluar(고정액)+Pungutan Ekspor(HR의 %) 합계를 파싱, 2024-10~. 인니 월 표기(Mei·Agt·Okt·Des)와 숫자 형식(1.042,15)을 변환한다. 표 구조가 바뀌면 실패 처리. 실현가 ≈ 국제가 − cpo_duty − 물류로 읽는다.
+- 화면 정리: 세 페이지 공통 상단 내비(차트·민감도·주가 시차), 환율·금리 영향표와 원자재 점검은 접힘 패널로, 카드의 관측 수·출처는 '실적 영향·시차·출처' 상세 안으로 이동. 주간 지표 뱃지는 '전주'(REC만 '직전 거래일').
+- 미연결 유지: KCCI(한국해양진흥공사, 매주 월 공표 — 공개 페이지 미확인), ICI4, BDI.
