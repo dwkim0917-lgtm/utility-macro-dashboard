@@ -177,3 +177,5 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - 클라우드에서 수집 불가: BigFinance 5계열(로그인), Investing.com 4계열(HTTP 차단). 로컬 `start-dashboard.ps1 -Refresh`가 수집 후 `git push`로 반영한다(원격이 설정된 경우에만).
 - `.gitignore`는 data/ 허용목록 방식. 텔레그램 설정·브리핑, 잠금, 백업, PDF/HTML 원문은 추적하지 않는다. KIS 키 파일은 저장소 밖에 있다.
 - Private 저장소의 Pages는 GitHub Free 플랜에서 불가(API 422). 공개 전환 또는 Pro 필요.
+
+2026-10-01 일일 갱신: 08:06 공개 13작업 성공 기록으로 중복 수집 생략. Telegram message_id=3799. 10월 KOGAS 요금 시행일 관측 반영 확인. BigFinance 기관 로그인 복구, 5계열 최근 2개월 10행 동일값 검증. 웹 신규 4·수정 4행 포함 총18행 반영(manual-verified-2026-10-01.json). TTF Nov2026 월물 교체 기록. Brent 현물 9/29 113.96, 직전119.97 대비 -5.01%. 08:06 분석 잔존 잠금은 관련 실행 프로세스 부재 확인 후 제거; 재실행 성공, 완료 월 2026-09 기준 분석 및 검증 통과. 외부 배포·git push 미실행.
