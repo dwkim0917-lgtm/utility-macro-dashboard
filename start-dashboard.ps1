@@ -25,7 +25,7 @@ if ($Refresh -and (Test-Path (Join-Path $dashboardRoot '.git'))) {
         if ($remote) {
             git add data 2>$null
             git diff --cached --quiet; if (-not $?) { git commit -q -m ("data: local sources " + (Get-Date -Format 'yyyy-MM-dd HH:mm')) }
-            git pull -q --rebase origin main; git push -q origin main
+            git pull -q --rebase -X theirs origin main; if (-not $?) { git rebase --abort; git fetch -q origin; git reset -q --hard origin/main; Write-Warning 'GitHub 데이터와 충돌: 원격 버전으로 되돌림. 다음 -Refresh에서 재수집·재반영' } else { git push -q origin main }
         }
     } catch { Write-Warning "GitHub 반영 실패: $_" } finally { Pop-Location }
 }

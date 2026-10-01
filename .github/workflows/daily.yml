@@ -37,10 +37,18 @@ jobs:
         run: |
           git config user.name "dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data
-          git diff --cached --quiet || git commit -m "data: automated refresh $(date -u +%Y-%m-%dT%H:%MZ)"
-          git pull --rebase origin main || true
-          git push
+          for attempt in 1 2 3; do
+            git add data
+            git diff --cached --quiet && { echo "no data change"; break; }
+            git commit -q -m "data: automated refresh $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push && break
+            # 로컬 PC가 같은 시각에 푸시한 경우: 원격을 받아 그 위에서 수집·빌드를 다시 한다
+            echo "push rejected (attempt $attempt); re-collecting on top of origin/main"
+            git fetch origin && git reset -q --hard origin/main
+            node collector.mjs > /dev/null || true
+            UTILITY_ANALYSIS_PYTHON=python3 node refresh-analysis.mjs > /dev/null || true
+            node build-static.mjs
+          done
       - uses: actions/upload-pages-artifact@v3
         with: {path: site}
   deploy:
