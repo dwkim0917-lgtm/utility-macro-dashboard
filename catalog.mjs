@@ -46,6 +46,13 @@ export const catalog = [
  item('kau','KAU · 배출권','전력·요금','원/tCO₂','일간','한국 배출권 가격. 이행연도별 종목을 혼합하지 않고 현재 이행연도 계열을 사용.',[e('015760,071320,005090','부족한 배출권을 구매하는 발전사는 비용 증가. 잉여 배출권 매도사는 수익 가능하며 무상할당·헤지·인식정책에 따라 다름.','이행연도·충당부채·매각 시점별',7)],{priority:'보완',sourceHint:'KRX 배출권시장 · 이행연도 확인'})
 ];
 
+// ── 상사(포스코인터·LX인터) 관점 원자재·운임 (2026-10-01)
+const palmEffects=[e('047050,001120','CPO 가격 상승은 팜 농장 매출단가에 긍정. 실제 실현가격은 인도네시아 FOB·수출세(levy)·내수의무(DMO) 공제 후이며 생산량(FFB·OER)과 함께 봐야 함. 포스코인터 PT.BIA·PT.PAR, LX 서칼리만탄 농장 모두 인니 소재.','판매 계약·선적 기준 1~2개월; 월 생산량은 강우 6~24개월 시차',8)];
+catalog.push(
+ item('palm','팜유 · 국제가격 월평균','상사·원자재','USD/t','월간','IMF 1차상품 가격(FRED PPOILUSDM): 말레이시아 팜유 월평균, USD/톤. 공식 월간 벤치마크이며 인니 FOB·회사 실현가격과 다름.',palmEffects,{fred:'PPOILUSDM',sourceHint:'FRED · IMF Primary Commodity Prices',staleDays:100}),
+ item('cpo','팜유 · CME 말레이시아 CPO 스왑','상사·원자재','USD/t','일간','CME USD Malaysian Crude Palm Oil Calendar 스왑(Yahoo CPO=F) 일간 종가. Bursa FCPO(MYR) 현금결제 연동의 달러 표시 일간 프록시. 유동성이 얇아 거래 없는 날은 전일 가격 유지 가능.',palmEffects,{sourceHint:'Yahoo Finance · CPO=F',staleDays:6}),
+ item('wci','컨테이너 운임 · Drewry WCI','상사·원자재','USD/FEU','주간','Drewry World Container Index 종합(8개 항로 가중, 40ft 기준), 매주 목요일 발표. SCFI(상하이발 수출운임, 상하이항운교역소 구독 필요)의 공개 대체 지표. 두 지수는 항로 구성·기준항이 달라 수준은 다르지만 방향은 대체로 동행. 공개 페이지는 최신값만 제공하므로 2026-10부터 주간 누적.',[e('001120','해상운임 상승은 LX 물류(포워딩·해운 중개) 매출 확대 요인이나 마진은 매입운임과의 스프레드·물량에 좌우. 석탄·팜 트레이딩에는 운송비 부담으로 반대 방향.','주간 지수 즉시, 물류 실적 분기',9),e('047050','트레이딩 물류비 부담 요인. 자체 선대 없음.','분기 실적',0)],{priority:'보완',sourceHint:'Drewry WCI 공개 페이지',staleDays:12}),
+ item('scfi','SCFI · 상하이 컨테이너 운임지수','상사·원자재','pt','주간','상하이항운교역소 종합지수, 매주 금요일. 원천 페이지가 구독 로그인 필요라 자동 수집 불가. 주간 수동 CSV 반영(id=scfi) 또는 WCI 대체.',[e('001120','LX 물류 사업의 운임 환경 지표. 수치 자동 수집 미연결.','주간',9)],{priority:'보완',sourceHint:'SSE 구독 또는 주간 수동 입력'}));
 for(const id of ['usdkrw','kr3y','credit','us10y']){const c=catalog.find(v=>v.id===id);for(const code of Object.keys(stocks))if(!c.effects.some(x=>x.codes.includes(code)))c.effects.push(e(code,'종목별 영업·금융·현금흐름 경로는 근거 비교표에서 확인.','계약·결산·재설정 시점별',0));}
 const recCard=catalog.find(c=>c.id==='rec');recCard.name='REC · 현물 거래일 평균가';recCard.priority='핵심';recCard.staleDays=12;recCard.definition='KPX 현물시장의 거래일 평균가. 종가·장기 계약가격·연간 REC 기준가격과 구분. 화·목 개장; 초기 연결 이후 거래일별 누적. 과거 월평균은 별도 차트.';
 const kauCard=catalog.find(c=>c.id==='kau');kauCard.name='KAU26 · 배출권 종가';kauCard.priority='핵심';kauCard.definition='2026 이행연도 KAU26의 실제 거래량이 있는 날 종가. 무거래 기준가격과 KAU25·27 등 다른 종목은 혼합하지 않는다. 배출권 부족·잉여 수량과 유상할당·전력시장 정산을 함께 확인.';kauCard.sourceHint='KRX 배출권시장 정보플랫폼 · KAU26';
