@@ -24,3 +24,5 @@
 @media(max-width:700px){.topnav{margin-left:4px}.topnav a{padding:5px 7px;font-size:11px}}
 
 #oil-curve table{min-width:0;font-size:12px}#oil-curve td.num{text-align:right;white-space:nowrap}#oil-curve td.num small{display:block;color:var(--muted);font-size:10px}#oil-curve th{font-size:11px}
+
+.card svg rect.bar.pos{fill:#2a78d6}.card svg rect.bar.neg{fill:#d85a30}.card svg line.zero{stroke:#8a9499;stroke-dasharray:3 3}
