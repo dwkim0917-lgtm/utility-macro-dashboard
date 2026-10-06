@@ -22,3 +22,5 @@ test('Yahoo chart keeps today only when includeToday is set',()=>{const t0=Math.
 
 import {deriveSpread} from '../collector.mjs';
 test('JKM minus FEI spread derives only on shared dates and converts propane to MMBtu',()=>{const db={series:{jkm_futures:[{date:'2026-10-02',value:25.7,source:'a'},{date:'2026-10-05',value:25.71,source:'a'}],fei:[{date:'2026-10-05',value:932.58,source:'b'},{date:'2026-10-06',value:940,source:'b'}]}};const r=deriveSpread(db);assert.deepEqual(r.map(x=>[x.date,x.value]),[['2026-10-05',6.16]]);assert.deepEqual(deriveSpread({series:{}}),[]);});
+
+test('Derived spreads cover both FEI (converted) and HH (raw) pairs',()=>{const db={series:{jkm_futures:[{date:'2026-10-05',value:25.71,source:'a'}],fei:[{date:'2026-10-05',value:932.58,source:'b'}],hh_ng1:[{date:'2026-10-05',value:3.07,source:'c'}]}};assert.deepEqual(deriveSpread(db).map(x=>[x.id,x.value]),[['jkm_fei',6.16],['jkm_hh',22.64]]);});

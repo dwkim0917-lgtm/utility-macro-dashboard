@@ -219,3 +219,4 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - `jkm_fei`: 수집 직후 `deriveSpread`가 JKMc1 − A7E/47.7(프로판 HHV)로 산출해 같은 저장 트랜잭션에 병합하는 파생 계열. 카드는 `chart:'bars'` 모드(0선·부호별 색). JKM은 로컬(Investing) 계열이라 클라우드 실행에서는 커밋된 JKM까지만 산출된다.
 - 아침 브리핑 알림: 스프레드 <0(LNG가 저렴) 또는 ≥+5(LPG 우위)일 때 `⚠ 유가 알림`에 포함.
 - 분석 메모: `5. 섹터 리서치/JKM-FEI_스프레드_2026-10-06.md`.
+- JKM−HH(2026-10-06 추가): `hh_ng1`(Yahoo `NG=F`, NYMEX 최근월, 당일 포함)을 수집하고 `jkm_hh = jkm_futures − hh_ng1`을 같은 파생 단계(`DERIVED` 목록)에서 산출. 미국산 LNG 아시아 netback 여유 지표이며 도착원가(HH×1.15+액화+운임)는 차감하지 않은 원 스프레드. 브리핑은 7일 변동 ±10% 이상일 때 알림.
