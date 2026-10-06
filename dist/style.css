@@ -22,3 +22,5 @@
 .card .stock-tags{border-top:0;padding-top:9px}.card .history{padding:8px 14px 2px;border-top:1px solid #edf0ee}.card .impact summary{padding-top:8px}
 .heading h1{font-size:20px}.coverage{margin:6px 0 14px}.notice{margin:8px 0 10px}
 @media(max-width:700px){.topnav{margin-left:4px}.topnav a{padding:5px 7px;font-size:11px}}
+
+#oil-curve table{min-width:0;font-size:12px}#oil-curve td.num{text-align:right;white-space:nowrap}#oil-curve td.num small{display:block;color:var(--muted);font-size:10px}#oil-curve th{font-size:11px}

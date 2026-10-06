@@ -202,3 +202,13 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - `wti`(FRED DCOILWTICO, EIA Cushing 현물, 1986~)를 신설하고 `brent`(FRED DCOILBRENTEU)를 보완→핵심으로 올려 Dubai 월평균(BigFinance)과 유가 3종을 함께 표시한다. 전환이 아니라 추가이며 Dubai 계열은 그대로 유지.
 - 민감도: 한전 −3,140억/$1(B, Dubai 근거 대용)과 포스코인터 +47억/$1(C)에 `wti` 행 추가. Brent 행은 기존 유지. 한국 도입계약은 Dubai/JCC 연동이라 WTI·Brent−Dubai 스프레드 확대 시 환산 오차 가능 — 근거 표에 명시.
 - 아침 브리핑 핵심 목록에 wti·brent 추가. `build-impact-evidence.mjs`의 연료 집합에 wti 포함.
+
+2026-10-06: 실제 09:58 재개. 08:05 전체 fetch failed 기록을 표시한 Telegram message_id=3873 성공 후 공개18작업 재시도 전부 성공. BigFinance 정상 기관 재로그인 후 5계열 최근2개월 10행 동일값 검증. 웹 신규12·수정4 포함 총26행 반영(manual-verified-2026-10-06.json). TTF10/6 일중·10/4 일요일 행 제외. 10/2 분석 잔존 잠금은 관련 프로세스 부재 확인 후 제거, 분석 재실행 및 검증 성공(2026-09 기준). 8765 서버의 이전 catalog 캐시를 재시작으로 갱신, 활성34지표 API 확인. 외부 배포·git push 미실행.
+
+
+## WTI·Brent 당일 가격 · 선물 계열 추가, 유가 알림 (2026-10-06)
+- FRED 현물(EIA)은 약 1주 지연이라 당일 확인용으로 `wti_cl1`(Yahoo `CL=F`, NYMEX WTI 최근월)·`brent_b1`(Yahoo `BZ=F`, ICE Brent 최근월) 일간 종가를 2000년부터 수집한다. `parseYahoo`에 `includeToday` 옵션을 추가해 당일 장중 가격도 저장하며, 같은 날짜·출처 행은 다음 수집에서 종가로 덮어쓴다(`mergeRows`).
+- 과거 "NG1·B1·CL1 선물은 다시 추가하지 않음" 결정(`macro-impacts.mjs`)은 BigFinance 로그인 계열 기준이었고, 이번에는 사용자가 당일 가격을 요청해 공개 Yahoo 계열로 추가했다.
+- 민감도: 한전·포스코인터 유가 행을 선물 2종에도 복제(총 30행). 선물은 현물과 베이시스·월물 교체 차이가 있어 환산은 참고용.
+- 알림: 아침 브리핑 상단에 `⚠ 유가 알림` — 선물 하루 ±4% 이상, 7일 ±8% 이상, 또는 수집 지연(staleDays 4) 시 표시. Telegram은 기존 08:30 발송 경로를 그대로 쓴다(별도 실시간 푸시 없음).
+- 선물 커브: `fetchOilCurve`가 Yahoo 개별 월물(CL·BZ + 월코드 + yy + .NYM, 향후 15개월)을 조회해 `data/oil-curve.json` 스냅샷을 쓰고, 최근월에서 12개월 뒤 월물 가격을 `wti_m12`·`brent_m12`(보완) 계열로 저장한다. 차트 페이지 상단 ‘유가 선물 커브’ 패널과 아침 브리핑에 최근월→12개월 뒤 비교(백워데이션/콘탱고)를 표시한다. 커브는 시장이 거래로 반영한 경로이며 예측치가 아님을 화면에 명시.

@@ -26,3 +26,4 @@ data/*
 !data/kau26-raw.json
 !data/stock-raw/
 !data/scfi-datawrapper.json
+!data/oil-curve.json

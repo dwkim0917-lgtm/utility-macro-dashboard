@@ -15,11 +15,14 @@ export function summarize(db,previous={},date=today()){
 export function buildBrief(db,audit,previous={},date=today()){
  const rows=summarize(db,previous,date),available=rows.filter(r=>!r.missing),changes=available.filter(r=>r.changed),snapshot=Object.fromEntries(available.map(r=>[r.id,{date:r.latest.date,value:r.latest.value,source:r.latest.source}]));
  const rank=r=>r.score+(r.frequency==='일간'?25:0)+(r.unit!=='%'&&r.unit!=='°C'&&Math.abs(r.week?.value||0)>=5?120:0);// 7일 ±5% 이상은 보완 지표도 승격
- const core=['wti','brent','jkm_futures','coal','usdkrw','kr3y','kau','rec'];
+ const core=['wti_cl1','brent_b1','jkm_futures','coal','usdkrw','kr3y','kau','rec'];
  const chosen=core.map(id=>available.find(r=>r.id===id)).filter(Boolean);
  chosen.push(...available.filter(r=>!core.includes(r.id)).sort((a,b)=>rank(b)-rank(a)).slice(0,8-chosen.length));
  const title=`유틸리티 아침 브리핑 | ${date} KST`;
  const lines=[title,Object.keys(previous).length?`직전 발송 이후 신규·수정 ${changes.length}개 / 확보 ${available.length}개`:'첫 브리핑: 확보한 최신 관측 현황 (당일 변동 아님)', '변동률은 직전 관측 대비. 관측일·발표 주기는 지표마다 다릅니다.'];
+ const alerts=[];for(const id of ['wti_cl1','brent_b1']){const r=available.find(x=>x.id===id);if(!r)continue;if(Math.abs(r.delta?.value||0)>=4)alerts.push(`${r.name} 하루 ${r.delta.text}`);else if(Math.abs(r.week?.value||0)>=8)alerts.push(`${r.name} 7일 ${r.week.text}`);if(r.stale)alerts.push(`${r.name} 수집 지연(${r.latest.date})`);}
+ {const f=available.find(x=>x.id==='wti_cl1'),m=available.find(x=>x.id==='wti_m12');if(f&&m&&f.latest.date===m.latest.date)lines.push(`\n유가 커브(WTI): 최근월 ${fmt(f.latest.value)} → 12개월 뒤 ${fmt(m.latest.value)} (${(m.latest.value/f.latest.value-1>0?'+':'')+fmt((m.latest.value/f.latest.value-1)*100)}%, ${m.latest.value<f.latest.value?'백워데이션':'콘탱고'}) · 시장이 반영한 경로, 예측 아님`);}
+ if(alerts.length)lines.push('\n⚠ 유가 알림: '+alerts.join(' / ')+' — 한전 −3,140억/$1(B), 포스코인터 +47억/$1(C) 환산 확인');
  for(const r of chosen){let l=`\n${r.revised?'[수정] ':r.changed?'[신규] ':''}${r.name}: ${fmt(r.latest.value)} ${r.unit}\n${r.latest.date} | 직전 ${r.delta?.text??'비교 없음'}${r.week?' | 7일 '+r.week.text:''}${r.stale?' | 갱신 지연':''}`;
  const codes=[...new Set(r.effects.flatMap(e=>e.codes))];l+='\n관련: '+codes.map(c=>stocks[c]||c).slice(0,4).join(' · ');
  const p=audit?.byPair?.[r.id+':'+codes[0]];if(p){const d=p.direction;const sign=r.delta?.value;const rating=d&&sign?(sign>0?d.up:d.down):null;const explanation=d?'상승 시 '+d.operating:(p.text||'');l+='\n'+(stocks[codes[0]]||codes[0])+' '+(rating?`이번 방향 ${rating}(조건부). `:'실적 경로: ')+explanation.split(/(?<=다\.)\s/)[0].slice(0,90);}

@@ -284,7 +284,8 @@
       }
     ],
     "publicCollectorAt": "2026-10-06T01:04:09.323Z",
-    "publicProcessedRows": 61061
+    "publicProcessedRows": 61061,
+    "publicJobs": 19
   },
   "knownHistoricalLimitations": [
     {
@@ -297,10 +298,10 @@
     }
   ],
   "analysis": {
-    "status": "refreshing",
-    "generatedAt": "2026-09-30T23:38:12.374378+00:00",
+    "status": "complete",
+    "generatedAt": "2026-10-06T01:11:13.398768+00:00",
     "asOfMonth": "2026-09",
-    "hypothesisCount": 11235
+    "hypothesisCount": 13739
   },
   "maintenance": "8765 서버 PID 확인 후 중단, 원본 백업, 해당 write.lock 제거, 별도 collector 저장 성공 후 서버 재시작. 코드/권한 변경 없음.",
   "environmental": {
@@ -353,8 +354,8 @@
     "status": "effective-and-imported"
   },
   "analysisRecovery": "10/2 잔존 잠금 확인. 관련 실행 프로세스 부재 확인 후 정확한 analysis-refresh.lock만 제거하고 재실행.",
-  "lastHeartbeatAt": "2026-10-06T01:05:57.208Z",
-  "lastHeartbeatNote": "Telegram message_id=3873 확인. 오늘 중복 발송 없음.",
+  "lastHeartbeatAt": "2026-10-06T01:16:20.325Z",
+  "lastHeartbeatNote": "동일 날짜 재호출: 공개 수집·BigFinance 10행 검증·웹 보완·분석 완료 및 Telegram message_id=3873 확인. 중복 수집/발송 생략.",
   "corrections": [],
   "recoveredFailures": [
     {
