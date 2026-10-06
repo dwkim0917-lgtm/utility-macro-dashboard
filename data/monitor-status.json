@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-09-30T23:36:29.780Z",
+  "checkedAt": "2026-10-06T01:05:57.208Z",
   "status": "complete",
-  "note": "10/1 08:06 공개 수집 13작업 성공 기록 확인, 중복 수집 생략. 10월 가스요금 반영. 웹 신규 4·수정 4행과 BigFinance 최근 2개월 10행 검증 반영. 미연결 3지표 유지.",
+  "note": "10/6 08:05 공개 수집 전체 연결 실패 후 09:58 실제 작업 재개. 지연/실패를 표시한 Telegram 발송 후 공개 18작업 재시도 성공. 웹 신규12·수정4 및 BigFinance 검증10행 반영.",
   "missing": [
     "jkm",
     "lpg_cp",
@@ -25,9 +25,9 @@
     {
       "id": "jkm_futures",
       "name": "JKM · 최근월 선물",
-      "count": 3114,
+      "count": 3118,
       "first": "2012-09-27",
-      "last": "2026-09-29"
+      "last": "2026-10-05"
     },
     {
       "id": "jkm",
@@ -39,9 +39,16 @@
     {
       "id": "coal",
       "name": "Newcastle · 호주 유연탄 선물",
-      "count": 4570,
+      "count": 4573,
       "first": "2008-12-08",
-      "last": "2026-09-30"
+      "last": "2026-10-05"
+    },
+    {
+      "id": "wti",
+      "name": "WTI · 미국 현물 유가",
+      "count": 9512,
+      "first": "1986-01-02",
+      "last": "2026-09-29"
     },
     {
       "id": "dubai",
@@ -53,9 +60,9 @@
     {
       "id": "ttf",
       "name": "TTF · 유럽 천연가스 선물",
-      "count": 4263,
+      "count": 4266,
       "first": "2010-03-15",
-      "last": "2026-09-30"
+      "last": "2026-10-05"
     },
     {
       "id": "lpg_cp",
@@ -102,16 +109,16 @@
     {
       "id": "peak",
       "name": "일일 최대전력",
-      "count": 8232,
+      "count": 8237,
       "first": "2002-07-10",
-      "last": "2026-09-30"
+      "last": "2026-10-05"
     },
     {
       "id": "reserve",
       "name": "최대전력 시 공급예비율",
-      "count": 8232,
+      "count": 8237,
       "first": "2002-07-10",
-      "last": "2026-09-30"
+      "last": "2026-10-05"
     },
     {
       "id": "consumption",
@@ -130,23 +137,23 @@
     {
       "id": "temperature",
       "name": "서울 일평균 기온",
-      "count": 3661,
+      "count": 3667,
       "first": "2016-09-16",
-      "last": "2026-09-24"
+      "last": "2026-09-30"
     },
     {
       "id": "usdkrw",
       "name": "원/달러 · 뉴욕 매입환율",
-      "count": 11362,
+      "count": 11367,
       "first": "1981-04-13",
-      "last": "2026-09-25"
+      "last": "2026-10-02"
     },
     {
       "id": "kr3y",
       "name": "한국 국고채 3년",
-      "count": 9069,
+      "count": 9071,
       "first": "1995-05-03",
-      "last": "2026-09-30"
+      "last": "2026-10-02"
     },
     {
       "id": "credit",
@@ -158,9 +165,9 @@
     {
       "id": "us10y",
       "name": "미국 국채 10년",
-      "count": 16171,
+      "count": 16174,
       "first": "1962-01-02",
-      "last": "2026-09-29"
+      "last": "2026-10-02"
     },
     {
       "id": "hh",
@@ -179,16 +186,58 @@
     {
       "id": "rec",
       "name": "REC · 현물 거래일 평균가",
-      "count": 3,
+      "count": 4,
       "first": "2026-09-17",
-      "last": "2026-09-29"
+      "last": "2026-10-01"
     },
     {
       "id": "kau",
       "name": "KAU26 · 배출권 종가",
-      "count": 27,
+      "count": 29,
       "first": "2026-07-23",
+      "last": "2026-10-02"
+    },
+    {
+      "id": "palm",
+      "name": "팜유 · 국제가격 월평균",
+      "count": 415,
+      "first": "1992-01-01",
+      "last": "2026-07-01"
+    },
+    {
+      "id": "cpo",
+      "name": "팜유 · CME 말레이시아 CPO 스왑",
+      "count": 3957,
+      "first": "2010-05-25",
+      "last": "2026-10-02"
+    },
+    {
+      "id": "wci",
+      "name": "컨테이너 운임 · Drewry WCI",
+      "count": 2,
+      "first": "2026-09-24",
+      "last": "2026-10-01"
+    },
+    {
+      "id": "scfi",
+      "name": "SCFI · 상하이 컨테이너 운임지수",
+      "count": 847,
+      "first": "2009-10-16",
       "last": "2026-09-30"
+    },
+    {
+      "id": "cpo_hr",
+      "name": "인니 CPO 수출 기준가(HR)",
+      "count": 25,
+      "first": "2024-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "id": "cpo_duty",
+      "name": "인니 CPO 수출세+부과금 합계",
+      "count": 25,
+      "first": "2024-10-01",
+      "last": "2026-10-01"
     },
     {
       "id": "rec_monthly",
@@ -199,43 +248,43 @@
     }
   ],
   "failures": [],
-  "imported": 18,
+  "imported": 26,
   "importDetails": {
-    "webNew": 4,
+    "webNew": 12,
     "webRevised": 4,
     "bigfinanceVerified": 10,
     "revisions": [
       {
         "id": "coal",
         "date": "2026-09-29",
-        "value": 144.85,
-        "previous": 145.2,
+        "value": 145.2,
+        "previous": 144.85,
+        "type": "revised"
+      },
+      {
+        "id": "coal",
+        "date": "2026-09-30",
+        "value": 146.5,
+        "previous": 146.25,
         "type": "revised"
       },
       {
         "id": "kr3y",
-        "date": "2026-09-29",
-        "value": 4.072,
-        "previous": 4.076,
+        "date": "2026-09-30",
+        "value": 4.011,
+        "previous": 4.035,
         "type": "revised"
       },
       {
         "id": "ttf",
-        "date": "2026-09-28",
-        "value": 73.437,
-        "previous": 71.25,
-        "type": "revised"
-      },
-      {
-        "id": "ttf",
-        "date": "2026-09-29",
-        "value": 69.805,
-        "previous": 69,
+        "date": "2026-09-30",
+        "value": 72.357,
+        "previous": 72.355,
         "type": "revised"
       }
     ],
-    "publicCollectorAt": "2026-09-30T23:06:37.901Z",
-    "publicProcessedRows": 46269
+    "publicCollectorAt": "2026-10-06T01:04:09.323Z",
+    "publicProcessedRows": 61061
   },
   "knownHistoricalLimitations": [
     {
@@ -248,7 +297,7 @@
     }
   ],
   "analysis": {
-    "status": "complete",
+    "status": "refreshing",
     "generatedAt": "2026-09-30T23:38:12.374378+00:00",
     "asOfMonth": "2026-09",
     "hypothesisCount": 11235
@@ -256,29 +305,29 @@
   "maintenance": "8765 서버 PID 확인 후 중단, 원본 백업, 해당 write.lock 제거, 별도 collector 저장 성공 후 서버 재시작. 코드/권한 변경 없음.",
   "environmental": {
     "kauVintage": "KAU26",
-    "kauLast": "2026-09-30",
-    "recLast": "2026-09-29",
+    "kauLast": "2026-10-02",
+    "recLast": "2026-10-01",
     "recMonthlyLast": "2025-12-01"
   },
   "telegram": {
-    "date": "2026-10-01",
+    "date": "2026-10-06",
     "status": "sent",
-    "messageId": 3799,
-    "at": "2026-09-30T23:31:18.915Z",
-    "messagePath": "C:\\Users\\park jiyeon\\Desktop\\김동욱\\5. 섹터 리서치\\utility-macro-dashboard\\data\\telegram-brief-2026-10-01.txt"
+    "messageId": 3873,
+    "at": "2026-10-06T00:58:43.947Z",
+    "messagePath": "C:\\Users\\park jiyeon\\Desktop\\김동욱\\5. 섹터 리서치\\utility-macro-dashboard\\data\\telegram-brief-2026-10-06.txt"
   },
   "lastCheck": {
-    "at": "2026-09-30T23:36:29.780Z",
-    "webNew": 4,
+    "at": "2026-10-06T01:05:57.208Z",
+    "webNew": 12,
     "webRevised": 4,
     "bigfinanceVerified": 10
   },
   "bigfinanceSession": {
     "status": "authenticated",
-    "checkedAt": "2026-09-30T23:36:29.780Z",
-    "lastAuthenticatedAt": "2026-09-30T23:36:29.780Z",
+    "checkedAt": "2026-10-06T01:05:57.208Z",
+    "lastAuthenticatedAt": "2026-10-06T01:05:57.208Z",
     "mode": "기업 사용자",
-    "note": "기존 승인 계정 정상 로그인 후 실제 툴팁 확인."
+    "note": "기존 승인 계정 정상 로그인 복구, 실제 툴팁 검증"
   },
   "commodityAvailabilityCheck": {
     "at": "2026-09-21T00:33:54.385Z",
@@ -286,8 +335,8 @@
     "result": "확인한 목록에서 ICI4·우드펠릿·Saudi CP 명시 계열을 찾지 못함. 사이트 전체 미제공을 뜻하지 않음."
   },
   "bigfinanceVerification": {
-    "at": "2026-09-30T23:36:29.780Z",
-    "file": "data/manual-verified-2026-10-01.json",
+    "at": "2026-10-06T01:05:57.208Z",
+    "file": "data/manual-verified-2026-10-06.json",
     "observations": 10,
     "new": 0,
     "revised": 0,
@@ -297,24 +346,22 @@
     "gasSalesLatest": "2026-08",
     "dubaiLatest": "2026-08"
   },
-  "significantMoves": [
-    {
-      "id": "brent",
-      "date": "2026-09-29",
-      "value": 113.96,
-      "previous": 119.97,
-      "previousDate": "2026-09-28",
-      "changePct": -5.009585729765775,
-      "url": "https://fred.stlouisfed.org/series/DCOILBRENTEU"
-    }
-  ],
+  "significantMoves": [],
   "announcedRates": {
     "file": "data/announced-rates-2026-09-29.json",
     "effectiveDate": "2026-10-01",
     "status": "effective-and-imported"
   },
-  "analysisRecovery": "08:06 분석 잠금 잔존. 실행 프로세스 부재 확인 후 정확한 analysis-refresh.lock 파일만 제거하고 재실행.",
-  "lastHeartbeatAt": "2026-09-30T23:36:29.780Z",
-  "lastHeartbeatNote": "10/1 Telegram message_id=3799 성공. 이후 보완 관측은 다음날 반영.",
-  "corrections": []
+  "analysisRecovery": "10/2 잔존 잠금 확인. 관련 실행 프로세스 부재 확인 후 정확한 analysis-refresh.lock만 제거하고 재실행.",
+  "lastHeartbeatAt": "2026-10-06T01:05:57.208Z",
+  "lastHeartbeatNote": "Telegram message_id=3873 확인. 오늘 중복 발송 없음.",
+  "corrections": [],
+  "recoveredFailures": [
+    {
+      "source": "공개 수집 18작업",
+      "at": "2026-10-05T23:05:54.597Z",
+      "error": "fetch failed",
+      "recoveredAt": "2026-10-06T01:04:09.323Z"
+    }
+  ]
 }

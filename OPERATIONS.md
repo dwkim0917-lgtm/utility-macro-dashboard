@@ -196,3 +196,9 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - `cpo_hr`·`cpo_duty`: GIMNI(인니 식용유협회) 집계 표 `gimni.org/harga-cpo`에서 Kemendag 월별 Harga Referensi(USD/t)와 Bea Keluar(고정액)+Pungutan Ekspor(HR의 %) 합계를 파싱, 2024-10~. 인니 월 표기(Mei·Agt·Okt·Des)와 숫자 형식(1.042,15)을 변환한다. 표 구조가 바뀌면 실패 처리. 실현가 ≈ 국제가 − cpo_duty − 물류로 읽는다.
 - 화면 정리: 세 페이지 공통 상단 내비(차트·민감도·주가 시차), 환율·금리 영향표와 원자재 점검은 접힘 패널로, 카드의 관측 수·출처는 '실적 영향·시차·출처' 상세 안으로 이동. 주간 지표 뱃지는 '전주'(REC만 '직전 거래일').
 - 미연결 유지: KCCI(한국해양진흥공사, 매주 월 공표 — 공개 페이지 미확인), ICI4, BDI.
+
+
+## 유가 지표 추가 · WTI·Brent (2026-10-06)
+- `wti`(FRED DCOILWTICO, EIA Cushing 현물, 1986~)를 신설하고 `brent`(FRED DCOILBRENTEU)를 보완→핵심으로 올려 Dubai 월평균(BigFinance)과 유가 3종을 함께 표시한다. 전환이 아니라 추가이며 Dubai 계열은 그대로 유지.
+- 민감도: 한전 −3,140억/$1(B, Dubai 근거 대용)과 포스코인터 +47억/$1(C)에 `wti` 행 추가. Brent 행은 기존 유지. 한국 도입계약은 Dubai/JCC 연동이라 WTI·Brent−Dubai 스프레드 확대 시 환산 오차 가능 — 근거 표에 명시.
+- 아침 브리핑 핵심 목록에 wti·brent 추가. `build-impact-evidence.mjs`의 연료 집합에 wti 포함.

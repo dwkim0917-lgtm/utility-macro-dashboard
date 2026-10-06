@@ -15,7 +15,7 @@ export function summarize(db,previous={},date=today()){
 export function buildBrief(db,audit,previous={},date=today()){
  const rows=summarize(db,previous,date),available=rows.filter(r=>!r.missing),changes=available.filter(r=>r.changed),snapshot=Object.fromEntries(available.map(r=>[r.id,{date:r.latest.date,value:r.latest.value,source:r.latest.source}]));
  const rank=r=>r.score+(r.frequency==='일간'?25:0)+(r.unit!=='%'&&r.unit!=='°C'&&Math.abs(r.week?.value||0)>=5?120:0);// 7일 ±5% 이상은 보완 지표도 승격
- const core=['jkm_futures','coal','usdkrw','kr3y','kau','rec'];
+ const core=['wti','brent','jkm_futures','coal','usdkrw','kr3y','kau','rec'];
  const chosen=core.map(id=>available.find(r=>r.id===id)).filter(Boolean);
  chosen.push(...available.filter(r=>!core.includes(r.id)).sort((a,b)=>rank(b)-rank(a)).slice(0,8-chosen.length));
  const title=`유틸리티 아침 브리핑 | ${date} KST`;
