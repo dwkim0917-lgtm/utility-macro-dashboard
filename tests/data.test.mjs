@@ -24,3 +24,6 @@ import {deriveSpread} from '../collector.mjs';
 test('JKM minus FEI spread derives only on shared dates and converts propane to MMBtu',()=>{const db={series:{jkm_futures:[{date:'2026-10-02',value:25.7,source:'a'},{date:'2026-10-05',value:25.71,source:'a'}],fei:[{date:'2026-10-05',value:932.58,source:'b'},{date:'2026-10-06',value:940,source:'b'}]}};const r=deriveSpread(db);assert.deepEqual(r.map(x=>[x.date,x.value]),[['2026-10-05',6.16]]);assert.deepEqual(deriveSpread({series:{}}),[]);});
 
 test('Derived spreads cover both FEI (converted) and HH (raw) pairs',()=>{const db={series:{jkm_futures:[{date:'2026-10-05',value:25.71,source:'a'}],fei:[{date:'2026-10-05',value:932.58,source:'b'}],hh_ng1:[{date:'2026-10-05',value:3.07,source:'c'}]}};assert.deepEqual(deriveSpread(db).map(x=>[x.id,x.value]),[['jkm_fei',6.16],['jkm_hh',22.64]]);});
+
+import {parseIci} from '../collector.mjs';
+test('ICI OCR rows yield GAR 4200 with ordering and range checks',()=>{const j={date:'2026-10-02',rows:{'4300':81.59,'4200':79.5,'4100':75.87}};assert.deepEqual(parseIci(j).map(r=>[r.id,r.date,r.value]),[['ici4','2026-10-02',79.5]]);assert.throws(()=>parseIci({rows:{'4200':79.5}}));assert.throws(()=>parseIci({date:'2026-10-02',rows:{'4300':70,'4200':79.5,'4100':75}}));assert.throws(()=>parseIci({date:'2026-10-02',rows:{'4200':300}}));});

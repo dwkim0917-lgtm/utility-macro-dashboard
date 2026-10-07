@@ -22,7 +22,7 @@ jobs:
         with: {node-version: '22'}
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
-      - run: pip install numpy pandas
+      - run: pip install numpy pandas rapidocr-onnxruntime pillow
       - name: Collect public sources
         run: node collector.mjs | tail -40
         continue-on-error: true

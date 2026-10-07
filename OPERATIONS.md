@@ -227,3 +227,9 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - `chart()` 재작성: 보기 좋은 눈금(nice step 4~5단), 연/월 X축 라벨, 기간 평균 점선, 면적 음영, 최신값 라벨(우측 칩), 끝점 표식, 70개 이하 계열만 점 표시(그 이상은 투명 hit 영역에 툴팁). 막대 모드는 0선·부호별 색 유지.
 - 카드 아래 `legend()` 범례: 선 계열은 출처·최신 관측일·기간 평균, 막대 계열은 카탈로그 `legend:{pos,neg}` 문구(JKM−FEI: LPG가 열량당 저렴/LNG가 저렴, JKM−HH: JKM 프리미엄/역전).
 - 그룹별 선 색(`data-group`): 에너지 파랑, 전력·요금 초록, 수요·가동 보라, 금리·환율 황갈, 상사·원자재 분홍.
+
+
+## ICI 인니 저열량탄 GAR 4200 (2026-10-07)
+- `ici4`: coaltradeindo.com/ici-coal-price/ 의 주간 FOB 가격표는 이미지라 `ici_ocr.py`(rapidocr-onnxruntime)로 OCR 한다. 수집 잡 `Coaltradeindo ICI GAR4200`이 페이지에서 `Indonesian-Coal-Price-updated-<d>-<Month>-<yyyy>.jpg` 링크를 찾아 날짜를 파일명에서 읽고, 이미지를 `data/ici/`에 저장한 뒤 OCR 결과 JSON(추적)과 함께 GAR 4200 행 값을 저장한다. 검증: 20~250 범위, GAR 4300 ≥ 4200 ≥ 4100 순서.
+- 선택 근거: LX인터내셔널 GAM 광산 자체생산탄 열량 GAR 3,800~4,200 범위의 실현 판가 프록시(사용자 지정). 공식 Argus/Coalindo ICI-4가 아닌 트레이더 호가 표이며, ESDM HBA II(GAR 4,100, 격주 고시: 2026-10 1기 $63.45)와 기준이 달라 수준 차이가 있다.
+- 이력: 사이트가 최신 주만 게시하고 Wayback 스냅샷도 1건(2025-10-05)뿐이라 2026-10-02부터 주간 누적. 로컬·클라우드 모두 OCR 실행(워크플로에 rapidocr 설치 추가). OCR 실패 시 잡 실패로 표시되고 기존 값 유지.

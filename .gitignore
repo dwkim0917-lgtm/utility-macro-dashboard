@@ -27,3 +27,6 @@ data/*
 !data/stock-raw/
 !data/scfi-datawrapper.json
 !data/oil-curve.json
+!data/ici/
+data/ici/*.jpg
+data/ici/*.png
