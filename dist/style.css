@@ -26,3 +26,23 @@
 #oil-curve table{min-width:0;font-size:12px}#oil-curve td.num{text-align:right;white-space:nowrap}#oil-curve td.num small{display:block;color:var(--muted);font-size:10px}#oil-curve th{font-size:11px}
 
 .card svg rect.bar.pos{fill:#2a78d6}.card svg rect.bar.neg{fill:#d85a30}.card svg line.zero{stroke:#8a9499;stroke-dasharray:3 3}
+
+/* 2026-10-07 차트 정리: 그룹 색, 눈금, 평균선, 최신값 라벨, 범례 */
+.card[data-group="에너지"]{--chart-color:#2a78d6}.card[data-group="전력·요금"]{--chart-color:#1d9e75}.card[data-group="수요·가동"]{--chart-color:#6250d6}.card[data-group="금리·환율"]{--chart-color:#c98500}.card[data-group="상사·원자재"]{--chart-color:#d4537e}
+.chart svg text{font-size:9.5px;fill:#8a969b;font-variant-numeric:tabular-nums}.chart .ytick{fill:#8a969b}.chart .xlabel{fill:#8a969b}
+.gridline{stroke:#e6ebee;stroke-dasharray:none;stroke-width:1}.axis{stroke:#cfd8dc;stroke-width:1}.xtick{stroke:#cfd8dc;stroke-width:1}
+.line{stroke:var(--chart-color);stroke-width:1.6;fill:none;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.area{fill:var(--chart-color);opacity:.09}
+.point{fill:var(--chart-color);stroke:#f9faf8;stroke-width:1}
+.hit{fill:var(--chart-color);opacity:0}.hit:hover{opacity:.55}
+.end{fill:var(--chart-color);stroke:#fff;stroke-width:2}
+.meanline{stroke:#9aa6ab;stroke-dasharray:4 3;stroke-width:1}
+.vlabel rect{fill:var(--chart-color)}.vlabel text{fill:#fff;font-size:9.5px;font-weight:600}.vlabel line{stroke:var(--chart-color);stroke-width:1}
+.card svg rect.bar.pos,svg rect.bar.pos{fill:#2a78d6}.card svg rect.bar.neg,svg rect.bar.neg{fill:#d85a30}.card svg line.zero,svg line.zero{stroke:#5f6b70;stroke-dasharray:none;stroke-width:1}
+.legend{display:flex;flex-wrap:wrap;gap:3px 12px;font-size:9.5px;color:var(--muted);padding:3px 14px 0;line-height:1.5}
+.legend .sw{display:inline-block;width:12px;height:2px;border-radius:1px;vertical-align:middle;margin-right:4px;background:var(--chart-color)}
+.legend .sw.dash{background:repeating-linear-gradient(90deg,#9aa6ab 0 3px,transparent 3px 5px)}
+.legend .sw.dot{width:7px;height:7px;border-radius:50%;border:1.5px solid #fff;box-shadow:0 0 0 1px var(--chart-color)}
+.legend .sw.bar{width:8px;height:8px;border-radius:1px}.legend .sw.bar.pos{background:#2a78d6}.legend .sw.bar.neg{background:#d85a30}.legend .sw.zero{background:#5f6b70;height:1px}
+.chart{height:176px}
+#detail-body .chart{height:360px}

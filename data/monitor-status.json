@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-10-06T01:05:57.208Z",
+  "checkedAt": "2026-10-07T00:08:44.230Z",
   "status": "complete",
-  "note": "10/6 08:05 공개 수집 전체 연결 실패 후 09:58 실제 작업 재개. 지연/실패를 표시한 Telegram 발송 후 공개 18작업 재시도 성공. 웹 신규12·수정4 및 BigFinance 검증10행 반영.",
+  "note": "10/7 아침 실패 원천 재시도 복구. 웹 신규2·동일2 및 BigFinance 검증10행 반영, 분석 검증 완료.",
   "missing": [
     "jkm",
     "lpg_cp",
@@ -30,6 +30,34 @@
       "last": "2026-10-05"
     },
     {
+      "id": "fei",
+      "name": "프로판 · Argus FEI 선물(CME)",
+      "count": 3457,
+      "first": "2012-12-17",
+      "last": "2026-10-05"
+    },
+    {
+      "id": "jkm_fei",
+      "name": "JKM − FEI 스프레드 · 열량 환산",
+      "count": 3062,
+      "first": "2013-01-09",
+      "last": "2026-10-05"
+    },
+    {
+      "id": "hh_ng1",
+      "name": "Henry Hub · NYMEX 최근월 선물(당일)",
+      "count": 6555,
+      "first": "2000-08-30",
+      "last": "2026-10-06"
+    },
+    {
+      "id": "jkm_hh",
+      "name": "JKM − Henry Hub 스프레드",
+      "count": 3104,
+      "first": "2012-09-27",
+      "last": "2026-10-05"
+    },
+    {
       "id": "jkm",
       "name": "JKM · 아시아 LNG 현물",
       "count": 0,
@@ -42,6 +70,34 @@
       "count": 4573,
       "first": "2008-12-08",
       "last": "2026-10-05"
+    },
+    {
+      "id": "wti_cl1",
+      "name": "WTI · NYMEX 최근월 선물(당일)",
+      "count": 6557,
+      "first": "2000-08-23",
+      "last": "2026-10-06"
+    },
+    {
+      "id": "brent_b1",
+      "name": "Brent · ICE 최근월 선물(당일)",
+      "count": 4776,
+      "first": "2007-07-30",
+      "last": "2026-10-06"
+    },
+    {
+      "id": "wti_m12",
+      "name": "WTI · 12개월 뒤 월물 선물가",
+      "count": 1,
+      "first": "2026-10-06",
+      "last": "2026-10-06"
+    },
+    {
+      "id": "brent_m12",
+      "name": "Brent · 12개월 뒤 월물 선물가",
+      "count": 1,
+      "first": "2026-10-06",
+      "last": "2026-10-06"
     },
     {
       "id": "wti",
@@ -207,9 +263,9 @@
     {
       "id": "cpo",
       "name": "팜유 · CME 말레이시아 CPO 스왑",
-      "count": 3957,
+      "count": 3958,
       "first": "2010-05-25",
-      "last": "2026-10-02"
+      "last": "2026-10-05"
     },
     {
       "id": "wci",
@@ -248,44 +304,15 @@
     }
   ],
   "failures": [],
-  "imported": 26,
+  "imported": 14,
   "importDetails": {
-    "webNew": 12,
-    "webRevised": 4,
+    "webNew": 2,
+    "webRevised": 0,
+    "webVerified": 2,
     "bigfinanceVerified": 10,
-    "revisions": [
-      {
-        "id": "coal",
-        "date": "2026-09-29",
-        "value": 145.2,
-        "previous": 144.85,
-        "type": "revised"
-      },
-      {
-        "id": "coal",
-        "date": "2026-09-30",
-        "value": 146.5,
-        "previous": 146.25,
-        "type": "revised"
-      },
-      {
-        "id": "kr3y",
-        "date": "2026-09-30",
-        "value": 4.011,
-        "previous": 4.035,
-        "type": "revised"
-      },
-      {
-        "id": "ttf",
-        "date": "2026-09-30",
-        "value": 72.357,
-        "previous": 72.355,
-        "type": "revised"
-      }
-    ],
-    "publicCollectorAt": "2026-10-06T01:04:09.323Z",
-    "publicProcessedRows": 61061,
-    "publicJobs": 19
+    "publicCollectorAt": "2026-10-06T06:01:42.191Z",
+    "publicJobs": 25,
+    "publicProcessedRows": 88575
   },
   "knownHistoricalLimitations": [
     {
@@ -299,9 +326,9 @@
   ],
   "analysis": {
     "status": "complete",
-    "generatedAt": "2026-10-06T01:11:13.398768+00:00",
+    "generatedAt": "2026-10-07T00:07:09.086833+00:00",
     "asOfMonth": "2026-09",
-    "hypothesisCount": 13739
+    "hypothesisCount": 17287
   },
   "maintenance": "8765 서버 PID 확인 후 중단, 원본 백업, 해당 write.lock 제거, 별도 collector 저장 성공 후 서버 재시작. 코드/권한 변경 없음.",
   "environmental": {
@@ -311,11 +338,11 @@
     "recMonthlyLast": "2025-12-01"
   },
   "telegram": {
-    "date": "2026-10-06",
+    "date": "2026-10-07",
     "status": "sent",
-    "messageId": 3873,
-    "at": "2026-10-06T00:58:43.947Z",
-    "messagePath": "C:\\Users\\park jiyeon\\Desktop\\김동욱\\5. 섹터 리서치\\utility-macro-dashboard\\data\\telegram-brief-2026-10-06.txt"
+    "messageId": 3887,
+    "at": "2026-10-06T23:56:42.773Z",
+    "messagePath": "C:\\Users\\park jiyeon\\Desktop\\김동욱\\5. 섹터 리서치\\utility-macro-dashboard\\data\\telegram-brief-2026-10-07.txt"
   },
   "lastCheck": {
     "at": "2026-10-06T01:05:57.208Z",
@@ -325,10 +352,9 @@
   },
   "bigfinanceSession": {
     "status": "authenticated",
-    "checkedAt": "2026-10-06T01:05:57.208Z",
-    "lastAuthenticatedAt": "2026-10-06T01:05:57.208Z",
-    "mode": "기업 사용자",
-    "note": "기존 승인 계정 정상 로그인 복구, 실제 툴팁 검증"
+    "checkedAt": "2026-10-07T00:08:44.230Z",
+    "lastAuthenticatedAt": "2026-10-07T00:08:44.230Z",
+    "mode": "기업 사용자"
   },
   "commodityAvailabilityCheck": {
     "at": "2026-09-21T00:33:54.385Z",
@@ -336,8 +362,8 @@
     "result": "확인한 목록에서 ICI4·우드펠릿·Saudi CP 명시 계열을 찾지 못함. 사이트 전체 미제공을 뜻하지 않음."
   },
   "bigfinanceVerification": {
-    "at": "2026-10-06T01:05:57.208Z",
-    "file": "data/manual-verified-2026-10-06.json",
+    "at": "2026-10-07T00:08:44.230Z",
+    "file": "data/manual-verified-2026-10-07.json",
     "observations": 10,
     "new": 0,
     "revised": 0,
@@ -354,8 +380,8 @@
     "status": "effective-and-imported"
   },
   "analysisRecovery": "10/2 잔존 잠금 확인. 관련 실행 프로세스 부재 확인 후 정확한 analysis-refresh.lock만 제거하고 재실행.",
-  "lastHeartbeatAt": "2026-10-06T01:16:20.325Z",
-  "lastHeartbeatNote": "동일 날짜 재호출: 공개 수집·BigFinance 10행 검증·웹 보완·분석 완료 및 Telegram message_id=3873 확인. 중복 수집/발송 생략.",
+  "lastHeartbeatAt": "2026-10-07T00:08:44.230Z",
+  "lastHeartbeatNote": "오늘 발송·분석 성공 확인. 최종 검증에서 과거로 돌아간 monitor 표시를 실제 오늘 기록으로 재동기화.",
   "corrections": [],
   "recoveredFailures": [
     {
