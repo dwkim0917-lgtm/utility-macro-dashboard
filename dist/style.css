@@ -46,3 +46,5 @@
 .legend .sw.bar{width:8px;height:8px;border-radius:1px}.legend .sw.bar.pos{background:#2a78d6}.legend .sw.bar.neg{background:#d85a30}.legend .sw.zero{background:#5f6b70;height:1px}
 .chart{height:176px}
 #detail-body .chart{height:360px}
+
+.chart .note{fill:#b2552f;font-size:9px}
