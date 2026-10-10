@@ -34,3 +34,11 @@ test('Monthly SMP from daily needs 5+ days and averages simply',()=>{const s=Arr
 
 import {deriveSpread as deriveSpread2, DERIVED as DERIVED2} from '../collector.mjs';
 test('tariff − SMP spread joins same month and uses latest source of each series',()=>{const db={series:{tariff:[{date:'2026-06-01',value:175.2,source:'BF'},{date:'2026-07-01',value:179.7,source:'BF'}],smp:[{date:'2026-07-01',value:133.8,source:'KPX'},{date:'2026-08-01',value:148.4,source:'KPX'}]}};const rows=deriveSpread2(db,DERIVED2.filter(d=>d.id==='tariff_smp'));assert.deepEqual(rows.map(r=>[r.id,r.date,r.value]),[['tariff_smp','2026-07-01',45.9]]);});
+
+import {buildKepcoForecast} from '../kepco-forecast.mjs';
+test('KEPCO forecast: tariff E = same month last year × recent YoY, SMP anchored on month-to-date',()=>{const series={smp:[],tariff:[],brent:[],usdkrw:[],jkm_futures:[],smp_mtd:[],smp_daily:[]};const mk=(id,date,value,source='s')=>series[id].push({id,date,value,source});
+ for(let y=2013;y<=2026;y++)for(let m=1;m<=12;m++){const d=`${y}-${String(m).padStart(2,'0')}-01`;if(d<='2026-09-01')mk('smp',d,100+10*Math.sin(m)+(y-2013));if(d<='2026-07-01')mk('tariff',d,150+m+(y>=2026?-1:0));mk('brent',`${y}-${String(m).padStart(2,'0')}-15`,70+m);mk('usdkrw',`${y}-${String(m).padStart(2,'0')}-15`,1300);mk('jkm_futures',`${y}-${String(m).padStart(2,'0')}-15`,12+m/4);}
+ mk('smp_mtd','2026-10-01',95);for(let d=1;d<=6;d++)mk('smp_daily',`2026-10-0${d}`,95);
+ const f=buildKepcoForecast({series});assert.equal(f.anchor.kind,'당월 누적');assert.equal(f.smpE[0].month,'2026-10');assert.equal(f.smpE[0].value,95);
+ const aug=f.tariffE.find(e=>e.month==='2026-08');const g=[5,6,7].map(m=>(149+m)/(150+m)-1).reduce((a,b)=>a+b,0)/3;assert.ok(Math.abs(aug.value-Math.round(158*(1+g)*10)/10)<0.11);
+ assert.ok(f.spreadE.every(s=>Number.isFinite(s.value)));});

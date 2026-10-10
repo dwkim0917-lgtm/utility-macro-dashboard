@@ -61,18 +61,12 @@
 .compare{gap:4px;padding-top:5px}.compare span{display:inline-flex;align-items:baseline;gap:3px;padding:2px 6px;border-radius:3px;background:#f1f4f5;font-size:10px;font-weight:600;white-space:nowrap}
 .compare span small{font-weight:500;color:#8a969b;font-size:9px;margin:0}.compare span.rise{color:#c0392b;background:#fbeeee}.compare span.fall{color:#2563eb;background:#edf2fd}.compare span.neutral{color:#74858d}
 
-/* 2026-10-10 한전 마진 패널: 판매단가·SMP 선 + 스프레드 막대 */
-#kepco-spread{--tar:#203540;--smp:#e0892b}
-.ks-chart svg{display:block;width:100%;height:auto;overflow:visible}
-.ks-chart text{fill:#8a969b;font-size:10px;font-variant-numeric:tabular-nums}
-.ks-chart .gridline{stroke:#e9eef0;stroke-dasharray:2 4}.ks-chart .axis,.ks-chart .xtick{stroke:#c9d3d7}.ks-chart .zero{stroke:#8a969b;stroke-width:1}
-.ks-line{fill:none;stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}.ks-line.tar{stroke:var(--tar)}.ks-line.smp{stroke:var(--smp)}
-.ks-bar.pos{fill:#2a78d6;opacity:.32}.ks-bar.neg{fill:#d85a30;opacity:.5}
-.ks-hit{fill:transparent}.ks-hit:hover{fill:#203540;opacity:.06}
-.ks-tag line{stroke:#c9d3d7;stroke-dasharray:2 2}.ks-tag text{font-size:10.5px;font-weight:600}.ks-tag text.d{font-size:9px;font-weight:400;fill:#8a969b}
-.ks-tag.tar text:not(.d){fill:var(--tar)}.ks-tag.smp text:not(.d){fill:var(--smp)}.ks-tag.spr text:not(.d){fill:#2a78d6}
-.ks-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#5c6d75;margin:4px 0 8px}
-.ks-sw{display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}.ks-sw.tar{background:#203540}.ks-sw.smp{background:#e0892b}.ks-sw.spr,.ks-sw.bar.pos{background:#2a78d6;opacity:.6;height:9px;width:10px}.ks-sw.bar.neg{background:#d85a30;opacity:.7;height:9px;width:10px}
-.ks-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}.ks-table th,.ks-table td{text-align:left;padding:5px 8px;border-bottom:1px solid #edf0ee}.ks-table td:nth-child(3),.ks-table td:nth-child(4){font-variant-numeric:tabular-nums}
-.ks-q{font-size:12px;color:#5c6d75;margin:8px 0 0}
-@media(max-width:700px){.ks-table th:nth-child(5),.ks-table td:nth-child(5){display:none}}
+/* 2026-10-10 한전 마진 카드: 판매단가·SMP 선 + 스프레드 막대 + E */
+.kchart .k-line{fill:none;stroke-width:1.7;stroke-linejoin:round;vector-effect:non-scaling-stroke}.kchart .k-line.tar{stroke:#203540}.kchart .k-line.smp{stroke:#e0892b}.kchart .k-line.est{stroke-dasharray:3 3}
+.kchart .k-bar.pos{fill:#2a78d6;opacity:.38}.kchart .k-bar.neg{fill:#d85a30;opacity:.55}.kchart .k-bar.est{opacity:.18}
+.kchart .k-eshade{fill:#203540;opacity:.045}.kchart .k-elabel{font-size:9px;font-weight:700;fill:#74858d}
+.kchart .k-hit{fill:transparent}.kchart .k-hit:hover{fill:#203540;opacity:.07}.kchart .zero{stroke:#8a969b;stroke-width:.8}
+.sw.est{background:repeating-linear-gradient(90deg,#74858d 0 3px,transparent 3px 5px)}
+.kzoom{display:inline-flex;align-items:center;gap:4px;margin-left:auto}.kzoom button{width:24px;height:22px;border:1px solid #d5dee2;background:#fff;border-radius:5px;color:#203540;cursor:pointer;font-size:13px;line-height:1}.kzoom button:hover{background:#edf4f0}.kzoom span{font-size:11px;color:#5c6d75;min-width:30px;text-align:center}
+.k-info{font-size:10.5px;color:#4b5b62;margin:3px 0;line-height:1.45}.k-info.muted{color:#8a969b}
+.k-more{margin:2px 0 0}.k-more summary{font-size:10.5px;color:#74858d;cursor:pointer}
