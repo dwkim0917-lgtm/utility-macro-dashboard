@@ -1,0 +1,19 @@
+{
+  "source": "Earnings Review 4Q25 · 한국전력 주요 지표(2026-02-26) — 4. 종목 리서치/Earnings Reveiw_2026_Q2_유틸리티_260730.xlsx, 시트 '4Q25 Review' B34:J41",
+  "note": "하우스 Earning model 분기 가정. 판매량(GWh)은 E 월 가중치에, 판매단가(원/kWh)는 대시보드 E와 대조용으로 쓴다. 모델 갱신 시 이 파일의 숫자만 바꾸면 된다.",
+  "updated": "2026-02-26",
+  "quarters": {
+    "2025Q1": {"volume": 141018, "tariff": 165, "usdkrw": 1452, "coal_kwon_t": 193, "lng_kwon_t": 1100, "kind": "P"},
+    "2025Q2": {"volume": 127341, "tariff": 164, "usdkrw": 1399, "coal_kwon_t": 185, "lng_kwon_t": 972, "kind": "P"},
+    "2025Q3": {"volume": 151506, "tariff": 175, "usdkrw": 1387, "coal_kwon_t": 165, "lng_kwon_t": 967, "kind": "P"},
+    "2025Q4": {"volume": 129551, "tariff": 173, "usdkrw": 1449, "coal_kwon_t": 170, "lng_kwon_t": 883, "kind": "P"},
+    "2026Q1": {"volume": 141029, "tariff": 165, "usdkrw": 1450, "coal_kwon_t": 176, "lng_kwon_t": 941, "kind": "F"},
+    "2026Q2": {"volume": 127230, "tariff": 164, "usdkrw": 1450, "coal_kwon_t": 182, "lng_kwon_t": 915, "kind": "F"},
+    "2026Q3": {"volume": 151556, "tariff": 176, "usdkrw": 1450, "coal_kwon_t": 187, "lng_kwon_t": 954, "kind": "F"},
+    "2026Q4": {"volume": 129493, "tariff": 172, "usdkrw": 1450, "coal_kwon_t": 187, "lng_kwon_t": 954, "kind": "F"}
+  },
+  "tariffEvents": [
+    {"from": "2026-10", "to": "2026-12", "change_won_kwh": 0, "basis": "4Q26 연료비조정단가 +5원 유지(2026-09-21 한전 발표). 4Q25도 +5원이라 전년 대비 영향 0"},
+    {"from": "2027-01", "to": "2027-03", "change_won_kwh": 0, "basis": "1Q27 미발표 → 동결 가정. 12월 발표 시 갱신"}
+  ]
+}

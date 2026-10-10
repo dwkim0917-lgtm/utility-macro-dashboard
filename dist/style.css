@@ -70,3 +70,4 @@
 .kzoom{display:inline-flex;align-items:center;gap:4px;margin-left:auto}.kzoom button{width:24px;height:22px;border:1px solid #d5dee2;background:#fff;border-radius:5px;color:#203540;cursor:pointer;font-size:13px;line-height:1}.kzoom button:hover{background:#edf4f0}.kzoom span{font-size:11px;color:#5c6d75;min-width:30px;text-align:center}
 .k-info{font-size:10.5px;color:#4b5b62;margin:3px 0;line-height:1.45}.k-info.muted{color:#8a969b}
 .k-more{margin:2px 0 0}.k-more summary{font-size:10.5px;color:#74858d;cursor:pointer}
+.k-qt{width:100%;border-collapse:collapse;font-size:10px;margin:4px 0;font-variant-numeric:tabular-nums}.k-qt th,.k-qt td{padding:2px 3px;text-align:right;border-bottom:1px solid #edf0ee;white-space:nowrap}.k-qt th:first-child,.k-qt td:first-child{text-align:left;color:#5c6d75}.k-qt small{color:#8a969b;margin-left:1px}

@@ -30,3 +30,4 @@ data/*
 !data/ici/
 data/ici/*.jpg
 data/ici/*.png
+!data/kepco-model.json
