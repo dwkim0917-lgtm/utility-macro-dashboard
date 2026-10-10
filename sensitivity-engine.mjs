@@ -5,7 +5,7 @@ import {sensitivities,opBase,dataAsOf} from './sensitivity-data.mjs';
 const day=86400000;
 const windows=[{key:'d1',label:'직전 관측'},{key:'d7',label:'7일',days:7},{key:'d30',label:'30일',days:30},{key:'d90',label:'90일',days:90},{key:'yoy',label:'전년 동기(계절성 제거)',days:365}];
 // 계절·용도 믹스로 월별 수준이 출렁이는 월간 지표: 전월 대비 환산은 오해 소지가 커 전년동월 비교를 기본으로 쓴다.
-export const seasonal=new Set(['tariff','purchase','smp','consumption','gas_sales']);
+export const seasonal=new Set(['tariff','purchase','smp','smp_daily','smp_mtd','consumption','gas_sales']);
 export function sameSourceRows(db,id,date){const all=(db.series?.[id]||[]).filter(r=>!date||r.date<=date);const latest=all.at(-1);return latest?all.filter(r=>r.source===latest.source):[];}
 export function moves(rows){const latest=rows.at(-1);if(!latest)return null;const out={latest,windows:{}};
  for(const w of windows){let base;if(!w.days)base=rows.at(-2);else{const target=Date.parse(latest.date)-w.days*day;base=rows.findLast(r=>Date.parse(r.date)<=target);if(base&&target-Date.parse(base.date)>Math.max(35,w.days)*day)base=null;}

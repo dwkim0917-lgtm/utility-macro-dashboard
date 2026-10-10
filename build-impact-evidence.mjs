@@ -35,7 +35,7 @@ companySources['017390']=['seoul_filing','seoul_2025'];
 const byPair={};const markets=new Set(['kr3y','credit','us10y']);const fuel=new Set(['fei','jkm_fei','hh_ng1','jkm_hh','wti_cl1','brent_b1','wti','brent','dubai','jkm','jkm_futures','ttf','hh']);const operating=new Set(['peak','reserve','consumption','nuclear','gas_sales']);
 for(const c of catalog){for(const e of c.effects){for(const code of e.codes){const key=c.id+':'+code;if(byPair[key])continue;let text=e.text,lag='계약·인도·검침 또는 결산 시점별. 기업 공통의 고정 개월 수는 확인되지 않음.',refs=companySources[code]||[],status='사업구조 근거 2개 · 개별 민감도는 조건부',notes=[];
 if(code==='015760'){
- if(['coal','wti_cl1','brent_b1','wti','brent','dubai','jkm','jkm_futures','ttf','hh','purchase','smp','usdkrw'].includes(c.id))text='연료·외부 전력의 조달비 상승은 이익에 부담. 전기 판매단가, 원전 발전량, 환율과 정산조정계수를 함께 비교해야 한다. SMP는 최종 구입단가와 다르다.';
+ if(['smp_daily','smp_mtd','coal','wti_cl1','brent_b1','wti','brent','dubai','jkm','jkm_futures','ttf','hh','purchase','smp','usdkrw'].includes(c.id))text='연료·외부 전력의 조달비 상승은 이익에 부담. 전기 판매단가, 원전 발전량, 환율과 정산조정계수를 함께 비교해야 한다. SMP는 최종 구입단가와 다르다.';
  if(c.id==='tariff')text='판매단가 상승은 단위 매출 증가 요인. 판매량·용도별 믹스와 원가를 함께 확인하며, 판매단가−구입단가를 연결 영업이익률로 해석하지 않는다.';
  if(c.id==='nuclear')text='원전 발전 비중 확대는 고비용 연료·외부 구입전력을 대체할 수 있다. 연간 이용률만으로 월별 실적과 주가 반응 시점은 추정할 수 없다.';
  if(markets.has(c.id)){text='차환·변동금리 이자비용과 할인율 경로가 있다. KB증권의 당시 모형에는 금리 1%p 상승 시 EPS 민감도가 제시되지만 현재 실적·주가 민감도로 그대로 적용할 수 없다.';notes.push('KB증권 p.2: 2025E EPS −26.3%, 2026E −10.4%. 당시 추정 모형의 시나리오이며 실측 계수가 아님.');}

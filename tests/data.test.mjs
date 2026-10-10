@@ -27,3 +27,7 @@ test('Derived spreads cover both FEI (converted) and HH (raw) pairs',()=>{const 
 
 import {parseIci} from '../collector.mjs';
 test('ICI OCR rows yield GAR 4200 with ordering and range checks',()=>{const j={date:'2026-10-02',rows:{'4300':81.59,'4200':79.5,'4100':75.87}};assert.deepEqual(parseIci(j).map(r=>[r.id,r.date,r.value]),[['ici4','2026-10-02',79.5]]);assert.throws(()=>parseIci({rows:{'4200':79.5}}));assert.throws(()=>parseIci({date:'2026-10-02',rows:{'4300':70,'4200':79.5,'4100':75}}));assert.throws(()=>parseIci({date:'2026-10-02',rows:{'4200':300}}));});
+
+import {parseKpxSmpWeek,deriveSmpMonthly} from '../kpx-smp-daily.mjs';
+test('KPX weekly SMP table yields daily weighted averages and handles year rollover',()=>{const h='<table><tr><th>구분</th><th>12.29(월)</th><th>12.30(화)</th><th>01.01(목)</th></tr><tr><td>1h</td><td>1</td><td>2</td><td>3</td></tr><tr><td>가중평균</td><td>104.33</td><td>106.7</td><td>-</td></tr></table>';const r=parseKpxSmpWeek(h,'2027-01-01');assert.deepEqual(r.map(x=>[x.date,x.value]),[['2026-12-29',104.33],['2026-12-30',106.7]]);assert.throws(()=>parseKpxSmpWeek('<table></table>','2026-10-10'));});
+test('Monthly SMP from daily needs 5+ days and averages simply',()=>{const s=Array.from({length:6},(_,i)=>({date:`2026-10-0${i+1}`,value:100+i,source:'KPX · 육지 SMP 일간 가중평균'}));assert.deepEqual(deriveSmpMonthly({series:{smp_daily:s}}).map(x=>[x.date,x.value]),[['2026-10-01',102.5]]);assert.equal(deriveSmpMonthly({series:{smp_daily:s.slice(0,4)}}).length,0);});
