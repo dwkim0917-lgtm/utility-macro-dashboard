@@ -264,3 +264,5 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - 요금이 바뀌면 `tariffEvents`에 기간과 전년 대비 원/kWh 변화를 넣는다(예: 1Q27 연료비조정단가 발표 시).
 
 2026-10-10 데이터 검증: Investing 4계열 10/6~10/9 종가 반영(TTF·석탄 10/5 장중값→종가 정정), 12개월물 날짜 버그 수정(수집일→거래일), BigFinance 로그인 복구 후 5계열 재검증(원천 신규 월 없음). 절차는 DATA_VERIFY_MANUAL.md, 자동 점검 verify-latest.mjs.
+
+2026-10-10 일정 변경: GitHub Actions 공개 수집을 평일(월~금) 08:10 KST로 변경. 로컬 예약 작업 `utility-dashboard-weekday-verify`(평일 08:40, Claude 앱 실행 중일 때)가 DATA_VERIFY_MANUAL.md 0~8단계(Investing·BigFinance 갱신, 교차검증, 배포 확인) 수행.
