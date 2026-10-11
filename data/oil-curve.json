@@ -1,94 +1,94 @@
 {
- "asOf": "2026-10-10T02:23:52.033Z",
+ "asOf": "2026-10-11T11:35:46.933Z",
  "wti": [
   {
    "contract": "2026-11",
    "symbol": "CLX26.NYM",
-   "price": 91.66,
+   "price": 91.85,
    "at": "2026-10-09T20:59:58.000Z"
   },
   {
    "contract": "2026-12",
    "symbol": "CLZ26.NYM",
-   "price": 90.8,
+   "price": 91.01,
    "at": "2026-10-09T20:59:58.000Z"
   },
   {
    "contract": "2027-01",
    "symbol": "CLF27.NYM",
-   "price": 89.87,
+   "price": 90,
    "at": "2026-10-09T20:59:57.000Z"
   },
   {
    "contract": "2027-02",
    "symbol": "CLG27.NYM",
-   "price": 88.71,
+   "price": 88.83,
    "at": "2026-10-09T20:59:58.000Z"
   },
   {
    "contract": "2027-03",
    "symbol": "CLH27.NYM",
-   "price": 87.54,
+   "price": 87.63,
    "at": "2026-10-09T21:00:00.000Z"
   },
   {
    "contract": "2027-04",
    "symbol": "CLJ27.NYM",
-   "price": 86.32,
+   "price": 86.41,
    "at": "2026-10-09T21:00:00.000Z"
   },
   {
    "contract": "2027-05",
    "symbol": "CLK27.NYM",
-   "price": 85.07,
+   "price": 85.18,
    "at": "2026-10-09T20:59:59.000Z"
   },
   {
    "contract": "2027-06",
    "symbol": "CLM27.NYM",
-   "price": 83.77,
+   "price": 83.95,
    "at": "2026-10-09T20:59:59.000Z"
   },
   {
    "contract": "2027-07",
    "symbol": "CLN27.NYM",
-   "price": 82.61,
+   "price": 82.72,
    "at": "2026-10-09T20:59:57.000Z"
   },
   {
    "contract": "2027-08",
    "symbol": "CLQ27.NYM",
-   "price": 81.37,
+   "price": 81.5,
    "at": "2026-10-09T20:59:57.000Z"
   },
   {
    "contract": "2027-09",
    "symbol": "CLU27.NYM",
-   "price": 80.12,
+   "price": 80.34,
    "at": "2026-10-09T20:11:53.000Z"
   },
   {
    "contract": "2027-10",
    "symbol": "CLV27.NYM",
-   "price": 79.02,
+   "price": 79.25,
    "at": "2026-10-09T19:51:10.000Z"
   },
   {
    "contract": "2027-11",
    "symbol": "CLX27.NYM",
-   "price": 78.05,
+   "price": 78.28,
    "at": "2026-10-09T20:11:18.000Z"
   },
   {
    "contract": "2027-12",
    "symbol": "CLZ27.NYM",
-   "price": 77.23,
+   "price": 77.39,
    "at": "2026-10-09T20:59:58.000Z"
   },
   {
    "contract": "2028-01",
    "symbol": "CLF28.NYM",
-   "price": 76.39,
+   "price": 76.57,
    "at": "2026-10-09T19:52:25.000Z"
   }
  ],
@@ -96,61 +96,61 @@
   {
    "contract": "2026-12",
    "symbol": "BZZ26.NYM",
-   "price": 104.43,
+   "price": 104.72,
    "at": "2026-10-09T20:59:58.000Z"
   },
   {
    "contract": "2027-01",
    "symbol": "BZF27.NYM",
-   "price": 101,
+   "price": 101.25,
    "at": "2026-10-09T20:59:30.000Z"
   },
   {
    "contract": "2027-02",
    "symbol": "BZG27.NYM",
-   "price": 98.14,
+   "price": 98.52,
    "at": "2026-10-09T20:11:18.000Z"
   },
   {
    "contract": "2027-03",
    "symbol": "BZH27.NYM",
-   "price": 96.11,
+   "price": 96.48,
    "at": "2026-10-09T20:11:20.000Z"
   },
   {
    "contract": "2027-04",
    "symbol": "BZJ27.NYM",
-   "price": 93.9,
+   "price": 94.72,
    "at": "2026-10-09T06:47:55.000Z"
   },
   {
    "contract": "2027-05",
    "symbol": "BZK27.NYM",
-   "price": 92.93,
+   "price": 93.07,
    "at": "2026-10-08T14:44:42.000Z"
   },
   {
    "contract": "2027-06",
    "symbol": "BZM27.NYM",
-   "price": 91.17,
+   "price": 91.47,
    "at": "2026-10-09T20:11:20.000Z"
   },
   {
    "contract": "2027-07",
    "symbol": "BZN27.NYM",
-   "price": 89.67,
+   "price": 89.94,
    "at": "2026-10-09T14:40:48.000Z"
   },
   {
    "contract": "2027-08",
    "symbol": "BZQ27.NYM",
-   "price": 82.22,
+   "price": 88.5,
    "at": "2026-09-15T18:29:15.000Z"
   },
   {
    "contract": "2027-09",
    "symbol": "BZU27.NYM",
-   "price": 86.91,
+   "price": 87.18,
    "at": "2026-10-09T14:55:35.000Z"
   },
   {
@@ -168,13 +168,13 @@
   {
    "contract": "2027-12",
    "symbol": "BZZ27.NYM",
-   "price": 83.55,
+   "price": 83.88,
    "at": "2026-10-09T15:20:16.000Z"
   },
   {
    "contract": "2028-01",
    "symbol": "BZF28.NYM",
-   "price": 81,
+   "price": 82.93,
    "at": "2026-10-06T12:26:35.000Z"
   }
  ]
