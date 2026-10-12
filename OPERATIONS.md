@@ -266,3 +266,17 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 2026-10-10 데이터 검증: Investing 4계열 10/6~10/9 종가 반영(TTF·석탄 10/5 장중값→종가 정정), 12개월물 날짜 버그 수정(수집일→거래일), BigFinance 로그인 복구 후 5계열 재검증(원천 신규 월 없음). 절차는 DATA_VERIFY_MANUAL.md, 자동 점검 verify-latest.mjs.
 
 2026-10-10 일정 변경: GitHub Actions 공개 수집을 평일(월~금) 08:10 KST로 변경. 로컬 예약 작업 `utility-dashboard-weekday-verify`(평일 08:40, Claude 앱 실행 중일 때)가 DATA_VERIFY_MANUAL.md 0~8단계(Investing·BigFinance 갱신, 교차검증, 배포 확인) 수행.
+
+## 원 발행기관 계열 추가 (2026-10-12)
+| 자원 | 신규 id / 원천 | 형식·주기 | 비고 |
+|---|---|---|---|
+| 팜유 | `cpo_mpob` 말레이시아 팜오일위원회(MPOB) CPO 국내 인도 현물 | bepi.mpob.gov.my/admin2/price_local_daily_view_cpo_msia.php (연도별 일×월 표, MYR/t), 일간 | 2024-01~ 667일 백필. 8:30 잠정치(**)는 확정치로 덮어씀 |
+| 컨테이너 | `scfi` 상하이항운교역소(SSE) 공식 JSON 추가 | en.sse.net.cn/currentIndex?indexName=scfi, 주간 | 9/30 3,662.30 = 기존 재게시값 일치. `sourceFamily`로 SSE 공식 우선, Opencontainer 재게시로 이력 보완 |
+| 컨테이너 | `kcci` 한국해양진흥공사(KOBC) KCCI 종합 | kobc.or.kr .../kcci/gridList.do, 매주 월 14시 | 금주·전주만 공개, 2026-09-28부터 누적 |
+| 인니 석탄 | `hba`, `hba2` 인니 ESDM 장관령 HBA(GAR 6,322 / 4,100) | 2025-01~ 41개 고시(보도 교차확인, data/hba-history.csv) + coaltradeindo 재게시 최신 고시 자동 | ESDM 원문 사이트(minerba·jdih) 점검 중 |
+| 원유 | `dubai_d` 한국석유공사 페트로넷 Dubai 일간 | POST petronet.co.kr/v4/sub.jsp, 당월 일자 | 같은 표의 Brent·WTI는 ICE B1·NYMEX CL1 선물 최근월과 소수점까지 일치 |
+
+- `sourceFamily`(catalog 옵션): 한 지표를 여러 출처 이름으로 받을 때 날짜별로 앞 순위 출처를 우선해 하나의 계열로 그린다(app.js points, morning-brief).
+- 연결 불가로 확인: METI 스팟 LNG(2021-03 조사 종료), 아람코 LPG CP(공식 공개 페이지 없음, Argaam 헤드라인만), KPBN(유료 회원), Bursa FCPO 공식 페이지(Cloudflare 403, Bernama 보도로만 확인), globalCOAL·ICE Newcastle 정산가(로그인·유료).
+- Henry Hub 현물(`hh`, FRED DHHNGSP)의 원 발행은 EIA이고, EIA는 원자료 제공처를 Refinitiv(LSEG)로 표기한다.
+- FRED Brent·WTI(EIA 현물)는 2026-10 들어 선물 최근월보다 Brent +20~30달러, WTI +5~8달러 높다(현물 프리미엄). 오류 아님, 해석 시 구분.

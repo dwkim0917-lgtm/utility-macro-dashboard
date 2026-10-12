@@ -1,6 +1,6 @@
 let payload,group='전체',stock='',period=3653;const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const n=(v,d=3)=>v.toLocaleString('ko-KR',{maximumFractionDigits:d});const stamp=s=>s?new Date(s).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}):'미수집';
 function cutoff(p=period){const d=new Date();d.setUTCHours(0,0,0,0);d.setUTCFullYear(d.getUTCFullYear()-({3653:10,1826:5,1096:3,366:1}[p]||0));return +d;}
-function points(id){const raw=payload.db.series[id]||[];const latest=raw.at(-1);return latest?raw.filter(r=>r.source===latest.source):[];}
+function points(id){const raw=payload.db.series[id]||[];const fam=payload.catalog?.find(c=>c.id===id)?.sourceFamily;if(fam){const by=new Map();for(const r of raw){const rk=fam.indexOf(r.source);if(rk<0)continue;const p=by.get(r.date);if(!p||rk<fam.indexOf(p.source))by.set(r.date,r);}return [...by.values()].sort((a,b)=>a.date.localeCompare(b.date));}const latest=raw.at(-1);return latest?raw.filter(r=>r.source===latest.source):[];}
 function age(date){return Math.floor((Date.now()-Date.parse(date))/86400000);}
 function niceStep(span,target=4){const raw=span/target||1,p=Math.pow(10,Math.floor(Math.log10(raw)));const m=raw/p;return (m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*p;}
 function fmtTick(v,step){if(Math.abs(v)>=100000)return n(v/1000,0)+'k';if(Math.abs(v)>=10000)return n(v/1000,1)+'k';const d=step>=1?0:step>=.1?1:2;return n(v,d);}
@@ -20,7 +20,7 @@ function chart(rows,item){if(!rows.length)return '<div class="empty"><span>아�
  const label=`<g class="vlabel"><line x1="${W-R}" x2="${W-R+3}" y1="${y(lastV.value).toFixed(1)}" y2="${ly.toFixed(1)}"/><rect x="${W-R+4}" y="${(ly-7).toFixed(1)}" width="${lw.toFixed(1)}" height="14" rx="3"/><text x="${(W-R+4+lw/2).toFixed(1)}" y="${(ly+3.5).toFixed(1)}" text-anchor="middle">${ltxt}</text></g>`;
  let marks;
  if(bars){const bw=Math.max(.8,(W-L-R)/vals.length*.82),y0=y(0);marks=`<line class="zero" x1="${L}" x2="${W-R}" y1="${y0.toFixed(1)}" y2="${y0.toFixed(1)}"/>`+vals.map(v=>{const yy=y(v.value);return `<rect class="bar ${v.value>=0?'pos':'neg'}" x="${(x(v)-bw/2).toFixed(2)}" y="${Math.min(yy,y0).toFixed(2)}" width="${bw.toFixed(2)}" height="${Math.max(.6,Math.abs(yy-y0)).toFixed(2)}"><title>${esc(v.date)} · ${n(v.value,2)} ${esc(item.unit)}</title></rect>`;}).join('');}
- else{const gap=item.frequency==='월간'?70:item.frequency==='분기'?150:item.frequency==='연간'?500:10;const segs=[];let cur=[];vals.forEach((v,i)=>{if(i&&(Date.parse(v.date)-Date.parse(vals[i-1].date))/864e5>=gap){segs.push(cur);cur=[];}cur.push(v);});segs.push(cur);
+ else{const gap=item.frequency==='월간'?70:item.frequency==='격주'?40:item.frequency==='분기'?150:item.frequency==='연간'?500:10;const segs=[];let cur=[];vals.forEach((v,i)=>{if(i&&(Date.parse(v.date)-Date.parse(vals[i-1].date))/864e5>=gap){segs.push(cur);cur=[];}cur.push(v);});segs.push(cur);
   const path=segs.map(s=>s.map((v,i)=>`${i?'L':'M'}${x(v).toFixed(2)},${y(v.value).toFixed(2)}`).join(' ')).join(' ');
   const area=segs.filter(s=>s.length>1).map(s=>`M${x(s[0]).toFixed(2)},${(H-B).toFixed(1)} `+s.map(v=>`L${x(v).toFixed(2)},${y(v.value).toFixed(2)}`).join(' ')+` L${x(s.at(-1)).toFixed(2)},${(H-B).toFixed(1)} Z`).join(' ');
   const dots=vals.length<=70?vals.map(v=>`<circle class="point" cx="${x(v).toFixed(2)}" cy="${y(v.value).toFixed(2)}" r="2.2"/>`).join(''):'';
@@ -31,12 +31,13 @@ function legend(rows,item){const vals=chartVals(rows);if(!vals.length)return '';
  if(item.chart==='bars')return `<div class="legend"><span><i class="sw bar pos"></i>${esc(lg.pos||'양(+)')}</span><span><i class="sw bar neg"></i>${esc(lg.neg||'음(−)')}</span><span><i class="sw dash"></i>기간 평균 ${n(mean,dec)}</span><span><i class="sw zero"></i>0선</span></div>`;
  return `<div class="legend"><span><i class="sw line"></i>${esc(lg.series||item.sourceHint||'관측값')}</span><span><i class="sw dot"></i>최신 ${esc(vals.at(-1).date)}</span><span><i class="sw dash"></i>기간 평균 ${n(mean,dec)}</span></div>`;}
 // 변동 표기: 주 뱃지는 직전 관측 대비(일간=전 거래일, 월간=전월, 연간=전년). 보조 줄은 1W·1M·3M·1Y(월간 1M·3M·1Y).
-const primaryLabel=(f,id)=>f==='일간'?'전일':f==='주간'?(id==='rec'?'직전 거래일':'전주'):f==='월간'?'전월':f==='분기'?'전분기':f==='연간'?'전년':'직전';
+const primaryLabel=(f,id)=>f==='일간'?'전일':f==='주간'?(id==='rec'?'직전 거래일':'전주'):f==='격주'?'직전 고시':f==='월간'?'전월':f==='분기'?'전분기':f==='연간'?'전년':'직전';
 function diffText(a,b,unit){const c=a.value-b.value,f=(v,d,u)=>{const r=Number(v.toFixed(d));return (r>0?'+':'')+n(r===0?0:r,d)+u;};if(unit==='%')return f(c,2,'%p');if(unit==='°C')return f(c,1,'°C');if(unit==='USD/MMBtu'&&(a.id==='jkm_fei'||a.id==='jkm_hh'))return f(c,2,' $');return b.value!==0?f(c/Math.abs(b.value)*100,2,'%'):'비교 불가';}
 function baseBefore(rows,last,days,tol){const target=Date.parse(last.date)-days*86400000;const b=rows.findLast(r=>Date.parse(r.date)<=target);return b&&b!==last&&target-Date.parse(b.date)<=tol*86400000?b:null;}
 function compareList(rows,item){const last=rows.at(-1),f=item.frequency,out=[];const add=(label,b)=>{if(b)out.push({label,from:b.date,text:diffText(last,b,item.unit),cls:last.value>b.value?'rise':last.value<b.value?'fall':'neutral'});};
  if(f==='일간'||f==='주간'){add('1W',baseBefore(rows,last,7,6));add('1M',baseBefore(rows,last,30,10));add('3M',baseBefore(rows,last,91,14));add('1Y',baseBefore(rows,last,365,15));}
  else if(f==='월간'){add('1M',baseBefore(rows,last,28,20));add('3M',baseBefore(rows,last,89,35));add('1Y',rows.find(r=>r.date===(Number(last.date.slice(0,4))-1)+last.date.slice(4))||null);}
+ else if(f==='격주'){add('1M',baseBefore(rows,last,31,16));add('3M',baseBefore(rows,last,92,16));add('1Y',baseBefore(rows,last,365,16));}
  else if(f==='분기'){add('1Y',baseBefore(rows,last,365,50));}
  return out;}
 // ── 2026-10-10 한전 마진 카드: 판매단가·SMP 선 + 스프레드 막대 + E(추정), 카드 크기, 확대·축소
