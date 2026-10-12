@@ -71,3 +71,6 @@
 .k-info{font-size:10.5px;color:#4b5b62;margin:3px 0;line-height:1.45}.k-info.muted{color:#8a969b}
 .k-more{margin:2px 0 0}.k-more summary{font-size:10.5px;color:#74858d;cursor:pointer}
 .k-qt{width:100%;border-collapse:collapse;font-size:10px;margin:4px 0;font-variant-numeric:tabular-nums}.k-qt th,.k-qt td{padding:2px 3px;text-align:right;border-bottom:1px solid #edf0ee;white-space:nowrap}.k-qt th:first-child,.k-qt td:first-child{text-align:left;color:#5c6d75}.k-qt small{color:#8a969b;margin-left:1px}
+
+/* 핵심 지표 ★ 선택 (2026-10-13) */
+.card-top .star{font-size:15px;line-height:1;padding:2px 5px;border:0;background:none;color:#b8c2c6;cursor:pointer;opacity:1}.card-top .star:hover{color:#c9a227}.card-top .star.on{color:#d4a017}.card-top .tools .star{visibility:visible}#tabs .core-reset{font-size:11px;margin-left:6px;padding:4px 8px;border:1px dashed #c9d3d6;border-radius:4px;background:#fff;color:#5b6b72;cursor:pointer}
