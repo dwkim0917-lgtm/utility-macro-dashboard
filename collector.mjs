@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {parseEpsisSmp} from './epsis-source.mjs';
 import {fetchSmpDaily,deriveSmpMonthly} from './kpx-smp-daily.mjs';
-import {parseNuclear} from './nuclear-source.mjs';
+import {parseNuclear,parseNuclearLive} from './nuclear-source.mjs';
 import {environmentalJobs} from './environmental-source.mjs';
 import {catalog} from './catalog.mjs';
 import {mergeRows,mutate,today,ROOT} from './store.mjs';
@@ -61,6 +61,7 @@ export function parsePetronet(html){const yr=(html.match(/(20\d{2})년(?:&nbsp;|
 export async function refresh(){const jobs=catalog.filter(x=>x.fred).map(x=>({name:'FRED '+x.fred,ids:[x.id],run:async()=>parseFred(await fetchText(`https://fred.stlouisfed.org/graph/fredgraph.csv?id=${x.fred}&cosd=1900-01-01`),x.id,x.fred)}));
  jobs.push({name:'KPX 장기 SMP',ids:['smp'],run:async()=>parseEpsisSmp(await fetchText('https://epsis.kpx.or.kr/epsisnew/selectEkmaSmpSmpChart.do?menuId=040201'))});
  jobs.push({name:'한수원 연간 이용률',ids:['nuclear'],run:async()=>parseNuclear(await fetchText('https://npp.khnp.co.kr/ON004004002001003'))});
+ jobs.push({name:'한수원 실시간 운영현황',ids:['nuclear_live','nuclear_units'],run:async()=>parseNuclearLive(await fetchText('https://npp.khnp.co.kr/'),today())});
  jobs.push({name:'KOGAS 연말 미수금',ids:['receivable'],run:async()=>parseReceivable(await fetchText('https://www.kogas.or.kr/site/koGas/1040403010000'))});
  jobs.push({name:'KPX SMP',ids:['smp'],run:async()=>parseSmp(await fetchText('https://new.kpx.or.kr/smpMonthly.es?mid=a10404080300'))},{name:'KOGAS 요금',ids:['gas_power','gas_chp'],run:async()=>parseKogas(await fetchText('https://www.kogas.or.kr/site/koGas/1040402000000'))},{name:'KPX 수요',ids:['peak','reserve'],run:async()=>parseDemand(await fetchText('https://new.kpx.or.kr/powerDemandPerform.es?mid=a10404060000'))},
  {name:'서울 기온 재분석',ids:['temperature'],run:async()=>{const end=new Date(Date.now()-6*86400000).toISOString().slice(0,10);const start=new Date(Date.now()-3653*86400000).toISOString().slice(0,10);const url=`https://archive-api.open-meteo.com/v1/archive?latitude=37.5665&longitude=126.9780&start_date=${start}&end_date=${end}&daily=temperature_2m_mean&timezone=Asia%2FSeoul`;const j=JSON.parse(await fetchText(url));if(!j.daily?.time?.length)throw Error('기온 응답 형식 오류');return j.daily.time.flatMap((date,i)=>j.daily.temperature_2m_mean[i]===null?[]:[{id:'temperature',date,value:j.daily.temperature_2m_mean[i],source:'Open-Meteo · ERA5 재분석',url:'https://open-meteo.com/en/docs/historical-weather-api'}]);}});

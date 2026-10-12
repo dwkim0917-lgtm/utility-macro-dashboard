@@ -280,3 +280,5 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - 연결 불가로 확인: METI 스팟 LNG(2021-03 조사 종료), 아람코 LPG CP(공식 공개 페이지 없음, Argaam 헤드라인만), KPBN(유료 회원), Bursa FCPO 공식 페이지(Cloudflare 403, Bernama 보도로만 확인), globalCOAL·ICE Newcastle 정산가(로그인·유료).
 - Henry Hub 현물(`hh`, FRED DHHNGSP)의 원 발행은 EIA이고, EIA는 원자료 제공처를 Refinitiv(LSEG)로 표기한다.
 - FRED Brent·WTI(EIA 현물)는 2026-10 들어 선물 최근월보다 Brent +20~30달러, WTI +5~8달러 높다(현물 프리미엄). 오류 아님, 해석 시 구분.
+
+2026-10-12 원전 이용률: 연간 카드(2025 84.6%)가 최신처럼 보이던 문제 → `nuclear_live`(한수원 실시간 운영현황 발전량÷설비용량)·`nuclear_units`(운전 호기 수) 일간 계열 추가, 연간 카드는 "연간 확정"으로 명칭 변경. 첫 관측 10/12 79.7%, 26기 중 19기 운전.

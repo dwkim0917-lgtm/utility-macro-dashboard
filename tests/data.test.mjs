@@ -54,3 +54,6 @@ test('HBA page parses reference date and GAR 6322 / 4100 rows',()=>{const h='<p>
 
 import {parsePetronet} from '../collector.mjs';
 test('PetroNet table yields daily Dubai with year from header, skipping summary rows',()=>{const h='<h5 class="calender">2026년&nbsp;10월&nbsp;01일 ~ 2026년&nbsp;10월&nbsp;09일</h5><table id="csvExportTable0"><tr><th>일</th><th>Dubai</th></tr><tr><td class="title_td">10월&nbsp;09일</td><td class="right">108.50</td><td>104.72</td></tr><tr class="result_td"><td>평균</td><td>108.07</td></tr></table>';assert.deepEqual(parsePetronet(h).map(r=>[r.date,r.value]),[['2026-10-09',108.5]]);});
+
+import {parseNuclearLive} from '../nuclear-source.mjs';
+test('KHNP live status yields utilization snapshot and running units',()=>{const h='<div>실시간 운영현황</div><span>원자력 설비용량</span><b>26,050</b> MW <span>원자력 발전량</span><b>20,769</b> MWe <p>운영현황 26기중 19기 운전중</p>';const r=parseNuclearLive(h,'2026-10-12');assert.deepEqual(r.map(x=>[x.id,x.date,x.value]),[['nuclear_live','2026-10-12',79.7],['nuclear_units','2026-10-12',19]]);assert.throws(()=>parseNuclearLive('<p>없음</p>','2026-10-12'));});
