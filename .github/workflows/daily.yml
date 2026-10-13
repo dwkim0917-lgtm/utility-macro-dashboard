@@ -26,6 +26,9 @@ jobs:
       - name: Collect public sources
         run: node collector.mjs | tail -40
         continue-on-error: true
+      - name: Audit data (dates, display, second-source checks)
+        run: node audit-data.mjs | tail -12
+        continue-on-error: true
       - name: Refresh price relationship analysis
         env: {UTILITY_ANALYSIS_PYTHON: python3}
         run: node refresh-analysis.mjs 2>&1 | tail -20

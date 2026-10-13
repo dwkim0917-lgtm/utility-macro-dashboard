@@ -4,12 +4,13 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {catalog} from './catalog.mjs';
 import {ROOT,readStore,today} from './store.mjs';
+import {settledBars} from './yahoo-bars.mjs';
 const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36';
 const day=864e5;
 // 대시보드 id → 독립 출처(같은 상품·같은 정의). tol=허용 상대오차. Yahoo KRW=X는 일봉 날짜가 하루 어긋나(10/2 값=Investing 10/2 시가) 제외 — 환율은 FRED와 Investing으로 대조
 const XY={wti_cl1:['CL=F',0.002],brent_b1:['BZ=F',0.002],hh_ng1:['NG=F',0.005],cpo:['CPO=F',0.005],fei:['A7E=F',0.005],jkm_futures:['JKM=F',0.003],ttf:['TTF=F',0.01],us10y:['^TNX',0.01]};
 const XF={wti:'DCOILWTICO',brent:'DCOILBRENTEU',hh:'DHHNGSP',usdkrw:'DEXKOUS',us10y:'DGS10'};
-async function yahoo(sym){const r=await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=1mo&interval=1d`,{headers:{'User-Agent':UA},signal:AbortSignal.timeout(20000)});const x=(await r.json())?.chart?.result?.[0];if(!x?.timestamp)return new Map();const off=x.meta.gmtoffset||0;const m=new Map();x.timestamp.forEach((t,i)=>{const v=x.indicators.quote[0].close[i];if(v>0)m.set(new Date((t+off)*1000).toISOString().slice(0,10),v);});return m;}
+async function yahoo(sym){const r=await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=1mo&interval=1d`,{headers:{'User-Agent':UA},signal:AbortSignal.timeout(20000)});try{return new Map(settledBars(await r.json()).map(b=>[b.date,b.close]));}catch{return new Map();}}
 async function fred(id){const r=await fetch(`https://fred.stlouisfed.org/graph/fredgraph.csv?id=${id}&cosd=${new Date(Date.now()-40*day).toISOString().slice(0,10)}`,{headers:{'User-Agent':UA},signal:AbortSignal.timeout(20000)});const m=new Map();for(const l of (await r.text()).trim().split('\n').slice(1)){const [d,v]=l.split(',');if(v&&v!=='.')m.set(d,Number(v));}return m;}
 const db=await readStore();const t0=Date.parse(today());const rows=[];
 for(const c of catalog){const s=db.series[c.id]||[];const l=s.at(-1);if(!l){rows.push({id:c.id,name:c.name,status:'미연결'});continue;}

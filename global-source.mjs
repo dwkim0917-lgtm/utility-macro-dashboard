@@ -1,5 +1,6 @@
 // 해외(일본·미국) 지표·종목 원천 (2026-10-13). 외부 라이브러리 없이 CSV·XLSX를 직접 읽는다.
 import zlib from 'node:zlib';
+import {settledBars} from './yahoo-bars.mjs';
 const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36';
 const get=async(url,ms=60000)=>{const r=await fetch(url,{signal:AbortSignal.timeout(ms),headers:{'User-Agent':UA}});if(!r.ok)throw Error('HTTP '+r.status+' '+url);return r;};
 const kstToday=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul'}).format(new Date());
@@ -28,8 +29,7 @@ export const globalMarkets={'1306.T':'TOPIX (NEXT FUNDS ETF)','^GSPC':'S&P 500'}
 export const globalNames=Object.fromEntries(Object.entries(globalStocks).map(([k,v])=>[k,v.name]));
 
 // Yahoo 일별 종가: 거래소 현지 날짜(gmtoffset 반영). 당일(미확정)은 제외.
-export function parseYahooLocal(j,id,source,url){const r=j?.chart?.result?.[0];if(!r||!Array.isArray(r.timestamp))throw Error('Yahoo 차트 형식 변경');const off=r.meta?.gmtoffset??0,close=r.indicators?.quote?.[0]?.close||[];const today=kstToday(),out=[];
- for(let i=0;i<r.timestamp.length;i++){const v=close[i];if(v==null||!Number.isFinite(v)||v<=0)continue;const date=new Date((r.timestamp[i]+off)*1000).toISOString().slice(0,10);if(date>=today)continue;out.push({id,date,value:Math.round(v*10000)/10000,source,url});}
+export function parseYahooLocal(j,id,source,url){const today=kstToday();const out=settledBars(j).filter(b=>b.date<=today).map(b=>({id,date:b.date,value:Math.round(b.close*10000)/10000,source,url}));
  if(!out.length)throw Error('Yahoo 종가 없음');return out;}
 export async function fetchYahooDaily(sym,id,label,from=1262304000){const r=await get(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?period1=${from}&period2=${Math.floor(Date.now()/1000)+86400}&interval=1d`,30000);
  const j=await r.json();if(j?.chart?.result?.[0]?.meta?.symbol!==sym)throw Error('Yahoo 종목 검증 실패 '+sym);return parseYahooLocal(j,id,'Yahoo Finance · '+label+' 종가','https://finance.yahoo.com/quote/'+encodeURIComponent(sym)+'/history/');}

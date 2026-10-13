@@ -125,4 +125,6 @@ addFx('coal',`8058.T,8031.T,${JPU}`,'상사: 호주 석탄 지분 이익. 전력
 // 명칭 정리: '(당일)'·'실시간' 대신 기준(종가·수집 시점)을 이름에, 최종일·출처는 카드에 표시
 for(const [id,name] of [['wti_cl1','WTI · NYMEX 최근월 선물 종가'],['brent_b1','Brent · ICE 최근월 선물 종가'],['hh_ng1','Henry Hub · NYMEX 최근월 선물 종가'],['nuclear_live','원전 이용률 · 일간(수집 시점)'],['nuclear_units','원전 운전 호기 수 · 일간(수집 시점)']]){const c=catalog.find(v=>v.id===id);if(c)c.name=name;}
 for(const c of catalog)c.definition=c.definition.replace(/실시간 운영현황/g,'운영현황').replace(/최근 상황은 실시간 카드/g,'최근 상황은 일간(수집 시점) 카드');
+// 2026-10-13 감사: 원천의 정상 발표 지연에 맞춘 지연 기준(이 기간을 넘으면 '발표/갱신 확인')
+for(const [id,d] of [['nickel',120],['uranium',120],['jlng',120],['jp_spark',120],['palm',120],['settle_nuc',80],['settle_coal',80],['settle_lng',80],['us_retail',80],['us_gen',80],['rec_monthly',430],['usdjpy',14]]){const c=catalog.find(v=>v.id===id);if(c)c.staleDays=d;}
 export const domesticStocks=stocks;

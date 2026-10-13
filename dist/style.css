@@ -80,3 +80,4 @@
 
 /* 최종일·출처 줄 (2026-10-13) */
 .card .date{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline}.card .date b{font-weight:600;color:#203540;margin-right:3px}.card .date .fd small{color:#8a969b}.card .date .fs a{color:#4b5b62;text-decoration:none;border-bottom:1px dotted #9aa6ab}.card .date .fs a:hover{color:#203540}.card .date .fp{color:#8a969b}
+.card .date .fv{font-size:10.5px;padding:0 5px;border-radius:3px;cursor:help}.card .date .fv.ok{color:#2c6e4f;background:#eaf5ef}.card .date .fv.warn{color:#8a5a12;background:#fdf3e1}.card .date .fv.err{color:#9f2937;background:#fdecea}
