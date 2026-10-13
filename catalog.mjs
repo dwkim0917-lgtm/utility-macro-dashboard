@@ -1,3 +1,5 @@
+import {globalStocks,globalNames} from './global-source.mjs';
+export {globalStocks,globalNames};
 export const sources = [
  {name:'하나증권 유틸리티 Weekly · 지표 선정',url:'https://www.hanaw.com/main/research/research/download.cmd?attachFileSeq=1&bbsCd=2206&bbsId=&bbsSeq=1286301&dbType='},
  {name:'메리츠증권 · 유가→SMP 시차',url:'https://home.imeritz.com/include/resource/research/WorkFlow/20260304080413251K_02.pdf'},
@@ -83,3 +85,44 @@ const kauCard=catalog.find(c=>c.id==='kau');kauCard.name='KAU26 · 배출권 종
 catalog.push(item('rec_monthly','REC · 현물 월평균 이력','전력·요금','원/REC','월간','KPX 2025 전력시장 통계 표 3-3. 2016년 3월 통합시장 이후 월평균. 거래일 평균가와 별도 계열이며 2026년 월자료는 미확보. 2018년 7월 원문 공란은 결측 유지.',recCard.effects,{priority:'보완',sourceHint:'KPX 2025 전력시장 통계 · 표 3-3',staleDays:65}));
 // 2026-10-10: 한전 전력통계속보(약 2.5~3개월 뒤 발표)·가스공사 판매량(약 1.5개월) 발표 시차를 지연 기준에 반영
 for(const [id,d] of [['purchase',115],['tariff',115],['consumption',115],['gas_sales',80]]){const c=catalog.find(v=>v.id===id);if(c)c.staleDays=d;}
+
+// ── 2026-10-13 확장: 커버리지 스프레드·실적 추정용 국내 지표 + 해외(일본 상사·전력가스, 미국 발전·유틸리티) 연계 지표
+const JPT='8058.T,8031.T,8001.T,8002.T,8053.T',JPU='9501.T,9503.T,9502.T,9531.T,9532.T',USG='VST,CEG,NRG,TLN',USR='NEE,SO,DUK,AEP';
+const KPX='KPX EPSIS',ep={priority:'보완'};
+catalog.push(
+ item('fuel_lng','LNG 연료비단가 · 발전량당','전력·요금','원/kWh','월간','KPX가 집계하는 LNG 발전기의 발전량당 연료비(변동비). SMP는 대부분 LNG 발전기 변동비로 결정되므로 SMP의 원가 기준선. 가스공사 발전용 요금과 직도입 단가가 섞인 평균.',[e('015760','상승 시 SMP 상방 압력 → 한전 전력구입비 부담. SMP와의 차이(스파크 스프레드)로 원가 전가 여부 확인.','당월 정산, 한전 실적은 해당 분기',1),e('047050,018670,071320','직도입·자체 LNG 발전 마진 = SMP − 자체 연료비. 시장 평균 연료비단가보다 자체 조달원가가 낮을수록 초과마진.','당월 정산',5)],{...ep,sourceHint:KPX+' · 연료비용 · 연료비단가',staleDays:60}),
+ item('fuel_coal','유연탄 연료비단가 · 발전량당','전력·요금','원/kWh','월간','KPX 집계 유연탄 발전기의 발전량당 연료비. 석탄 발전 마진(다크 스프레드)과 한전 발전자회사 연료비의 기준.',[e('005090','SGC에너지 석탄 열병합 발전 마진 = SMP − 연료비. 상승 시 마진 축소(SMP가 동반 상승하지 않으면).','당월 정산·재고 소진 1~2개월',7),e('015760','연결 발전자회사 연료비. 석탄 정산단가(정산조정계수)로 일부 상쇄.','당월~분기',0)],{...ep,sourceHint:KPX+' · 연료비용 · 연료비단가',staleDays:60}),
+ item('fuel_nuc','원자력 연료비단가 · 발전량당','전력·요금','원/kWh','월간','KPX 집계 원전 발전량당 연료비. 원전은 연료비 비중이 낮아 SMP와의 격차가 크다.',[e('015760','원전 연료비는 저가·안정. 이용률(원전 카드)과 함께 한전 연결 원가 방어 요인.','분기',0)],{...ep,sourceHint:KPX+' · 연료비용',staleDays:60}),
+ item('lng_heat','LNG 열량단가 · 발전용','에너지','원/Gcal','월간','KPX 집계 발전용 LNG의 열량당 단가(가스공사 발전용 요금+직도입 평균). 가스공사 발전용 요금 이력의 대리 지표.',[e('036460','발전용 요금은 원료비 연동으로 매월 조정. 국내 규제 이익은 투자보수 구조라 단가 변동이 곧 이익 변동은 아님.','매월 산정',2),e('015760','LNG 발전 연료비 → SMP 경로.','1개월 내외',1)],{...ep,sourceHint:KPX+' · 연료비용 · 열량단가',staleDays:60}),
+ item('settle_nuc','원자력 정산단가 · 한전 구입','전력·요금','원/kWh','월간','한전이 전력시장에서 원전(한수원) 전력을 사는 kWh당 정산단가(정산조정계수 반영). 한전 전력구입비의 저가 축.',[e('015760','원전 정산단가·발전량은 한전 구입단가를 낮추는 핵심 축. 정산조정계수 변경 시 연결 내부 이익 이전.','당월 정산',0)],{...ep,sourceHint:KPX+' · 정산단가 · 연료원별',staleDays:65}),
+ item('settle_coal','유연탄 정산단가 · 한전 구입','전력·요금','원/kWh','월간','한전이 유연탄 발전기 전력을 사는 kWh당 정산단가(용량요금 포함). 석탄 발전사의 kWh당 매출 대리값.',[e('015760','한전 구입비. 연결 발전자회사는 내부거래.','당월 정산',0),e('005090','석탄 발전 판매단가의 시장 기준. 연료비단가와 차이 = 발전 마진(용량요금 포함).','당월 정산',7)],{...ep,sourceHint:KPX+' · 정산단가 · 연료원별',staleDays:65}),
+ item('settle_lng','LNG 정산단가 · 한전 구입','전력·요금','원/kWh','월간','한전이 LNG 발전기 전력을 사는 kWh당 정산단가(용량요금 포함). 민간 LNG 발전사의 kWh당 매출 대리값.',[e('015760','LNG 구입 비중이 큰 달에 한전 구입단가를 끌어올림.','당월 정산',0),e('047050,018670,071320','민자 LNG 발전 kWh당 매출. 자체 연료비와의 차이가 발전 부문 이익.','당월 정산',5)],{...ep,sourceHint:KPX+' · 정산단가 · 연료원별',staleDays:65}),
+ item('spark_spread','스파크 스프레드 · SMP − LNG 연료비단가','전력·요금','원/kWh','월간','육지 SMP 월평균 − KPX LNG 연료비단가. LNG 한계발전기의 변동비 대비 SMP 초과분. 직도입·고효율 LNG 발전사의 마진 방향 지표. 용량요금 미포함.',[e('047050,018670,071320','확대 시 LNG 발전 마진 개선(자체 조달원가·효율이 평균 이상이면 더 큼).','당월 정산, 분기 실적',5),e('015760','확대는 SMP가 LNG 원가보다 높게 결정된다는 뜻 → 한전 구입비 부담.','당월 정산',1)],{...ep,sourceHint:'자체 산출 · KPX SMP − KPX LNG 연료비단가',staleDays:60,chart:'bars',legend:{pos:'SMP > LNG 연료비',neg:'역스프레드'}}),
+ item('dark_spread','다크 스프레드 · SMP − 유연탄 연료비단가','전력·요금','원/kWh','월간','육지 SMP 월평균 − KPX 유연탄 연료비단가. 석탄 발전기의 변동비 대비 SMP 초과분(용량요금 제외). SGC에너지 등 석탄 열병합 마진 방향.',[e('005090','확대 시 석탄 열병합 발전 마진 개선.','당월 정산·분기',7),e('015760','연결 석탄 발전자회사 마진은 정산조정계수로 제한.','분기',0)],{...ep,sourceHint:'자체 산출 · KPX SMP − KPX 유연탄 연료비단가',staleDays:60,chart:'bars',legend:{pos:'SMP > 석탄 연료비',neg:'역스프레드'}}),
+ item('copper','구리 · COMEX 최근월 선물','상사·원자재','USD/lb','일간','COMEX 구리 최근월 선물 종가. 일본 상사의 칠레·페루 구리 지분 이익과 자원 트레이딩의 지표.',[e('8058.T,8031.T,8002.T,8053.T','구리 광산 지분 이익(지분법·배당). 상사별 지분 생산량에 비례.','분기 결산(가격 평균), 1~3개월',0),e('047050,001120','비철 트레이딩 물량·단가. 직접 광산 노출은 제한적(추론).','계약별',0)],{...ep,yahoo:'HG=F',sourceHint:'Yahoo Finance · COMEX HG=F',staleDays:6}),
+ item('iron_ore','철광석 62% Fe · CFR 중국 선물','상사·원자재','USD/t','일간','CME/SGX 철광석 62% Fe CFR China(TSI) 최근월 선물 종가. 일본 상사의 호주·브라질 철광석 지분 이익의 핵심 지표.',[e('8031.T,8058.T','미쓰이(Vale·BHP JV), 미쓰비시(호주 철광석) 지분 이익. 가격 1달러 변동의 연간 이익 민감도는 각사 결산 자료 참고.','분기 결산',0),e('047050','철강 원료·제품 트레이딩 단가 방향(추론).','계약별',0)],{...ep,yahoo:'TIO=F',sourceHint:'Yahoo Finance · TIO=F',staleDays:6}),
+ item('nickel','니켈 · IMF 월평균','상사·원자재','USD/t','월간','IMF 1차상품가격(LME 기준) 니켈 월평균.',[e('001120','인니 니켈 광산(AKP) 지분 매출·이익 방향.','분기',8),e('8053.T','스미토모상사 니켈(Ambatovy 등) 지분 이익.','분기',0)],{...ep,fred:'PNICKUSDM',sourceHint:'FRED · IMF PNICKUSDM',staleDays:100}),
+ item('uranium','우라늄 · IMF 월평균','에너지','USD/lb','월간','IMF 1차상품가격 우라늄(U3O8) 월평균. 원전 연료비의 장기 기준.',[e('CEG,TLN','원전 보유 발전사의 연료 원가. 장기계약 비중이 커 영향은 수년에 걸쳐 분산.','장기계약 갱신 시',0),e('015760','한수원 원전 연료비(장기계약). 단기 영향 제한.','수년',0)],{...ep,fred:'PURANUSDM',sourceHint:'FRED · IMF PURANUSDM',staleDays:100}),
+ item('usdjpy','엔/달러 · 뉴욕 정오','해외·일본','JPY/USD','일간','FRB H.10 엔/달러 뉴욕 정오 매입환율.',[e(JPT,'엔화 약세 시 해외 이익의 엔화 환산액 증가.','분기 결산 환산',0),e(JPU,'엔화 약세 시 LNG·석탄 수입원가 상승. 연료비조정제도로 약 3~5개월 뒤 요금 전가(시차 손익).','연료비조정 3~5개월',0)],{...ep,fred:'DEXJPUS',sourceHint:'FRED · DEXJPUS',staleDays:10}),
+ item('jepx','JEPX · 일본 도매전력 시스템가격','해외·일본','JPY/kWh','일간','일본도매전력거래소(JEPX) 스팟시장 30분 단위 시스템프라이스의 일평균.',[e(JPU,'발전 잉여 판매가 큰 회사는 상승 시 유리, 소매 조달 의존 회사는 불리. 연료비 대비 스프레드(일본 스파크)로 해석.','당월',0),e('015760','한국 SMP와 같은 LNG 한계비용 구조의 비교 지표.','참고',0)],{...ep,sourceHint:'JEPX · 스팟 시스템프라이스',staleDays:6}),
+ item('jlng','일본 LNG 수입가격 · IMF 월평균','해외·일본','USD/MMBtu','월간','IMF 1차상품가격 일본 LNG 수입가(장기계약 위주, 유가연동). 아시아 장기계약 LNG 원가의 기준.',[e(JPU,'연료비조정제도 시차: 수입가 하락기에는 요금 반영이 늦어 일시 이익, 상승기에는 일시 손실.','3~5개월 시차',0),e('8058.T,8031.T','LNG 프로젝트 판매가격(유가연동) → 지분 이익.','3~6개월',0),e('036460','가스공사 장기계약 도입단가와 같은 유가연동 구조의 비교값.','참고',2)],{...ep,fred:'PNGASJPUSDM',sourceHint:'FRED · IMF PNGASJPUSDM',staleDays:100}),
+ item('jp_spark','일본 스파크 스프레드 · JEPX − LNG 연료비','해외·일본','JPY/kWh','월간','JEPX 월평균 − 일본 LNG 수입가×엔/달러×0.007MMBtu/kWh(열효율 약 49% 가정). 일본 LNG 발전의 변동마진 방향.',[e(JPU,'확대 시 발전 잉여를 도매로 파는 회사(간사이·주부(JERA)) 유리.','당월~분기',0)],{...ep,sourceHint:'자체 산출 · JEPX − IMF 일본 LNG×USDJPY',staleDays:100,chart:'bars',legend:{pos:'JEPX > LNG 연료비',neg:'역스프레드'}}),
+ item('jgb10y','일본 국채 10년 · 월평균','해외·일본','%','월간','OECD 장기금리(일본 10년 국채) 월평균.',[e(JPU,'규제·설비 산업의 차입비용과 밸류에이션 할인율.','차환 시점별',0),e(JPT,'금리 상승은 엔화 강세 요인과 겹쳐 환산 이익에 간접 영향.','간접',0)],{...ep,fred:'IRLTLT01JPM156N',sourceHint:'FRED · OECD IRLTLT01JPM156N',staleDays:100}),
+ item('pjm_west','PJM West Hub · 피크 전력가격','해외·미국','USD/MWh','일간','ICE 거래 PJM West Hub 실시간 피크 일간 가중평균(EIA 재게시, 약 2주 지연).',[e(USG,'상승 시 무헤지 발전량의 판매단가 상승. 원전(CEG·TLN)은 연료비가 고정적이라 이익 레버리지 큼.','헤지 비율에 따라 수개월~수년',0),e(USR,'규제 유틸리티는 연료·구입비 전가 구조라 직접 영향 제한.','요금 재산정 시',0)],{...ep,sourceHint:'EIA · Wholesale Electricity (ICE)',staleDays:30}),
+ item('pjm_spark','PJM 스파크 스프레드 · PJM West − Henry Hub×7','해외·미국','USD/MWh','일간','PJM West Hub 피크 − Henry Hub 현물×7 MMBtu/MWh(복합화력 열소비율 가정). 가스발전 변동마진 방향.',[e('VST,NRG,TLN,CEG','확대 시 가스발전 마진 개선. 원전·석탄 보유자는 전력가 자체가 더 중요.','헤지 비율별',0)],{...ep,sourceHint:'자체 산출 · EIA PJM West − FRED HH',staleDays:30,chart:'bars',legend:{pos:'전력가 > 가스 연료비',neg:'역스프레드'}}),
+ item('pjm_cap','PJM 용량시장 낙찰가 · BRA RTO','해외·미국','USD/MW-day','연간','PJM 기준용량경매(BRA) RTO 낙찰가. 관측일 = 경매 결과 발표월, 값은 해당 인도연도(6월~익년 5월) 가격: 2014.05→17/18 · 2015.08→18/19 · 2016.05→19/20 · 2017.05→20/21 · 2018.05→21/22 · 2021.06→22/23 · 2022.06→23/24 · 2023.02→24/25 · 2024.07→25/26 · 2025.07→26/27(상한) · 2025.12→27/28(상한).',[e(USG,'용량 수입 = 낙찰가×낙찰 용량. 인도연도 시작(6월)부터 이익 반영.','인도연도 시작 시',0),e(USR,'PJM 지역 규제 유틸리티(AEP 등)는 고객 요금으로 전가.','요금 재산정 시',0)],{...ep,sourceHint:'PJM · BRA 결과',staleDays:400}),
+ item('us_retail','미국 평균 전기요금 · 도시 소비자','해외·미국','USD/kWh','월간','BLS 평균가격(도시 소비자) 전기 kWh당.',[e(USR,'규제 유틸리티 요금 인상 → 매출. 비용 전가 결과이므로 이익률과 동일하지 않음.','요금 인가 시점',0)],{...ep,fred:'APU000072610',sourceHint:'FRED · BLS APU000072610',staleDays:70}),
+ item('us_gen','미국 전력 생산지수 · 산업생산','해외·미국','2017=100','월간','연준 산업생산 중 전력 생산(계절조정). 데이터센터·전기화 수요 추세 확인.',[e(USG+','+USR,'판매량 증가 → 발전량·송배전 투자 확대.','당월~분기',0)],{...ep,fred:'IPG2211S',sourceHint:'FRED · IPG2211S',staleDays:70}));
+// 기존 지표의 해외 종목 연결
+// 효과 배열은 여러 지표가 공유(fuel·rates 등)하므로 복사 후 추가해 다른 지표로 새지 않게 한다
+const addFx=(id,codes,text,lag)=>{const c=catalog.find(v=>v.id===id);if(c)c.effects=[...c.effects,e(codes,text,lag,0)];};
+for(const id of ['hh','hh_ng1'])addFx(id,USG,'미국 전력가격의 한계비용. 가스 상승 시 원전·석탄 보유자(CEG·TLN) 마진 확대, 가스발전 비중 큰 VST·NRG는 헤지·스프레드에 따라 상이.','헤지 비율별');
+addFx('us10y',USR,'규제 유틸리티의 차입비용·할인율. 허용자기자본이익률(ROE) 재산정은 수년 시차.','차환·요금 재산정 시');
+addFx('jkm_futures',JPU,'일본 전력·가스사의 현물 LNG 조달비. 연료비조정 시차로 단기 손익 변동.','1~5개월');
+addFx('jkm_futures','8058.T,8031.T','LNG 트레이딩·현물 판매 마진(추론). 프로젝트 판매는 유가연동 비중이 큼.','계약별');
+addFx('brent_b1','8058.T,8031.T,8001.T','원유·가스 지분 생산과 LNG 유가연동 판매가격.','3~6개월');
+addFx('coal',`8058.T,8031.T,${JPU}`,'상사: 호주 석탄 지분 이익. 전력사: 석탄 발전 연료비(연료비조정 시차).','분기·3~5개월');
+// 명칭 정리: '(당일)'·'실시간' 대신 기준(종가·수집 시점)을 이름에, 최종일·출처는 카드에 표시
+for(const [id,name] of [['wti_cl1','WTI · NYMEX 최근월 선물 종가'],['brent_b1','Brent · ICE 최근월 선물 종가'],['hh_ng1','Henry Hub · NYMEX 최근월 선물 종가'],['nuclear_live','원전 이용률 · 일간(수집 시점)'],['nuclear_units','원전 운전 호기 수 · 일간(수집 시점)']]){const c=catalog.find(v=>v.id===id);if(c)c.name=name;}
+for(const c of catalog)c.definition=c.definition.replace(/실시간 운영현황/g,'운영현황').replace(/최근 상황은 실시간 카드/g,'최근 상황은 일간(수집 시점) 카드');
+export const domesticStocks=stocks;

@@ -16,6 +16,7 @@ const server=http.createServer(async(req,res)=>{const send=(status,body,type='ap
  if(url.pathname==='/api/impact'&&req.method==='GET')return send(200,await impactPayload());
  if(url.pathname==='/api/sensitivity'&&req.method==='GET')return send(200,await sensitivityPayload());
  if(url.pathname==='/api/analysis'&&req.method==='GET')return send(200,await analysisPayload());
+ if(url.pathname==='/api/analysis-global'&&req.method==='GET')return send(200,await analysisPayload('global'));
  if(url.pathname==='/api/analysis/export'&&req.method==='GET'){res.setHeader('Content-Disposition','attachment; filename="relationship-tests.csv"');return send(200,await fs.readFile(path.join(ROOT,'data','relationship-tests.csv'),'utf8'),'text/csv; charset=utf-8');}
  const files={'/sensitivity':'sensitivity.html','/sensitivity.js':'sensitivity.js','/sensitivity.css':'sensitivity.css','/analysis':'analysis.html','/macro-ui.js':'macro-ui.js','/analysis.js':'analysis.js','/analysis.css':'analysis.css','/':'index.html','/app.js':'app.js','/style.css':'style.css','/favicon.svg':'favicon.svg'};if(req.method!=='GET'||!files[url.pathname])return send(404,{error:'Not found'});const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};return send(200,await fs.readFile(path.join(ROOT,'dist',files[url.pathname]),'utf8'),types[path.extname(files[url.pathname])]);
  }catch(e){send(400,{error:e.message});}});

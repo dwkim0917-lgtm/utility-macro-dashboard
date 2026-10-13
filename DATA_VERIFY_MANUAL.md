@@ -44,8 +44,24 @@
 - WCI: Drewry 원문 최신 평가일·값 vs `wci`.
 - SCFI: opencontainer 재게시 지연 확인(중국 연휴 후 재개).
 - 원/달러: FRED(주 1회 발표, 1주 지연 정상) ↔ Investing USD/KRW 종가. **Yahoo `KRW=X`는 일봉 날짜가 하루 어긋나 대조에 쓰지 않음.**
-- 원전 이용률: `nuclear`는 한수원 **연간 확정치**(연말 날짜, 최신 점=직전 연도 평균)라 최근값이 아니다. 최근 상황은 `nuclear_live`(한수원 메인 실시간 운영현황, 발전량÷설비용량, 수집 시점 스냅숏)와 `nuclear_units`(운전 호기 수)로 본다. 2026-10-12부터 누적, 과거 소급 불가.
+- 원전 이용률: `nuclear`는 한수원 **연간 확정치**(연말 날짜, 최신 점=직전 연도 평균)라 최근값이 아니다. 최근 상황은 `nuclear_live`(한수원 메인 운영현황, 발전량÷설비용량, 수집 시점 스냅숏)와 `nuclear_units`(운전 호기 수)로 본다. 2026-10-12부터 누적, 과거 소급 불가.
 - FRED Brent 현물(DCOILBRENTEU)은 선물 대비 괴리가 클 수 있음(2026-10-02 135.5 vs 선물 102). 값은 FRED와 일치하면 유지, 판단은 `brent_b1` 선물 사용.
+
+## 5-1. 2026-10-13 추가 계열 점검 (평일 루프에 포함)
+| 계열 | 원천(자동) | 점검 |
+|---|---|---|
+| fuel_lng·fuel_coal·fuel_nuc·lng_heat | KPX EPSIS 연료비용(월, 2001~) | 매월 초 전월치 반영 여부. EPSIS 화면 연료비단가 표와 1개월 대조 |
+| settle_nuc·settle_coal·settle_lng | KPX EPSIS 정산단가(월, 2002~) | 약 1.5개월 지연 정상 |
+| spark_spread·dark_spread | 자체 산출(SMP − 연료비단가) | SMP·연료비단가 같은 월만 계산. 음(−)이면 민감도 화면 경고 |
+| copper(HG=F)·iron_ore(TIO=F) | Yahoo 일간 | Investing 구리·철광석 종가 주 1회 대조 |
+| nickel·uranium·jlng·jgb10y·us_retail·us_gen·usdjpy | FRED | 월간은 2~3개월 지연 정상 |
+| jepx | JEPX 스팟 CSV(30분→일평균) | 익일 인도분이 오늘 날짜로 들어올 수 있음(전일 경매 확정치) |
+| pjm_west·pjm_spark | EIA 도매전력(ICE, 약 2주 지연) | 연초 EIA 연도 파일명이 바뀌면 수집 오류 → `global-source.mjs`의 파일명 확인 |
+| pjm_cap | PJM BRA 수기 표 | 새 경매 결과 발표 시 `pjmCapacityRows()`에 1행 추가(발표월 날짜) |
+| 해외 주가 18종목 | Yahoo(현지 거래일) → `stock-prices-global.json` | 시장지수(1306.T·^GSPC) 누락 시 기존 파일 유지 |
+- 해외 주가 시차는 `analyze-links.py global` → `relationship-analysis-global.json`(TOPIX ETF·S&P500 통제). `refresh-analysis.mjs`가 국내·해외를 함께 갱신.
+- 민감도·주가 시차 화면 상단 ‘오늘 확인할 것’: 갱신 시각이 30시간을 넘으면 빨간 ‘갱신 지연’. 이 경우 Actions 로그부터 확인.
+- 과거 이력 재적재: `node backfill-global.mjs`(Yahoo 2010~, JEPX 2016~, EIA 2017~; 재실행 안전).
 
 ## 6. 테스트·배포
 - `npm test` 전부 통과 → `git add -A data <수정 코드>` → 커밋 → `git pull --rebase -X theirs origin main` → `git push`.

@@ -6,5 +6,5 @@ export function parseNuclearLive(html,date){const t=html.replace(/<script[\s\S]*
  if(!cap||!gen)throw Error('한수원 실시간 운영현황 문구 변경');const c=Number(cap[1].replace(/,/g,'')),g=Number(gen[1].replace(/,/g,''));
  if(!(c>15000&&c<40000)||!(g>=0&&g<=c*1.08))throw Error('한수원 실시간 값 범위 이상: '+g+'/'+c);
  const note=u?` · ${u[1]}기 중 ${u[2]}기 운전`:'';
- const out=[{id:'nuclear_live',date,value:Math.round(g/c*1000)/10,source:'한수원 · 실시간 운영현황(수집 시점 발전량÷설비용량)',url:'https://npp.khnp.co.kr/'}];
- if(u)out.push({id:'nuclear_units',date,value:Number(u[2]),source:'한수원 · 실시간 운영현황(운전 호기 수, 총 '+u[1]+'기)',url:'https://npp.khnp.co.kr/'});return out;}
+ const out=[{id:'nuclear_live',date,value:Math.round(g/c*1000)/10,source:'한수원 · 운영현황(수집 시점 발전량÷설비용량)',url:'https://npp.khnp.co.kr/'}];
+ if(u)out.push({id:'nuclear_units',date,value:Number(u[2]),source:'한수원 · 운영현황(운전 호기 수, 총 '+u[1]+'기)',url:'https://npp.khnp.co.kr/'});return out;}

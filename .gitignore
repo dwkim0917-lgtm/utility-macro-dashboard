@@ -17,6 +17,9 @@ data/*
 !data/relationship-analysis.json
 !data/relationship-summary.csv
 !data/relationship-tests.csv
+!data/relationship-analysis-global.json
+!data/relationship-tests-global.csv
+!data/stock-prices-global.json
 !data/stock-prices.json
 !data/analysis-refresh-state.json
 !data/analysis-catalog.json
