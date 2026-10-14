@@ -34,4 +34,5 @@ data/*
 data/ici/*.jpg
 data/ici/*.png
 !data/kepco-model.json
+!data/kepco-forecast-log.json
 !data/audit-latest.json

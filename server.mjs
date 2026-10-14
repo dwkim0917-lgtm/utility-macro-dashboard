@@ -14,6 +14,7 @@ const server=http.createServer(async(req,res)=>{const send=(status,body,type='ap
  if(url.pathname==='/api/import'&&req.method==='POST'){let body='';for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>5e6)return send(413,{error:'파일 최대 5MB'});}const rows=parseCSV(body);await mutate(db=>mergeRows(db,rows));return send(200,{count:rows.length});}
  if(url.pathname==='/api/export'&&req.method==='GET'){res.setHeader('Content-Disposition','attachment; filename="utility-macro.csv"');return send(200,csvExport(await readStore()),'text/csv; charset=utf-8');}
  if(url.pathname==='/api/impact'&&req.method==='GET')return send(200,await impactPayload());
+ if(url.pathname==='/api/live'&&req.method==='GET'){const {fetchLive}=await import('./live-source.mjs');return send(200,await fetchLive());}
  if(url.pathname==='/api/sensitivity'&&req.method==='GET')return send(200,await sensitivityPayload());
  if(url.pathname==='/api/analysis'&&req.method==='GET')return send(200,await analysisPayload());
  if(url.pathname==='/api/analysis-global'&&req.method==='GET')return send(200,await analysisPayload('global'));

@@ -166,4 +166,9 @@ for(const [id,fam,patch] of [
  ['credit',['한국은행 ECOS · 회사채 AA− 3년(금투협 최종호가)'],{sourceHint:'한국은행 ECOS(금투협 최종호가)',effects:catalog.find(v=>v.id==='credit')?.effects}],
  ['usdkrw',['한국은행 ECOS · 원/달러 매매기준율(서울)','FRED · DEXKOUS'],{name:'원/달러 · 매매기준율(서울)',definition:'한국은행 ECOS 원/달러 매매기준율(서울 외환시장, 일간). 국내 기업 회계·가스공사 원료비 환산과 같은 기준. 2010년 이전 구간은 FRED 뉴욕 정오 환율로 이어붙임(정의 차이 일 0.5% 내외).',sourceHint:'한국은행 ECOS · 매매기준율'}]])
 {const c=catalog.find(v=>v.id===id);if(c)Object.assign(c,{sourceFamily:fam},Object.fromEntries(Object.entries(patch).filter(([,v])=>v!=null)));}
+// 2026-10-14 공시 지표 추가: SMP 결정 연료 비율(월), 오늘 최대부하 전망(일, 수집 시점)
+catalog.push(
+ item('smp_set_lng','SMP 결정 비율 · LNG','전력·요금','%','월간','해당 월 전체 시간 중 LNG 발전기가 SMP(한계가격)를 결정한 시간 비율. 높을수록 SMP가 LNG 연료비에 연동. 석탄 결정 시간이 늘면 SMP가 LNG 원가보다 낮아짐(스파크 스프레드 악화 요인).',[e('015760','LNG 결정 비율이 높고 LNG 연료비가 오르면 SMP·전력구입비 상승.','당월 정산',1),e('047050,018670,071320,004690','LNG 결정 비율이 낮아지면 LNG 발전기의 SMP 마진(스파크) 축소.','당월 정산',5)],{priority:'보완',sourceHint:'KPX EPSIS · 연료원별 SMP 결정',staleDays:90}),
+ item('smp_set_coal','SMP 결정 비율 · 석탄','전력·요금','%','월간','유연탄·무연탄 발전기가 SMP를 결정한 시간 비율. 경부하기(봄·가을 심야)·원전 고이용률·재생에너지 확대 시 증가.',[e('015760','석탄 결정 비율 상승 = 저가 한계발전기 → SMP 하락, 한전 구입비 감소.','당월 정산',1),e('005090','석탄 발전기가 한계발전기가 되면 다크 스프레드 축소.','당월 정산',7)],{priority:'보완',sourceHint:'KPX EPSIS · 연료원별 SMP 결정',staleDays:90}),
+ item('peak_fcst','오늘 최대부하 전망','수요·가동','MW','일간','KPX가 공표하는 당일 최대전력 전망(수집 시점 기준, 피크 시간대 포함). 실적은 일일 최대전력 카드.',[e('015760,036460','전망 최대부하가 높을수록 LNG 발전 가동·SMP 상방.','당일',4)],{priority:'보완',sourceHint:'KPX · 최대부하전망',staleDays:4}));
 export const domesticStocks=stocks;

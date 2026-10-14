@@ -14,3 +14,11 @@ export function parseEpsisSettle(html){if(!html.includes('원자력/유연탄/�
  const seen=new Set();for(const m of html.matchAll(re)){const date=`${m[1]}-${m[2]}-01`;if(seen.has(date))continue;seen.add(date);
   for(const [id,v] of [['settle_nuc',m[3]],['settle_coal',m[4]],['settle_lng',m[7]]]){const x=Number(v);if(v!==''&&Number.isFinite(x)&&x>0)out.push({id,date,value:Math.round(x*100)/100,source:'KPX EPSIS · 연료원별 정산단가',url:UPS_URL});}}
  if(out.filter(r=>r.id==='settle_lng').length<24)throw Error('EPSIS 정산단가 형식 변경');return out;}
+// EPSIS 연료원별 SMP 결정(2026-10-14): 월별로 각 연료원이 SMP를 결정한 시간 수 → 비율(%). LNG가 한계발전기인 시간 비중.
+const NSM_URL='https://epsis.kpx.or.kr/epsisnew/selectEkmaSmpNsmChart.do?menuId=040203';
+export function parseEpsisSmpSetter(html){if(!html.includes('dataField="c1" headerText="LNG"'))throw Error('EPSIS SMP 결정 열 확인 실패');const out=[];
+ const re=/c1\s*=\s*"([^"]*)";\s*c2\s*=\s*"([^"]*)";\s*c3\s*=\s*"([^"]*)";\s*c4\s*=\s*"([^"]*)";\s*c5\s*=\s*"([^"]*)";\s*c6\s*=\s*"([^"]*)";\s*c7\s*=\s*"([^"]*)";[\s\S]*?if\("(\d{2})" == "13"\)[\s\S]*?gridData\.push\(\{"year":"(\d{4})"/g;
+ for(const m of html.matchAll(re)){const mon=Number(m[8]);if(mon<1||mon>12)continue;const tot=Number(m[7]);if(!(tot>0))continue;const date=`${m[9]}-${m[8]}-01`;
+  out.push({id:'smp_set_lng',date,value:Math.round(Number(m[1])/tot*1000)/10,source:'KPX EPSIS · 연료원별 SMP 결정 시간 비율',url:NSM_URL});
+  out.push({id:'smp_set_coal',date,value:Math.round((Number(m[4])+Number(m[3]))/tot*1000)/10,source:'KPX EPSIS · 연료원별 SMP 결정 시간 비율',url:NSM_URL});}
+ if(out.length<48)throw Error('EPSIS SMP 결정 형식 변경');return out;}
