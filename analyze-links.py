@@ -55,7 +55,16 @@ GCODES=set(config.get('globalStocks',{}))
 for c in config['catalog']:
     if GLOBAL and not GCODES&{s for e in c['effects'] for s in e['codes']}:continue
     if not GLOBAL and not set(STOCKS)&{s for e in c['effects'] for s in e['codes']}:continue
-    rows=data['series'].get(c['id'],[]); rows=[r for r in rows if r['source']==(rows[-1]['source'] if rows else '')]
+    rows=data['series'].get(c['id'],[])
+    fam=c.get('sourceFamily')
+    if fam and any(r['source'] in fam for r in rows):  # 출처 우선순위로 날짜별 병합(store.seriesRows와 동일 규칙)
+        by={}
+        for r in rows:
+            if r['source'] not in fam:continue
+            p=by.get(r['date'])
+            if p is None or fam.index(r['source'])<fam.index(p['source']):by[r['date']]=r
+        rows=[by[d] for d in sorted(by)]
+    else:rows=[r for r in rows if r['source']==(rows[-1]['source'] if rows else '')]
     info={'id':c['id'],'name':c['name'],'unit':c['unit'],'frequency':c['frequency'],'count':len(rows),'mappedStocks':sorted({s for e in c['effects'] for s in e['codes']}),'status':'ready'}
     if c['frequency']=='연간':info.update(status='unavailable',reason='연간 관측값을 월간으로 복제하지 않음 · 월별 주가 시차 추정 불가')
     elif len(rows)<24:info.update(status='unavailable',reason='원자료 미확보 또는 시계열 부족')

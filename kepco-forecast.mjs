@@ -1,3 +1,6 @@
+// 한전 마진 전망(E) v3 (2026-10-14): v2 산식 유지 + 시차별 백테스트 오차 범위(lo/hi)·입력 갱신 주기(updates) 추가.
+//   SMP 범위 = E ± 시차별 평균 절대오차(앵커 월은 경과 일수별 오차), 판매단가 범위 = E ± 시차별 백테스트 오차(2023-01~),
+//   스프레드 범위 = √(SMP 오차² + 판매단가 오차²), 분기 범위 = 해당 분기 E 월 범위의 판매량 가중 평균.
 // 한전 마진 전망(E) v2 (2026-10-10). 서버/정적 빌드가 매번 최신 관측으로 다시 계산한다.
 // SMP E  = 0.7 × [앵커 × 과거 5년 같은 달 계절 비율(중앙값, 연료 효과 제거) × 연료비 모델 변화율] + 0.3 × 앵커
 //          앵커 = 공식 월평균 다음 달의 KPX 일간 누적평균(5일 이상) + 일간평균→공식치 편향 보정, 없으면 마지막 공식 월평균
@@ -7,7 +10,8 @@
 //          동결기 백테스트 평균 절대오차 약 1.5원/kWh. 분기 평균은 판매량 가중(E 월 판매량 = 전년 같은 달 × 하우스 모델 분기 판매량 증가율)
 const ym = d => d.slice(0, 7);
 export const addM = (k, n) => { let [y, m] = k.split('-').map(Number); m += n; while (m > 12) { m -= 12; y++; } while (m < 1) { m += 12; y--; } return `${y}-${String(m).padStart(2, '0')}`; };
-const latestSrc = (db, id) => { const s = db.series[id] || []; if (!s.length) return []; const src = s.at(-1).source; return s.filter(r => r.source === src); };
+import { seriesRows } from './store.mjs';
+const latestSrc = (db, id) => seriesRows(db, id); // 출처 우선순위 규칙(store.seriesRows) 공유
 const mavg = rows => { const g = {}; for (const r of rows) (g[ym(r.date)] ||= []).push(r.value); return Object.fromEntries(Object.entries(g).map(([k, v]) => [k, v.reduce((a, b) => a + b, 0) / v.length])); };
 const median = a => { const s = [...a].sort((x, y) => x - y); return s.length ? (s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2) : NaN; };
 function ols(X, y) { const k = X[0].length, M = Array.from({ length: k }, () => Array(k + 1).fill(0)); X.forEach((r, i) => { for (let a = 0; a < k; a++) { M[a][k] += r[a] * y[i]; for (let b = 0; b < k; b++) M[a][b] += r[a] * r[b]; } });
@@ -61,7 +65,27 @@ export function buildKepcoForecast(db, { horizon = 5, fitFrom = '2015-01', seaso
     const mt = mq[q]?.tariff; return { q, value: r1(tw - sw), tariff: r1(tw), smp: r1(sw), volume: Math.round(V), pool: Math.round(pool * 100) / 100, estimated: parts.some(p => p.t.e || p.s.e || p.v.e), model: mt ? { tariff: mt, kind: mq[q].kind, gap: r1(tw - mt) } : null }; }).filter(Boolean).slice(-8);
   // 백테스트(2023-01 이후, 공식 월평균 앵커)
   const mae = {}; for (const h of [1, 2, 3, 4, 5]) { const errs = []; for (const A of smpMonths.filter(k => k >= '2023-01')) { const t = addM(A, h); if (smp[t] == null) continue; const e = smpEst(A, smp[A], h); if (Number.isFinite(e)) errs.push(Math.abs(e - smp[t])); } mae[h] = errs.length ? r1(errs.reduce((a, b) => a + b, 0) / errs.length) : null; }
-  return { asOf: new Date().toISOString(), version: 2, anchor, smpE, tariffE, spreadE, quarters,
-    model: { coef: coef.map(v => Math.round(v * 1000) / 1000), fitFrom, n: fitRows.length, seasonYears, blend, mae, tariffGrowth: Math.round(growth * 10000) / 100, tariffMae: 1.5, jkmAssumedFlat: [...assumed].sort(), house: model ? { source: model.source, updated: model.updated } : null },
-    note: 'SMP E: 0.7×(앵커×5년 계절 비율×연료비 모델 변화율)+0.3×앵커, 앵커는 당월 일간 누적평균+편향 보정. 판매단가 E: 전년 같은 달×(1+최근 3개월 전년비)+요금 이벤트. 분기 값은 판매량 가중, 판매량 E는 하우스 모델 분기 증가율 적용.' };
+  // ── v3: 판매단가 E 백테스트(2023-01~, 마지막 실적월 A 기준 h개월 뒤). 요금 인상 월이 포함돼 동결기보다 오차가 크다.
+  const tarMae = {}; for (const h of [1, 2, 3, 4, 5, 6, 7, 8]) { const errs = []; for (const A of tarMonths.filter(k => k >= '2023-01')) { const t = addM(A, h); if (tar[t] == null || tar[addM(t, -12)] == null) continue; const gg = [0, 1, 2].map(i => addM(A, -i)).map(k => tar[k] / tar[addM(k, -12)] - 1).filter(Number.isFinite); if (!gg.length) continue; const gr = gg.reduce((a, b) => a + b, 0) / gg.length; errs.push(Math.abs(tar[addM(t, -12)] * (1 + gr) - tar[t])); } tarMae[h] = errs.length ? r1(errs.reduce((a, b) => a + b, 0) / errs.length) : null; }
+  const hOf = (from, k) => { const [a, b] = [from, k].map(x => +x.slice(0, 4) * 12 + +x.slice(5)); return b - a; };
+  const smpErr = k => k === anchor.month && anchor.kind === '당월 누적' ? anchor.mae : (mae[Math.min(5, Math.max(1, hOf(anchor.month, k)))] ?? 15);
+  const tarErr = k => tarMae[Math.min(8, Math.max(1, hOf(lastTar, k)))] ?? 3;
+  for (const e of smpE) { const d = smpErr(e.month); Object.assign(e, { lo: r1(e.value - d), hi: r1(e.value + d), err: r1(d) }); }
+  for (const e of tariffE) { const d = tarErr(e.month); Object.assign(e, { lo: r1(e.value - d), hi: r1(e.value + d), err: r1(d) }); }
+  for (const e of spreadE) { const d = Math.hypot(e.smp === 'E' ? smpErr(e.month) : 0, e.tariff === 'E' ? tarErr(e.month) : 0); Object.assign(e, { lo: r1(e.value - d), hi: r1(e.value + d), err: r1(d) }); }
+  for (const q of quarters) { if (!q.estimated) continue; const ms = qMonths(q.q).map(m => ({ s: spreadE.find(x => x.month === m), v: volAt(m)?.v || 1 })); const V = ms.reduce((a, x) => a + x.v, 0); const d = ms.reduce((a, x) => a + (x.s?.err || 0) * x.v, 0) / V; Object.assign(q, { lo: r1(q.value - d), hi: r1(q.value + d), err: r1(d) }); }
+  // 입력별 최신 관측·갱신 주기·다음 반영 예상(화면 표 '업데이트 주기')
+  const lastOf = id => latestSrc(db, id).at(-1)?.date || null, nextMonth = (k, add) => addM(k, add);
+  const updates = [
+    { item: 'SMP 일간(육지 가중평균)', last: lastOf('smp_daily'), cadence: '매일 · KPX 하루전시장 결정가(익일분 전일 확정)', next: '매일', use: 'E 앵커: 당월 누적평균 + 편향 보정' },
+    { item: 'SMP 월평균(공식)', last: lastSmp, cadence: '월 1회 · KPX 익월 1~3영업일 공표', next: `${nextMonth(lastSmp, 1)}분 → ${nextMonth(lastSmp, 2)} 초`, use: '실적선·연료비 모델 적합' },
+    { item: '한전 평균 판매단가', last: lastTar, cadence: '월 1회 · 한전 전력통계속보(약 2.5~3개월 뒤) · BigFinance 수기 반영(로그인 필요)', next: `${nextMonth(lastTar, 1)}분 → 약 ${nextMonth(lastTar, 3)}~${nextMonth(lastTar, 4)}`, use: '실적선·판매단가 E 기준(전년 동월)' },
+    { item: '판매전력량', last: Object.keys(vol).sort().at(-1) || null, cadence: '판매단가와 동일', next: '판매단가와 동일', use: '분기 판매량 가중치' },
+    { item: 'Brent·JKM·원/달러', last: [lastOf('brent_b1'), lastOf('jkm_futures'), lastOf('usdkrw')].filter(Boolean).sort().at(-1), cadence: '매 거래일(평일 08:10 자동 수집)', next: '매일', use: 'SMP 연료비 모델(Brent 5개월·JKM 2개월 선행)' },
+    { item: '요금 이벤트(연료비조정단가 등)', last: model?.tariffEvents?.length ? '~' + model.tariffEvents.at(-1).to + ' 반영' : null, cadence: '분기 · 한전 발표(분기 시작 전월 하순)', next: '다음 분기 발표 시 data/kepco-model.json 수정', use: '판매단가 E 가감' },
+    { item: '하우스 모델(분기 판매량·판매단가)', last: model?.updated || null, cadence: '실적 리뷰 시', next: '분기 실적 후', use: '판매량 E·판매단가 대조' },
+    { item: 'E 재계산', last: new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date()), cadence: '데이터 수집 때마다(평일 아침·화면 갱신 시)', next: '매일', use: '모든 E·범위' }];
+  return { asOf: new Date().toISOString(), version: 3, anchor, smpE, tariffE, spreadE, quarters, updates, tariffMae: tarMae,
+    model: { coef: coef.map(v => Math.round(v * 1000) / 1000), fitFrom, n: fitRows.length, seasonYears, blend, mae, tariffGrowth: Math.round(growth * 10000) / 100, tariffMaeFlat: 1.5, jkmAssumedFlat: [...assumed].sort(), house: model ? { source: model.source, updated: model.updated } : null },
+    note: 'SMP E: 0.7×(앵커×5년 계절 비율×연료비 모델 변화율)+0.3×앵커, 앵커는 당월 일간 누적평균+편향 보정. 판매단가 E: 전년 같은 달×(1+최근 3개월 전년비)+요금 이벤트. 분기 값은 판매량 가중, 판매량 E는 하우스 모델 분기 증가율 적용. 범위 = 시차별 백테스트 평균 절대오차.' };
 }

@@ -1,6 +1,7 @@
 // 해외(일본·미국) 지표·종목 원천 (2026-10-13). 외부 라이브러리 없이 CSV·XLSX를 직접 읽는다.
 import zlib from 'node:zlib';
 import {settledBars} from './yahoo-bars.mjs';
+import {seriesRows} from './store.mjs';
 const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36';
 const get=async(url,ms=60000)=>{const r=await fetch(url,{signal:AbortSignal.timeout(ms),headers:{'User-Agent':UA}});if(!r.ok)throw Error('HTTP '+r.status+' '+url);return r;};
 const kstToday=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul'}).format(new Date());
@@ -69,7 +70,7 @@ const monthMean=(rows)=>{const m=new Map();for(const r of rows){const k=r.date.s
 const latestSource=rows=>{const s=rows.at(-1)?.source;return rows.filter(r=>r.source===s);};
 // 해외 파생: 일본 스파크(JEPX 월평균 − LNG 수입가×엔/달러×7,000Btu/kWh), PJM 스파크(PJM West − HH 현물×7 MMBtu/MWh).
 export const JP_HEAT_MMBTU_PER_KWH=0.007,US_HEAT_MMBTU_PER_MWH=7;
-export function deriveGlobal(db){const out=[];const S=id=>latestSource(db.series[id]||[]);
+export function deriveGlobal(db){const out=[];const S=id=>seriesRows(db,id);
  const jepx=S('jepx'),jlng=S('jlng'),jpy=S('usdjpy');if(jepx.length&&jlng.length&&jpy.length){const jm=monthMean(jepx),ym=monthMean(jpy);for(const r of jlng){const k=r.date.slice(0,7),a=jm.get(k),y=ym.get(k);if(!a||a.length<20||!y||y.length<10)continue;const p=a.reduce((s,x)=>s+x,0)/a.length,fx=y.reduce((s,x)=>s+x,0)/y.length;out.push({id:'jp_spark',date:k+'-01',value:Math.round((p-r.value*fx*JP_HEAT_MMBTU_PER_KWH)*100)/100,source:'자체 산출 · JEPX 월평균 − IMF 일본 LNG 수입가×엔/달러×0.007',url:'https://fred.stlouisfed.org/series/PNGASJPUSDM'});}}
  const pjm=S('pjm_west'),hh=S('hh');if(pjm.length&&hh.length){const hm=new Map(hh.map(r=>[r.date,r.value]));for(const r of pjm){let v=hm.get(r.date);if(v==null){const prev=hh.findLast(h=>h.date<r.date&&Date.parse(r.date)-Date.parse(h.date)<=4*864e5);v=prev?.value;}if(v==null)continue;out.push({id:'pjm_spark',date:r.date,value:Math.round((r.value-v*US_HEAT_MMBTU_PER_MWH)*100)/100,source:'자체 산출 · EIA PJM West 피크 − FRED Henry Hub 현물×7',url:'https://www.eia.gov/electricity/wholesale/'});}}
  return out;}

@@ -5,6 +5,10 @@ import {catalog} from './catalog.mjs';
 export const ROOT=path.dirname(fileURLToPath(import.meta.url));
 export const DATA=path.join(ROOT,'data');
 export const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+// 2026-10-14 공통 규칙: 지표의 '표시·계산용 계열' = sourceFamily가 있으면 출처 우선순위로 날짜별 병합, 없으면 최신 행의 출처만.
+// 화면(app.js points)·민감도·파생 스프레드·한전 E·주가 시차 분석이 모두 같은 계열을 쓰게 한다.
+let FAMILY=null;// 지연 생성: catalog↔global-source↔store 순환 import 시 초기화 순서 문제 방지
+export function seriesRows(db,id){FAMILY??=Object.fromEntries(catalog.filter(c=>c.sourceFamily).map(c=>[c.id,c.sourceFamily]));const raw=db.series?.[id]||[],fam=catalog.find(c=>c.id===id)?.sourceFamily;if(fam&&raw.some(r=>fam.includes(r.source))){const by=new Map();for(const r of raw){const k=fam.indexOf(r.source);if(k<0)continue;const p=by.get(r.date);if(!p||k<fam.indexOf(p.source))by.set(r.date,r);}return [...by.values()].sort((a,b)=>a.date.localeCompare(b.date));}const l=raw.at(-1);return l?raw.filter(r=>r.source===l.source):[];}
 export async function readStore(){try{return JSON.parse(await fs.readFile(path.join(DATA,'observations.json'),'utf8'));}catch(e){if(e.code==='ENOENT')return {series:{},runs:[],updatedAt:null};throw e;}}
 export function validateRows(rows){
  if(!Array.isArray(rows)||!rows.length||rows.length>200000)throw Error('관측값 배열이 비어 있거나 너무 큽니다.');

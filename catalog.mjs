@@ -158,4 +158,12 @@ link('fuel_lng','036460','LNG 발전 연료비 = 가스공사 발전용 요금 +
 // SGC에너지: 인니 석탄(추론), REC 이미 연결
 link('hba','005090','석탄 열병합 연료 일부 인니탄 사용 가능성(추론: 조달처 비중 미확인). 상승 시 연료비 부담.','재고 소진 1~3개월',0);
 link('peak','005090','전력 수요 증가 시 SMP 상승 → 발전 매출.','당일 급전',4);
+// 2026-10-14 공식 원천 우선순위: 같은 날짜에 둘 다 있으면 앞 출처 사용(공식), 없는 과거 구간은 뒤 출처로 이어붙임
+for(const [id,fam,patch] of [
+ ['jkm_futures',['CME · JKM 최근월 확정 정산가','Investing.com · JKMc1 종가'],{sourceHint:'CME 정산가(1순위) · Investing(과거)'}],
+ ['ttf',['CME · TTF 최근월 확정 정산가','Investing.com · TFMBMc1 종가'],{sourceHint:'CME 정산가(1순위) · Investing(과거)'}],
+ ['kr3y',['한국은행 ECOS · 국고채 3년(금투협 최종호가)','Investing.com · 한국 3년 국채 종가'],{sourceHint:'한국은행 ECOS(금투협 최종호가)'}],
+ ['credit',['한국은행 ECOS · 회사채 AA− 3년(금투협 최종호가)'],{sourceHint:'한국은행 ECOS(금투협 최종호가)',effects:catalog.find(v=>v.id==='credit')?.effects}],
+ ['usdkrw',['한국은행 ECOS · 원/달러 매매기준율(서울)','FRED · DEXKOUS'],{name:'원/달러 · 매매기준율(서울)',definition:'한국은행 ECOS 원/달러 매매기준율(서울 외환시장, 일간). 국내 기업 회계·가스공사 원료비 환산과 같은 기준. 2010년 이전 구간은 FRED 뉴욕 정오 환율로 이어붙임(정의 차이 일 0.5% 내외).',sourceHint:'한국은행 ECOS · 매매기준율'}]])
+{const c=catalog.find(v=>v.id===id);if(c)Object.assign(c,{sourceFamily:fam},Object.fromEntries(Object.entries(patch).filter(([,v])=>v!=null)));}
 export const domesticStocks=stocks;
