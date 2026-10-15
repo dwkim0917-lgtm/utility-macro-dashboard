@@ -105,3 +105,6 @@ body.capture{background:#fff}body.capture>*:not(#capture){display:none!important
 #capture .card .tools,#capture .card .expand,#capture .card details.impact,#capture .card .stock-tags{display:none!important}
 #capture .card .chart{height:200px}
 #capture .cap-foot{margin-top:12px;font-size:11px;color:#8a969b;border-top:1px solid #e6ebee;padding-top:8px}
+
+#capture .card.panel{grid-column:auto}#capture .card .star,#capture .card [data-ppng]{display:none!important}
+body.single #capture .card .chart{height:390px}body.single #capture .cap-head h1{font-size:24px}
