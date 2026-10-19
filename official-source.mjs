@@ -7,9 +7,12 @@ const iso=mdy=>{const [m,d,y]=mdy.split('/');return `${y}-${m}-${d}`;};
 // 최근월 = 정산가가 있는 첫 월물(목록은 만기순). 월물명도 함께 저장해 교체 시점을 추적한다.
 export const CME={wti_cl1:{id:425,name:'CL'},brent_b1:{id:424,name:'BZ'},hh_ng1:{id:444,name:'NG'},copper:{id:438,name:'HG'},jkm_futures:{id:7049,name:'JKM'},ttf:{id:8378,name:'TTF'},fei:{id:4615,name:'7E'},cpo:{id:2457,name:'CPO'}};
 export const cmeSource=k=>`CME · ${CME[k].name} 최근월 확정 정산가`;
-export function parseCmeSettlements(j){const s=(j?.settlements||[]).find(x=>/^[A-Z]{3} \d{2}$/.test(x.month)&&Number.isFinite(parseFloat(String(x.settle).replace(/,/g,''))));return s?{month:s.month,settle:parseFloat(String(s.settle).replace(/,/g,'')),final:j.reportType==='Final'}:null;}
+const MON={JAN:1,FEB:2,MAR:3,APR:4,MAY:5,JUN:6,JUL:7,AUG:8,SEP:9,OCT:10,NOV:11,DEC:12};
+// 2026-10-19: JKM은 계약월 직전 달 15일 만기. 만기 다음 거래일에도 CME 목록 첫 행에 만기 월물(최종정산가 고정)이 남아 있어 전일값이 반복 기록됐다(10/16 26.532). minIdx(년*12+월) 미만 월물은 건너뛴다.
+export function jkmMinMonthIdx(tradeIso){const y=+tradeIso.slice(0,4),m=+tradeIso.slice(5,7),d=+tradeIso.slice(8,10);return y*12+m+(d>15?2:1);}
+export function parseCmeSettlements(j,{minIdx=0}={}){const s=(j?.settlements||[]).find(x=>{const m=/^([A-Z]{3}) (\d{2})$/.exec(x.month||'');if(!m||!Number.isFinite(parseFloat(String(x.settle).replace(/,/g,''))))return false;return (2000+ +m[2])*12+MON[m[1]]>=minIdx;});return s?{month:s.month,settle:parseFloat(String(s.settle).replace(/,/g,'')),final:j.reportType==='Final'}:null;}
 export async function fetchCme(key,{days=5}={}){const {id}=CME[key];const dates=(await get(`https://www.cmegroup.com/CmeWS/mvc/Settlements/Futures/TradeDate/${id}`)).filter(d=>d[1]==='Final').slice(0,days).map(d=>d[0]);const out=[];
- for(const d of dates){const s=parseCmeSettlements(await get(`https://www.cmegroup.com/CmeWS/mvc/Settlements/Futures/Settlements/${id}/FUT?strategy=DEFAULT&tradeDate=${d}&pageSize=10`));if(s?.final)out.push({id:key,date:iso(d),value:s.settle,source:cmeSource(key),url:`https://www.cmegroup.com/search.html?q=${CME[key].name}`,contract:s.month});}
+ for(const d of dates){const s=parseCmeSettlements(await get(`https://www.cmegroup.com/CmeWS/mvc/Settlements/Futures/Settlements/${id}/FUT?strategy=DEFAULT&tradeDate=${d}&pageSize=10`),{minIdx:key==='jkm_futures'?jkmMinMonthIdx(iso(d)):0});if(s?.final)out.push({id:key,date:iso(d),value:s.settle,source:cmeSource(key),url:`https://www.cmegroup.com/search.html?q=${CME[key].name}`,contract:s.month});}
  if(!out.length)throw Error('CME 정산가 없음 '+key);return out;}
 export const ECOS={kr3y:{stat:'817Y002',item:'010200000',src:'한국은행 ECOS · 국고채 3년(금투협 최종호가)'},credit:{stat:'817Y002',item:'010300000',src:'한국은행 ECOS · 회사채 AA− 3년(금투협 최종호가)'},usdkrw:{stat:'731Y001',item:'0000001',src:'한국은행 ECOS · 원/달러 매매기준율(서울)'}};
 const ymd=d=>d.toISOString().slice(0,10).replace(/-/g,'');

@@ -59,3 +59,6 @@ test('PetroNet table yields daily Dubai with year from header, skipping summary 
 
 import {parseNuclearLive} from '../nuclear-source.mjs';
 test('KHNP live status yields utilization snapshot and running units',()=>{const h='<div>실시간 운영현황</div><span>원자력 설비용량</span><b>26,050</b> MW <span>원자력 발전량</span><b>20,769</b> MWe <p>운영현황 26기중 19기 운전중</p>';const r=parseNuclearLive(h,'2026-10-12');assert.deepEqual(r.map(x=>[x.id,x.date,x.value]),[['nuclear_live','2026-10-12',79.7],['nuclear_units','2026-10-12',19]]);assert.throws(()=>parseNuclearLive('<p>없음</p>','2026-10-12'));});
+
+import {parseCmeSettlements,jkmMinMonthIdx} from '../official-source.mjs';
+test('CME JKM skips the contract that expired on the 15th of the prior month',()=>{const j={reportType:'Final',settlements:[{month:'NOV 26',settle:'26.532'},{month:'DEC 26',settle:'29.925'}]};assert.equal(parseCmeSettlements(j,{minIdx:jkmMinMonthIdx('2026-10-16')}).settle,29.925);assert.equal(parseCmeSettlements(j,{minIdx:jkmMinMonthIdx('2026-10-15')}).settle,26.532);assert.equal(parseCmeSettlements(j).settle,26.532);});
