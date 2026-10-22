@@ -284,6 +284,8 @@ function kepcoExtra(){const F=payload.kepcoForecast;if(!F)return '<p class="p-su
 PANELS.unshift({id:'kepco',title:'한전 판매단가 · SMP · 스프레드',group:'전력·요금',codes:['015760'],coreAlias:'tariff_smp',src:'한전 전력통계속보(BigFinance) · KPX 육지 SMP · E = 대시보드 자체 추정(점선·음영·연한 막대)',extra:kepcoExtra,subs:[
  {title:'판매단가 vs SMP (원/kWh) · 점선 = E · 음영 = E 오차범위',from:'2022-01-01',unit:'원/kWh',series:[{id:'tariff',type:'line',color:'ink',w:2.2,label:'판매단가(실적)'},{fc:'tariffE',link:'tariff',type:'line',dash:true,band:true,color:'ink',label:'판매단가 E'},{id:'smp',type:'line',color:'orange',w:2.2,label:'SMP 월평균(실적)'},{fc:'smpE',link:'smp',type:'line',dash:true,band:true,color:'orange',label:'SMP E'}]},
  {title:'스프레드 = 판매단가 − SMP · 연한 막대 = E(세로선 = 오차범위)',from:'2022-01-01',unit:'원/kWh',h:.72,series:[{id:'tariff_smp',type:'bars',monthly:true,label:'스프레드(실적)'},{fc:'spreadE',link:'tariff_smp',type:'bars',monthly:true,est:true,band:true,label:'스프레드 E'}]}]});
+// 2026-10-22 원전 이용률 통합 차트는 맨 아래로
+{const i=PANELS.findIndex(p=>p.id==='nuclear');if(i>=0)PANELS.push(...PANELS.splice(i,1));}
 
 // ── 2026-10-14 실시간 현황 띠: KPX 수급(5분)·오늘 SMP(하루전 결정)·최대부하 전망·REC·한수원 원전·장중 선물가. 저장 시계열과 분리.
 async function loadLive(){const el=$('live');if(!el)return;try{const r=await fetch('/api/live');if(!r.ok)throw Error('HTTP '+r.status);const v=await r.json();const t=s=>s?new Date(s).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',hour12:false,month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
