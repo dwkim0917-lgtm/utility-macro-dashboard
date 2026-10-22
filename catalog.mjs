@@ -172,3 +172,28 @@ catalog.push(
  item('smp_set_coal','SMP 결정 비율 · 석탄','전력·요금','%','월간','유연탄·무연탄 발전기가 SMP를 결정한 시간 비율. 경부하기(봄·가을 심야)·원전 고이용률·재생에너지 확대 시 증가.',[e('015760','석탄 결정 비율 상승 = 저가 한계발전기 → SMP 하락, 한전 구입비 감소.','당월 정산',1),e('005090','석탄 발전기가 한계발전기가 되면 다크 스프레드 축소.','당월 정산',7)],{priority:'보완',sourceHint:'KPX EPSIS · 연료원별 SMP 결정',staleDays:90}),
  item('peak_fcst','오늘 최대부하 전망','수요·가동','MW','일간','KPX가 공표하는 당일 최대전력 전망(수집 시점 기준, 피크 시간대 포함). 실적은 일일 최대전력 카드.',[e('015760,036460','전망 최대부하가 높을수록 LNG 발전 가동·SMP 상방.','당일',4)],{priority:'보완',sourceHint:'KPX · 최대부하전망',staleDays:4}));
 export const domesticStocks=stocks;
+
+// ── 2026-10-22 유가 탭·원전 월간 이용률·일본 연료비 시차 (drivers-source.mjs)
+const OILC='015760,036460,047050,018670';
+const oilE=t=>[e(OILC,t,'유가→SMP·도입원가 5~7개월, 해외 E&P 판가는 즉시~분기',0)];
+catalog.push(
+ item('hormuz','호르무즈 해협 · 일 통과 선박','유가','척','일간','IMF PortWatch(위성 AIS)가 집계한 호르무즈 해협 하루 통과 선박 수(전 선종). 세계 원유 해상물동량의 약 1/5, 카타르 LNG 전량이 지나는 요충지. 평시 하루 100척 안팎. 수치 급감은 공급 차질 신호.',oilE('통항 급감은 원유·LNG 공급 차질 → 유가·JKM 상승 → 한전 원가 부담, 가스공사 현물 도입 부담, 포스코인터 E&P·트레이딩 이익'),{priority:'핵심',sourceHint:'IMF PortWatch',staleDays:10,tabs:['유가']}),
+ item('hormuz_tanker','호르무즈 해협 · 일 통과 탱커','유가','척','일간','같은 원천의 탱커(원유·제품·LNG 운반선)만 집계. 원유 수송 차질을 더 직접적으로 보여 준다.',oilE('탱커 통항 회복 여부가 공급 정상화의 선행 신호'),{sourceHint:'IMF PortWatch',staleDays:10,tabs:['유가']}),
+ item('babel','바브엘만데브 해협 · 일 통과 선박','유가','척','일간','홍해 남단 요충지. 후티 공격 등으로 우회(희망봉)하면 운임·도착 시차가 늘어 유가·운임에 영향.',oilE('통항 감소는 수에즈 경유 물동량 우회 → 운임·보험료 상승'),{priority:'보완',sourceHint:'IMF PortWatch',staleDays:10,tabs:['유가']}),
+ item('suez','수에즈 운하 · 일 통과 선박','유가','척','일간','유럽–아시아 최단 항로. 바브엘만데브와 함께 홍해 리스크를 본다.',oilE('통항 감소는 유럽행 원유·제품 공급 지연'),{priority:'보완',sourceHint:'IMF PortWatch',staleDays:10,tabs:['유가']}),
+ item('us_crude_stock','미국 원유 재고(전략비축 제외)','유가','천배럴','주간','EIA 주간 상업용 원유 재고. 예상보다 감소하면 유가 상승 압력.',oilE('재고 감소 → 근월물 강세(백워데이션)'),{fred:'WCESTUS1',sourceHint:'FRED · EIA WCESTUS1',staleDays:14,tabs:['유가']}),
+ item('us_crude_prod','미국 원유 생산','유가','천배럴/일','주간','EIA 주간 원유 생산량. 셰일 공급 반응(가격 상승 → 6~9개월 뒤 증산)을 본다.',oilE('증산은 중기 유가 하방 요인'),{priority:'보완',fred:'WCRFPUS2',sourceHint:'FRED · EIA WCRFPUS2',staleDays:14,tabs:['유가']}),
+ item('us_refutil','미국 정제설비 가동률','유가','%','주간','EIA 주간 정제가동률. 높으면 원유 수요(정제 투입) 강세.',oilE('가동률 상승은 원유 수요 강세'),{priority:'보완',fred:'WPULEUS3',sourceHint:'FRED · EIA WPULEUS3',staleDays:14,tabs:['유가']}),
+ item('usd_broad','달러지수 · 광의 명목','유가','지수','일간','FRB 광의 명목 달러지수. 달러 강세는 달러 표시 원자재 가격에 하방 압력.',oilE('달러 강세 → 유가 하방, 원화 약세 → 국내 원가 상승'),{priority:'보완',fred:'DTWEXBGS',sourceHint:'FRED · DTWEXBGS',staleDays:10,tabs:['유가']}),
+ item('ovx','원유 변동성지수(OVX)','유가','pt','일간','CBOE 원유 ETF 옵션 내재변동성. 공급 충격 기대가 커지면 급등.',oilE('변동성 급등 구간은 헤지·재고 비용 증가'),{priority:'보완',fred:'OVXCLS',sourceHint:'FRED · OVXCLS',staleDays:10,tabs:['유가']}),
+ item('gas_nyh','휘발유 · 뉴욕항 현물','유가','USD/gal','일간','뉴욕항 보통휘발유 현물. 크랙(정제마진) 산출 입력값.',oilE('제품가 강세는 정제 수요·원유 수요 지지'),{priority:'보완',fred:'DGASNYH',sourceHint:'FRED · DGASNYH',staleDays:10,tabs:['유가']}),
+ item('ho_nyh','난방유 · 뉴욕항 현물','유가','USD/gal','일간','뉴욕항 2호 난방유(경유 계열) 현물. 크랙 산출 입력값.',oilE('중간유분 강세는 동절기 수요·정제 타이트'),{priority:'보완',fred:'DHOILNYH',sourceHint:'FRED · DHOILNYH',staleDays:10,tabs:['유가']}),
+ item('crack_321','3-2-1 크랙 스프레드','유가','USD/bbl','일간','(2×휘발유 + 1×난방유)/3 × 42 − WTI 현물. 정제마진이 높으면 정제사가 원유를 더 사들여 원유 수요를 지지.',oilE('크랙 확대 → 원유 수요 강세 → 유가 지지'),{sourceHint:'자체 산출 · FRED',staleDays:10,tabs:['유가']}),
+ item('cftc_wti','WTI 운용사 순매수(CFTC)','유가','계약','주간','CFTC 분리보고서 NYMEX WTI의 Managed Money 롱 − 숏. 투기 포지션이 한쪽으로 쏠리면 반대 방향 되돌림 위험.',oilE('순매수 급증·급감은 단기 가격 변동성 확대 신호'),{priority:'보완',sourceHint:'CFTC 공개 API',staleDays:14,tabs:['유가']}),
+ item('brent_wti','Brent − WTI 스프레드','유가','USD/bbl','일간','국제 기준유(Brent)와 미국 내륙유(WTI) 차이. 중동·대서양 공급 차질 시 확대.',oilE('확대는 미국산 원유·LNG의 아시아 차익 확대'),{sourceHint:'자체 산출',staleDays:6,tabs:['유가']}),
+ item('dubai_brent','Dubai − Brent 스프레드','유가','USD/bbl','일간','중동산 중질유(Dubai)와 Brent 차이. 플러스면 중동 공급이 상대적으로 타이트. 한국 도입 원유·LNG 계약은 Dubai/JCC 연동이라 국내 원가에 직접.',oilE('Dubai 프리미엄 확대는 국내 도입단가 상승'),{sourceHint:'자체 산출',staleDays:6,tabs:['유가']}),
+ item('nuclear_gwh','원전 전력거래량 · 월간','수요·가동','GWh','월간','KPX EPSIS 전력시장 원자력 거래량(송전단). 2002년부터. 월간 이용률 산출 입력값.',[e('015760','원전 거래량 증가 → 고비용 LNG·석탄 대체 → 한전 구입비 감소','당월 구입비, 분기 실적',4)],{priority:'보완',sourceHint:'KPX EPSIS 전력거래량',staleDays:75}),
+ item('nuclear_m','원전 이용률 · 월간','수요·가동','%','월간','EPSIS 원자력 거래량 ÷ (연도별 유효설비 × 시간). 유효설비는 한수원 공식 연간 이용률과 정확히 맞도록 역산(송전단·공식 기준). 공식치 없는 해는 직전 해 기준 + 설비 변동(고리2 2026-04 재가동). 명판 26,050MW 기준 실시간 값보다 4~6%p 높게 나온다. 향후 5개월 추정(E)은 통합 차트 「원전 이용률」의 점선.',[e('015760','이용률 1%p ≈ 한전 연간 영업이익 약 2,900억원(대신증권, B등급). 고비용 LNG 대체 효과','당월 구입비, 분기 실적',4)],{priority:'핵심',sourceHint:'자체 산출 · EPSIS·한수원',staleDays:75}),
+ item('jp_fuel_lag','일본 연료비조정 시차(期ずれ) 지표','해외·일본','%','월간','엔화 연료비 지수(Brent 70%·Newcastle 석탄 30%, 2020=100) 당월 ÷ 3~5개월 전 평균 − 1. 일본 전력 요금의 연료비조정 단가는 3~5개월 전 3개월 평균 수입가로 정해진다. (+)면 원가가 요금보다 빨리 올라 일시 손실(期ずれ差損), (−)면 일시 이익. 가중치는 자체 가정(C등급).',[e(JPU,'(+) 확대 → 분기 경상이익 감소(시차 손실), (−) → 시차 이익. 일본 전력주 분기 실적 서프라이즈의 최대 변수','3~5개월 시차',0)],{priority:'핵심',sourceHint:'자체 산출 · ICE Brent·Newcastle·FRB 엔/달러',staleDays:40}));
+// 기존 유가 계열을 '유가' 탭에도 표시
+for(const id of ['wti_cl1','brent_b1','dubai_d','wti','brent','dubai','wti_m12','brent_m12']){const c=catalog.find(v=>v.id===id);if(c)c.tabs=[...(c.tabs||[]),'유가'];}
