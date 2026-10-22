@@ -8,6 +8,7 @@ import {fetchPeakForecastRow} from './live-source.mjs';
 import {fetchSmpDaily,deriveSmpMonthly} from './kpx-smp-daily.mjs';
 import {parseNuclear,parseNuclearLive} from './nuclear-source.mjs';
 import {fetchNuclearTraded,deriveNuclearMonthly,fetchChokepoints,fetchCftc,deriveOil,deriveJpFuelLag} from './drivers-source.mjs';
+import {refreshOh,deriveOhDaily} from './oh-source.mjs';
 import {environmentalJobs} from './environmental-source.mjs';
 import {catalog} from './catalog.mjs';
 import {mergeRows,mutate,today,ROOT,seriesRows} from './store.mjs';
@@ -72,6 +73,7 @@ export async function refresh(){const jobs=catalog.filter(x=>x.fred).map(x=>({na
  jobs.push({name:'KPX 장기 SMP',ids:['smp'],run:async()=>parseEpsisSmp(await fetchText('https://epsis.kpx.or.kr/epsisnew/selectEkmaSmpSmpChart.do?menuId=040201'))});
  jobs.push({name:'한수원 연간 이용률',ids:['nuclear'],run:async()=>parseNuclear(await fetchText('https://npp.khnp.co.kr/ON004004002001003'))});
  jobs.push({name:'EPSIS 원자력 전력거래량(월간)',ids:['nuclear_gwh'],run:fetchNuclearTraded});
+ jobs.push({name:'한수원 계획예방정비(본부별 공시)',ids:['nuclear_oh_gw'],run:async()=>deriveOhDaily(await refreshOh(ROOT,today()),today())});
  jobs.push({name:'IMF PortWatch 요충지 통항',ids:['hormuz','hormuz_tanker','babel','suez'],run:()=>fetchChokepoints()});
  jobs.push({name:'CFTC WTI 운용사 포지션',ids:['cftc_wti'],run:()=>fetchCftc({since:new Date(Date.now()-120*864e5).toISOString().slice(0,10)})});
  jobs.push({name:'한수원 운영현황(수집 시점)',ids:['nuclear_live','nuclear_units'],run:async()=>parseNuclearLive(await fetchText('https://npp.khnp.co.kr/'),today())});

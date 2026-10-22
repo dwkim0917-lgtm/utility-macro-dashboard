@@ -37,3 +37,4 @@ data/ici/*.png
 !data/kepco-forecast-log.json
 !data/audit-latest.json
 !data/nuclear-oh-ceiling.json
+!data/khnp-oh.json

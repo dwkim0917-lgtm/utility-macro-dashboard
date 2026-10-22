@@ -291,3 +291,9 @@ Henry Hub NG1·Brent B1·WTI CL1 선물 3계열(brent_bf/hh_bf/wti_bf)은 대시
 - 원전 3~5개월 추정(E): `data/nuclear-oh-ceiling.json`(원전 정비 트래커의 월별 이용률 상한)과 2026-01 이후 실제 월간 이용률의 선형회귀(2026-10-22 기준 n=8, 잔차 ±0.5%p). 저장소가 미래 날짜를 받지 않으므로 계열로 저장하지 않고 payload `kepcoForecast.nucE`로 계산해 통합 차트 「원전 이용률」에 점선 표시. 트래커 재생성(`전력가스/_스크립트/261019_build_oh_tracker.py`) 시 상한 파일이 자동 갱신된다.
 - 화면: 탭 「유가」(카탈로그 `tabs:['유가']`로 기존 유가 계열도 표시), 통합 차트 「원전 이용률 · 월간과 5개월 추정」「유가와 공급 요충지 · 수급 변수」「일본 연료비조정 시차」.
 - 이 PC에서는 FRED가 응답하지 않아(접속 제한) FRED 계열은 클라우드 수집으로 채운다. 일본 전력사·JAIF 사이트는 자동 접근 403 → 일본 원전 가동 현황·연료비조정 단가는 수동 확인 대상.
+
+## 원전 계획예방정비 자동 수집 · 정비 기반 이용률 추정 (2026-10-22)
+- 원천: 한수원 열린원전운영정보 계획예방정비 `https://npp.khnp.co.kr/ON004004002005001~005` (본부별). collector 작업 '한수원 계획예방정비(본부별 공시)'가 매일 읽어 `data/khnp-oh.json`에 호기·차수별로 누적(페이지는 호기당 1회차만 보여 지난 회차는 이 파일이 유일한 보관처). 일정이 바뀌면 `changes`에 기록.
+- 불시정지는 `data/khnp-oh.json`의 `unplanned` 배열에 수기 입력(unit,start,end,days,work,src).
+- 파생: `nuclear_oh_gw`(일별 정지 GW, 2026-01~), 월별 이용률 상한(명판) = 1 − 정지 MW·일 ÷ (설비×일수), 미공시 차기 OH는 직전 종료+16개월·50일 가정. 설비표·재가동 월은 `oh-source.mjs` OH_UNITS.
+- E: 상한 → 실적(nuclear_m, 공식 보정) 선형 보정(2026-01~ 적합) → payload `kepcoForecast.nucE`, 화면 표·간트는 `nuclearOH`. 기존 `data/nuclear-oh-ceiling.json`(엑셀 트래커 수출본)은 더 이상 쓰지 않음.

@@ -139,9 +139,10 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-star]');
 // ===== 복합 그래프 패널 (2026-10-13) — 유틸리티_매크로_자료_20261010.pdf 2~8장 재현. ★로 핵심 지표에 추가 =====
 const PCOL={blue:'#2a78d6',green:'#1a9a73',orange:'#e0892b',purple:'#5b4fd6',ink:'#203540',grey:'#9aa5aa',red:'#d85a30',teal:'#279a8a',lav:'#8a7ce0'};
 const PANELS=[
- {id:'nuclear',title:'원전 이용률 · 월간과 5개월 추정',group:'수요·가동',codes:['015760'],src:'KPX EPSIS 원자력 전력거래량 · 한수원 연간 이용률·계획예방정비 · E=정비 상한 회귀 추정',subs:[
+ {id:'nuclear',title:'원전 이용률 · 계획예방정비 기반 추정',group:'수요·가동',codes:['015760'],src:'KPX EPSIS 원자력 전력거래량 · 한수원 연간 이용률 · 한수원 계획예방정비 공시(매일) · E = 정비 반영 상한 → 실적 보정',extra:ohExtra,subs:[
   {title:'월간 이용률 (%, 공식 기준 보정 · 점선=E · 점=연간 공식치)',from:'2016-01-01',unit:'%',series:[{id:'nuclear_m',type:'area',color:'purple',w:1.4,label:'월간 이용률'},{fc:'nucE',link:'nuclear_m',type:'line',dash:true,color:'purple',label:'E(추정)'},{id:'nuclear',type:'dots',color:'ink',label:'연간 공식치'}]},
-  {title:'최근 24개월 (%)',months:24,unit:'%',h:.62,series:[{id:'nuclear_m',type:'line',dots:true,color:'purple',label:'월간'},{fc:'nucE',link:'nuclear_m',type:'line',dash:true,color:'purple',label:'E(추정)'}]}]},
+  {title:'최근 24개월 + 향후 (%) · 회색 = 정비 반영 이용률 상한(명판)',months:24,unit:'%',h:.7,series:[{id:'nuclear_m',type:'line',dots:true,color:'purple',label:'월간'},{fc:'nucE',link:'nuclear_m',type:'line',dash:true,color:'purple',label:'E(추정)'},{fc:'nucCeil',all:true,type:'line',w:1.3,color:'grey',label:'정비 반영 상한'}]},
+  {title:'정비·정지 용량 (GW, 일간)',months:24,unit:'GW',h:.5,series:[{id:'nuclear_oh_gw',type:'area',color:'orange',label:'정지 GW'}]}]},
  {id:'oil',title:'유가와 공급 요충지 · 수급 변수',group:'유가',codes:['015760','036460','047050','018670'],src:'ICE·NYMEX(Yahoo) · 한국석유공사 · IMF PortWatch(AIS) · EIA(FRED) · CFTC',subs:[
   {title:'Brent · WTI · Dubai (USD/bbl)',from:'2024-01-01',unit:'USD/bbl',series:[{id:'brent_b1',type:'line',color:'blue',label:'Brent'},{id:'wti_cl1',type:'line',color:'green',w:1.2,label:'WTI'},{id:'dubai_d',type:'line',color:'orange',w:1.2,label:'Dubai'}]},
   {title:'호르무즈 해협 일 통과 선박 (척, 계단=월평균)',from:'2024-01-01',unit:'척',h:.62,series:[{id:'hormuz',type:'line',color:'red',w:.8,label:'전체(일)'},{id:'hormuz',type:'mstep',color:'ink',label:'전체 월평균'},{id:'hormuz_tanker',type:'line',color:'orange',w:.8,label:'탱커(일)'}]},
@@ -168,7 +169,7 @@ const PANELS=[
   {title:'pt (우축: Drewry WCI USD/FEU)',from:'2023-01-01',unit:'pt',unit2:'USD/FEU',zero2:true,series:[{id:'scfi',type:'area',dots:true,color:'purple',label:'SCFI 종합(주간)'},{id:'kcci',type:'dots',color:'teal',label:'KCCI 한국발 종합(주간)'},{id:'wci',axis:2,type:'dots',shape:'sq',color:'orange',label:'Drewry WCI(우축)'}]}]},
 ];
 const pid=p=>'panel:'+p.id;
-function pRows(s){if(s.fc){const F=(payload.kepcoForecast||{})[s.fc]||[];const last=points(s.link||'smp').at(-1);const rows=F.map(r=>({date:r.month+'-01',value:r.value,lo:r.lo,hi:r.hi})).filter(r=>!last||r.date>last.date);if(s.type==='bars')return rows;return last&&rows.length?[{date:last.date,value:last.value,lo:last.value,hi:last.value},...rows]:rows;}
+function pRows(s){if(s.fc){const F=(payload.kepcoForecast||{})[s.fc]||[];if(s.all)return F.map(r=>({date:r.month+'-01',value:r.value}));const last=points(s.link||'smp').at(-1);const rows=F.map(r=>({date:r.month+'-01',value:r.value,lo:r.lo,hi:r.hi})).filter(r=>!last||r.date>last.date);if(s.type==='bars')return rows;return last&&rows.length?[{date:last.date,value:last.value,lo:last.value,hi:last.value},...rows]:rows;}
  return points(s.id).map(r=>({date:r.date,value:r.value*(s.k||1)}));}
 function pAgg(rows,key){const g=new Map();for(const r of rows){const k=key(r.date);(g.get(k)||g.set(k,[]).get(k)).push(r.value);}return [...g].map(([k,v])=>({k,value:v.reduce((a,b)=>a+b,0)/v.length}));}
 const mStart=k=>Date.parse(k+'-01'),mEnd=k=>{const d=new Date(mStart(k));d.setUTCMonth(d.getUTCMonth()+1);return d.getTime();};
@@ -284,6 +285,37 @@ function kepcoExtra(){const F=payload.kepcoForecast;if(!F)return '<p class="p-su
 PANELS.unshift({id:'kepco',title:'한전 판매단가 · SMP · 스프레드',group:'전력·요금',codes:['015760'],coreAlias:'tariff_smp',src:'한전 전력통계속보(BigFinance) · KPX 육지 SMP · E = 대시보드 자체 추정(점선·음영·연한 막대)',extra:kepcoExtra,subs:[
  {title:'판매단가 vs SMP (원/kWh) · 점선 = E · 음영 = E 오차범위',from:'2022-01-01',unit:'원/kWh',series:[{id:'tariff',type:'line',color:'ink',w:2.2,label:'판매단가(실적)'},{fc:'tariffE',link:'tariff',type:'line',dash:true,band:true,color:'ink',label:'판매단가 E'},{id:'smp',type:'line',color:'orange',w:2.2,label:'SMP 월평균(실적)'},{fc:'smpE',link:'smp',type:'line',dash:true,band:true,color:'orange',label:'SMP E'}]},
  {title:'스프레드 = 판매단가 − SMP · 연한 막대 = E(세로선 = 오차범위)',from:'2022-01-01',unit:'원/kWh',h:.72,series:[{id:'tariff_smp',type:'bars',monthly:true,label:'스프레드(실적)'},{fc:'spreadE',link:'tariff_smp',type:'bars',monthly:true,est:true,band:true,label:'스프레드 E'}]}]});
+// ── 2026-10-22 원전 계획예방정비 현황(한수원 공시 매일 수집) · 간트 · 월별 이용률 상한 → E
+function ohExtra(){const O=payload.nuclearOH;if(!O||O.error)return `<p class="p-sum">정비 일정 없음${O?.error?': '+esc(O.error):''}</p>`;
+ const DAY=864e5,t0=Date.parse(O.asOf)-120*DAY,t1=Date.parse(O.asOf)+460*DAY,W=920,L=64,R=8,RH=15,top=18,X=t=>L+(Math.min(Math.max(t,t0),t1)-t0)/(t1-t0)*(W-L-R);
+ const col=e=>e.kind==='불시정지'?'#d85a30':e.kind==='추정'?'#e0892b':((e.days||0)>150?'#203540':'#5b4fd6');
+ const rows=O.units;let g='';const ticks=[];for(let d=new Date(t0);d<=t1;d.setUTCMonth(d.getUTCMonth()+1)){d.setUTCDate(1);if(d<t0)continue;ticks.push(new Date(d));}
+ for(const d of ticks){const x=X(+d);g+=`<line x1="${x}" x2="${x}" y1="${top-4}" y2="${top+rows.length*RH}" stroke="#e3e8ea"/>`;if(d.getUTCMonth()%3===0)g+=`<text x="${x+2}" y="${top-6}" font-size="9" fill="#5d6d74">${String(d.getUTCFullYear()).slice(2)}.${d.getUTCMonth()+1}</text>`;}
+ rows.forEach((u,i)=>{const y=top+i*RH;g+=`<text x="${L-4}" y="${y+11}" font-size="10" text-anchor="end" fill="#203540">${esc(u.unit)}</text>`;
+  for(const e of O.events.filter(e=>e.unit===u.unit)){const a=Date.parse(e.start),b=Date.parse(e.end);if(b<t0||a>t1)continue;const x1=X(a),x2=Math.max(X(b),x1+2);
+   g+=`<rect x="${x1}" y="${y+3}" width="${x2-x1}" height="${RH-5}" rx="2" fill="${col(e)}" opacity="${e.kind==='추정'?0.45:0.85}"><title>${esc(u.unit)} ${esc(e.no||'')}${e.kind==='OH'?'차 OH':' '+e.kind} ${e.start}~${e.end} (${Math.round(e.days||0)}일)${e.work?'\n'+esc(e.work):''}</title></rect>`;}});
+ const xn=X(Date.parse(O.asOf));g+=`<line x1="${xn}" x2="${xn}" y1="${top-4}" y2="${top+rows.length*RH}" stroke="#c0392b" stroke-width="1.2"/><text x="${xn+3}" y="${top+rows.length*RH+11}" font-size="9" fill="#c0392b">오늘 ${O.asOf.slice(5)}</text>`;
+ const gantt=`<svg viewBox="0 0 ${W} ${top+rows.length*RH+16}" style="width:100%;height:auto;display:block">${g}</svg><div class="oh-lg"><span style="background:#5b4fd6"></span>정상 주기 OH <span style="background:#203540"></span>장기 OH(계속운전·설비개선) <span style="background:#d85a30"></span>불시정지 <span style="background:#e0892b;opacity:.5"></span>미공시 차기 OH 추정(직전 종료+${O.est.gapMonths}개월, ${O.est.days}일)</div>`;
+ const fmt=e=>e?`${e.start.slice(2).replaceAll('-','.')}~${e.end.slice(2).replaceAll('-','.')}`:'–';
+ const ut=rows.map(u=>{const e=u.cur||u.next;return `<tr class="${u.cur?'oh-on':''}"><td><b>${esc(u.unit)}</b></td><td>${esc(u.hq)}</td><td class="num">${n(u.mw,0)}</td><td><span class="oh-st ${u.status==='운전'?'ok':u.status==='불시정지'?'bad':'on'}">${esc(u.status)}</span></td>
+  <td>${u.cur?`${fmt(u.cur)} <small>${esc(u.cur.no||'')}${u.cur.kind==='OH'?'차':''} · 잔여 ${u.remain}일</small>`:'–'}</td><td>${u.next?`${fmt(u.next)} <small>${u.next.kind==='추정'?'(추정)':esc(u.next.no)+'차'} · D-${u.toNext}</small>`:'–'}</td><td class="num">${e?Math.round(e.days||0):'–'}</td><td><small>${esc(u.long||'정상 주기')}${e?.work&&e.kind!=='추정'?' · '+esc(e.work):''}</small></td></tr>`;}).join('');
+ const C=O.ceiling||[],E=Object.fromEntries((O.estimate||[]).map(r=>[r.month,r])),A=Object.fromEntries(points('nuclear_m').map(r=>[r.date.slice(0,7),r.value]));
+ const cm=C.filter(r=>r.month>='2026-01').slice(0,24);const nd=k=>(Date.UTC(+k.slice(0,4),+k.slice(5),1)-Date.UTC(+k.slice(0,4),+k.slice(5)-1,1))/DAY;
+ const ct=`<table class="k-qt2"><thead><tr><th>월</th>${cm.map(r=>`<th>${r.month.slice(2).replace('-','.')}</th>`).join('')}</tr></thead><tbody>
+ <tr><td>정지 GW(월평균)</td>${cm.map(r=>`<td>${n(r.offMWd/1000/nd(r.month),1)}${r.estMWd?'<small>*</small>':''}</td>`).join('')}</tr>
+ <tr><td>이용률 상한(명판)</td>${cm.map(r=>`<td>${n(r.value,1)}</td>`).join('')}</tr>
+ <tr class="b"><td>이용률 실적(공식 보정)</td>${cm.map(r=>`<td>${A[r.month]!=null?n(A[r.month],1):(E[r.month]?`<span class="oh-e">${n(E[r.month].value,1)}E</span>`:'–')}</td>`).join('')}</tr></tbody></table>`;
+ const up=(O.upcoming||[]).slice(0,14).map(x=>`<tr${x.kind==='추정'?' class="oh-est"':''}><td>${x.date}</td><td>${esc(x.what)}</td><td>${esc(x.unit)}</td><td class="num">${n(x.mw,0)}</td><td class="num">${Math.round(x.days||0)}일</td></tr>`).join('');
+ const ch=(O.changes||[]).slice(0,10).map(c=>`<tr><td>${c.date}</td><td>${esc(c.unit)} ${esc(c.no||'')}차</td><td>${esc(c.what)}</td><td><small>${esc(c.from||'')} → ${esc(c.to||'')}</small></td></tr>`).join('');
+ const f=O.fit;const nowGW=O.offNowMW/1000;
+ return `<div class="k-extra"><p class="p-sum"><b>오늘(${O.asOf}) 정지 ${O.units.filter(u=>u.cur).length}기 · ${n(nowGW,2)}GW</b> = 설비 ${n(O.capNowMW/1000,2)}GW의 ${n(O.offNowMW/O.capNowMW*100,1)}% · 정비 일정 원천: 한수원 열린원전운영정보 계획예방정비(매일 수집, 마지막 ${esc(O.updatedAt||'–')}) · 호기당 최근/차기 1회차만 게시돼 지난 회차는 대시보드가 누적 보관</p>
+ <h4>호기별 정비 일정 <small>막대에 마우스를 올리면 차수·기간·주요 정비내용</small></h4>${gantt}
+ <h4>월별 이용률 상한 → E <small>상한 = 1 − 정지 MW·일 ÷ (설비 × 일수), 명판 기준 · E = ${f?`${n(f.a,2)} + ${n(f.b,3)} × 상한 (2026-01~ 실적 ${f.n}개월, 잔차 ±${n(f.sd,2)}%p)`:'–'} · * = 미공시 차기 OH 추정 포함</small></h4><div class="table-wrap">${ct}</div>
+ <div class="oh-2"><div><h4>향후 120일 착수·복귀</h4><div class="table-wrap"><table class="k-up"><thead><tr><th>날짜</th><th>이벤트</th><th>호기</th><th>MW</th><th>정비일수</th></tr></thead><tbody>${up||'<tr><td colspan="5">없음</td></tr>'}</tbody></table></div></div>
+ <div><h4>최근 일정 변경 <small>한수원 게시값 비교</small></h4><div class="table-wrap"><table class="k-up"><thead><tr><th>확인일</th><th>회차</th><th>변경</th><th>이전 → 현재</th></tr></thead><tbody>${ch||'<tr><td colspan="4">없음</td></tr>'}</tbody></table></div></div></div>
+ <details><summary>호기별 현황표 (26기)</summary><div class="table-wrap"><table class="k-up oh-tbl"><thead><tr><th>호기</th><th>본부</th><th>MW</th><th>상태</th><th>현재 정비</th><th>차기 정비</th><th>일수</th><th>성격 · 주요 정비내용</th></tr></thead><tbody>${ut}</tbody></table></div></details>
+ <details><summary>E(추정) 계산 방법</summary><ul class="k-m"><li>한수원 본부별 계획예방정비 표(고리·한빛·월성·한울·새울)를 매일 읽어 호기·차수별로 보관하고, 일정이 바뀌면 변경 이력에 남긴다.</li><li>월별 정지 MW·일 = Σ 호기 설비 × 그 달 정지 일수(공시 OH + 불시정지 + 미공시 차기 OH 추정). 고리2는 2026-04 재가동부터 설비에 포함.</li><li>명판 상한과 실제 이용률(EPSIS 거래량, 공식 연간치 보정) 사이에는 출력감발·소내소비·보정 차이가 있어, 2026-01 이후 실적으로 선형 보정(E = a + b × 상한)한다. 2025년 이전은 지난 회차 공시가 없어 적합에서 제외.</li><li>범위 = 잔차 표준편차 × 1.5. 일정 변경·불시정지가 생기면 다음 수집 때 자동 반영된다.</li></ul></details></div>`;}
+
 // 2026-10-22 원전 이용률 통합 차트는 맨 아래로
 {const i=PANELS.findIndex(p=>p.id==='nuclear');if(i>=0)PANELS.push(...PANELS.splice(i,1));}
 
