@@ -124,3 +124,9 @@ body.single #capture .card .chart{height:390px}body.single #capture .cap-head h1
 @media print{@page{size:A4 landscape;margin:9mm}body{background:#fff!important}header .topnav,.hdr-act,.toolbar .controls,#notice,.manage,.method,.core-reset,.copy-tools,.card-actions,#live{display:none!important}
  .card,.panel,.asof,.macro-panel,article{break-inside:avoid;page-break-inside:avoid;box-shadow:none!important}#cards{gap:8px!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.asof{break-inside:auto}.ao-t tr{break-inside:avoid}}
 @media print{.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}.grid .card.panel{grid-column:1/-1}body{zoom:.78}.tool,.star,button.tool{display:none!important}.card details:not([open]){display:none}}
+
+.actbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 12px;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:10px}
+.actbar .act{font:inherit;font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}.actbar .act:hover{border-color:var(--accent);color:var(--accent)}
+.actbar .act-main{background:var(--accent);border-color:var(--accent);color:#fff}.actbar .act-main:hover{color:#fff;filter:brightness(1.08)}.actbar .act:disabled{opacity:.6;cursor:wait}
+.actbar .rs{font-size:11.5px;color:var(--muted);margin-left:4px}.actbar .act-hint{margin-left:auto;font-size:11px;color:var(--muted)}@media(max-width:700px){.actbar .act-hint{display:none}}
+@media print{.actbar{display:none!important}}
