@@ -346,12 +346,12 @@ const kst=s=>s?new Date(s).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',month:'
 function refreshState(){const el=$('refresh-status');if(!el||!payload)return;const run=payload.db.runs.at(-1),res=run?.results||[],bad=res.filter(r=>!r.ok).length;
  el.innerHTML=`수집 ${esc(kst(run?.at))}${res.length?` · 원천 ${res.length-bad}/${res.length} 성공`:''}${payload.static?` · 배포 ${esc(kst(payload.builtAt))}`:''}`;el.title=bad?'실패 원천: '+res.filter(r=>!r.ok).map(r=>r.name).join(', '):'';}
 $('refresh').onclick=async()=>{const b=$('refresh'),note=$('notice');b.disabled=true;const old=payload?.builtAt,oldRun=payload?.db.runs.at(-1)?.at;
- try{if(payload?.static){b.textContent='최신 배포 확인 중…';const r=await fetch('api/data.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('데이터 읽기 실패 '+r.status);const next=await r.json();
+ try{if(payload?.static){b.textContent='확인 중…';const r=await fetch('api/data.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('데이터 읽기 실패 '+r.status);const next=await r.json();
    if(next.builtAt!==old){payload=next;render();note.innerHTML=`최신 배포 데이터로 갱신했습니다 (배포 ${esc(kst(next.builtAt))}).`;}
    else note.innerHTML=`이미 최신 배포입니다 (배포 ${esc(kst(old))} · 평일 08:10 자동 수집). 지금 다시 수집하려면 <a href="${GH_RUN}" target="_blank" rel="noopener">GitHub Actions → Run workflow</a>(로그인 필요, 약 10~15분 후 이 버튼으로 재조회).`;}
-  else{b.textContent='공개 원천 수집 중… (1~3분)';const r=await fetch('/api/refresh',{method:'POST'});if(!r.ok)throw Error((await r.json()).error);await load();const run=payload.db.runs.at(-1),res=run?.results||[],bad=res.filter(x=>!x.ok);
+  else{b.textContent='수집 중…';const r=await fetch('/api/refresh',{method:'POST'});if(!r.ok)throw Error((await r.json()).error);await load();const run=payload.db.runs.at(-1),res=run?.results||[],bad=res.filter(x=>!x.ok);
    note.innerHTML=run?.at!==oldRun?`수집 완료 ${esc(kst(run.at))} · 원천 ${res.length-bad.length}/${res.length} 성공${bad.length?' · 실패: '+bad.map(x=>esc(x.name)).join(', '):''}`:'수집 결과 변화 없음';}}
- catch(e){note.textContent='최신화 실패: '+e.message;}finally{b.disabled=false;b.textContent='데이터 최신화 ↻';refreshState();}};
+ catch(e){note.textContent='최신화 실패: '+e.message;}finally{b.disabled=false;b.textContent='↻ 갱신';refreshState();}};
 const FREQ_BASIS={'일간':['해당일','그날의 종가·일평균·일 정산값'],'주간':['기준 주','발표 기준 주(대개 주말·발표 기준일)'],'격주':['기준일','격주 발표 기준일'],'월간':['기준월','그 달의 월평균·월합계(날짜의 1일 = 그 달)'],'분기':['기준 분기','분기 평균·합계'],'연간':['기준연도','연간 확정치']};
 function basisLabel(c,d){if(!d)return '미수집';const f=c.frequency;if(f==='월간')return `${d.slice(0,4)}년 ${+d.slice(5,7)}월`;if(f==='연간')return `${d.slice(0,4)}년`;if(f==='분기')return `${d.slice(0,4)}년 ${Math.floor((+d.slice(5,7)-1)/3)+1}Q`;return d;}
 function ageDays(c,d){if(!d)return null;let ref=Date.parse(d);if(c.frequency==='월간'){const x=new Date(ref);x.setUTCMonth(x.getUTCMonth()+1);ref=+x-864e5;}if(c.frequency==='연간')ref=Date.UTC(+d.slice(0,4),11,31);return Math.max(0,Math.floor((Date.now()-ref)/864e5));}
@@ -410,5 +410,5 @@ async function tabXlsx(){const XLSX=await loadXlsx();const ids=[...document.quer
 document.addEventListener('click',async ev=>{const b=ev.target.closest('[data-xl],[data-csv],[data-pxl],[data-pcsv]');if(!b)return;ev.preventDefault();ev.stopPropagation();b.disabled=true;const t0=b.textContent;b.textContent='…';
  try{const id=b.closest('.card')?.dataset.id;if(b.dataset.xl!=null)await cardXlsx(id);else if(b.dataset.csv!=null)cardCsv(id);else if(b.dataset.pxl)await panelXlsx(b.dataset.pxl);else if(b.dataset.pcsv)panelCsv(b.dataset.pcsv);toast('내려받기 완료');}
  catch(e){toast(e.message||'내려받기 실패',true);}finally{b.disabled=false;b.textContent=t0;}});
-$('xlsx-all').onclick=async()=>{const b=$('xlsx-all');b.disabled=true;const t0=b.textContent;b.textContent='XLSX 만드는 중…';try{const n=await tabXlsx();toast(`현재 화면 ${n}개 차트를 XLSX로 저장`);}catch(e){toast(e.message,true);}finally{b.disabled=false;b.textContent=t0;}};
+$('xlsx-all').onclick=async()=>{const b=$('xlsx-all');b.disabled=true;const t0=b.textContent;b.textContent='…';try{const n=await tabXlsx();toast(`현재 화면 ${n}개 차트를 XLSX로 저장`);}catch(e){toast(e.message,true);}finally{b.disabled=false;b.textContent=t0;}};
 window.utilityExport={...(window.utilityExport||{}),loadXlsx,cardRows,panelTables,sheetOf,cardXlsx,panelXlsx,tabXlsx,HEAD};
