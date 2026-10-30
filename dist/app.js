@@ -85,7 +85,7 @@ function render(){ renderOilCurve(); $('history-coverage').innerHTML=payload.cat
  $('health').innerHTML=(lastRun?.results||[]).map(r=>`<div class="health-row"><b>${esc(r.name)}</b><span>${r.ok?'정상 · '+r.count+'개 관측값':'실패 · '+esc(r.error)}</span></div>`).join('')+`<div class="health-row"><b>BigFinance</b><span>${payload.monitor?esc(stamp(payload.monitor.checkedAt))+' · '+esc(payload.monitor.note):'자동 확인 기록 없음 · 로그인 세션 필요'}</span></div>`;
  for(const d of document.querySelectorAll('.card details'))if(opened.includes(d.closest('.card').dataset.id))d.open=true; $('ids').textContent=payload.catalog.map(c=>`${c.id} → ${c.name} (${c.unit})`).join('\n');}
 async function load(){const r=await fetch('/api/data');if(!r.ok)throw Error('로컬 데이터 읽기 실패');const next=await r.json();payload=next;if(!$('data-series').options.length)for(const c of payload.catalog)$('data-series').add(new Option(c.name,c.id));if($('stock').options.length===1){const gs=payload.globalStocks||{},grp=(label,list)=>{if(!list.length)return;const og=document.createElement('optgroup');og.label=label;for(const [code,name] of list)og.appendChild(new Option(name,code));$('stock').appendChild(og);};grp('국내 커버리지',Object.entries(payload.stocks).filter(([c])=>!gs[c]));for(const sec of [...new Set(Object.values(gs).map(v=>v.sector))])grp(sec,Object.entries(gs).filter(([,v])=>v.sector===sec).map(([c,v])=>[c,v.name]));}{const qs=new URLSearchParams(location.search).get('stock');if(qs&&payload.stocks[qs]&&!stock){stock=qs;$('stock').value=qs;}}render();}
- $('stock').onchange=e=>{stock=e.target.value;render();};$('period').onchange=e=>{period=Number(e.target.value);render();};$('refresh').onclick=async()=>{const b=$('refresh');b.disabled=true;b.textContent='공개 원천 확인 중…';try{const r=await fetch('/api/refresh',{method:'POST'});if(!r.ok)throw Error((await r.json()).error);await load();}catch(e){$('notice').textContent=e.message;}finally{b.disabled=false;b.textContent='공개 데이터 갱신 ↻';}};
+ $('stock').onchange=e=>{stock=e.target.value;render();};$('period').onchange=e=>{period=Number(e.target.value);render();};
  $('import').onclick=async()=>{const f=$('csv').files[0];if(!f){$('notice').textContent='CSV 파일을 선택하세요.';return;}try{const r=await fetch('/api/import',{method:'POST',headers:{'Content-Type':'text/csv'},body:await f.text()});const j=await r.json();if(!r.ok)throw Error(j.error);await load();$('notice').textContent=`${j.count}개 관측값 반영 완료`;}catch(e){$('notice').textContent=e.message;}};
 load().catch(e=>{$('notice').textContent=e.message;});
 
@@ -339,3 +339,36 @@ loadLive();setInterval(loadLive,5*60e3);
  const wrap=document.createElement('section');wrap.id='capture';
  wrap.innerHTML=`<header class="cap-head"><div><h1>${esc(q.get('title')||'유틸리티 매크로')}</h1><p>${esc(q.get('sub')||'')}</p></div><div class="cap-meta"><b>UTILITY / MACRO</b><span>${latest?'최신 관측 '+esc(latest)+' · ':''}${items.every(c=>c.panel)?'패널별 기간':'차트 기간 '+plab} · 작성 ${new Date().toISOString().slice(0,10)}</span></div></header><div class="cap-grid" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${items.map(c=>c.panel?panelCard(c.panel):card(c)).join('')}</div><footer class="cap-foot">뱃지는 직전 관측 대비, 칩은 1W·1M·3M·1Y 변화율 · 상승 빨강/하락 파랑은 주가 전망이 아님 · 출처는 카드별 범례 표기 · https://dwkim0917-lgtm.github.io/utility-macro-dashboard/</footer>`;
  document.body.prepend(wrap);window.scrollTo(0,0);document.title='capture-ready';})();
+
+// ── 2026-10-30 데이터 최신화 버튼(로컬: 즉시 수집 / 공개 사이트: 최신 배포 재조회 + GitHub 수집 실행 링크) · 하단 데이터 기준일 주석
+const GH_RUN='https://github.com/dwkim0917-lgtm/utility-macro-dashboard/actions/workflows/daily.yml';
+const kst=s=>s?new Date(s).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'–';
+function refreshState(){const el=$('refresh-status');if(!el||!payload)return;const run=payload.db.runs.at(-1),res=run?.results||[],bad=res.filter(r=>!r.ok).length;
+ el.innerHTML=`수집 ${esc(kst(run?.at))}${res.length?` · 원천 ${res.length-bad}/${res.length} 성공`:''}${payload.static?` · 배포 ${esc(kst(payload.builtAt))}`:''}`;el.title=bad?'실패 원천: '+res.filter(r=>!r.ok).map(r=>r.name).join(', '):'';}
+$('refresh').onclick=async()=>{const b=$('refresh'),note=$('notice');b.disabled=true;const old=payload?.builtAt,oldRun=payload?.db.runs.at(-1)?.at;
+ try{if(payload?.static){b.textContent='최신 배포 확인 중…';const r=await fetch('api/data.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('데이터 읽기 실패 '+r.status);const next=await r.json();
+   if(next.builtAt!==old){payload=next;render();note.innerHTML=`최신 배포 데이터로 갱신했습니다 (배포 ${esc(kst(next.builtAt))}).`;}
+   else note.innerHTML=`이미 최신 배포입니다 (배포 ${esc(kst(old))} · 평일 08:10 자동 수집). 지금 다시 수집하려면 <a href="${GH_RUN}" target="_blank" rel="noopener">GitHub Actions → Run workflow</a>(로그인 필요, 약 10~15분 후 이 버튼으로 재조회).`;}
+  else{b.textContent='공개 원천 수집 중… (1~3분)';const r=await fetch('/api/refresh',{method:'POST'});if(!r.ok)throw Error((await r.json()).error);await load();const run=payload.db.runs.at(-1),res=run?.results||[],bad=res.filter(x=>!x.ok);
+   note.innerHTML=run?.at!==oldRun?`수집 완료 ${esc(kst(run.at))} · 원천 ${res.length-bad.length}/${res.length} 성공${bad.length?' · 실패: '+bad.map(x=>esc(x.name)).join(', '):''}`:'수집 결과 변화 없음';}}
+ catch(e){note.textContent='최신화 실패: '+e.message;}finally{b.disabled=false;b.textContent='데이터 최신화 ↻';refreshState();}};
+const FREQ_BASIS={'일간':['해당일','그날의 종가·일평균·일 정산값'],'주간':['기준 주','발표 기준 주(대개 주말·발표 기준일)'],'격주':['기준일','격주 발표 기준일'],'월간':['기준월','그 달의 월평균·월합계(날짜의 1일 = 그 달)'],'분기':['기준 분기','분기 평균·합계'],'연간':['기준연도','연간 확정치']};
+function basisLabel(c,d){if(!d)return '미수집';const f=c.frequency;if(f==='월간')return `${d.slice(0,4)}년 ${+d.slice(5,7)}월`;if(f==='연간')return `${d.slice(0,4)}년`;if(f==='분기')return `${d.slice(0,4)}년 ${Math.floor((+d.slice(5,7)-1)/3)+1}Q`;return d;}
+function ageDays(c,d){if(!d)return null;let ref=Date.parse(d);if(c.frequency==='월간'){const x=new Date(ref);x.setUTCMonth(x.getUTCMonth()+1);ref=+x-864e5;}if(c.frequency==='연간')ref=Date.UTC(+d.slice(0,4),11,31);return Math.max(0,Math.floor((Date.now()-ref)/864e5));}
+function renderAsOf(){const el=$('asof');if(!el||!payload)return;const groups=[...new Set(payload.catalog.map(c=>c.group))];let late=0,miss=0;
+ const rows=groups.map(g=>{const cs=payload.catalog.filter(c=>c.group===g);return `<tr class="ao-g"><td colspan="7">${esc(g)} <small>${cs.length}개</small></td></tr>`+cs.map(c=>{const raw=payload.db.series[c.id]||[];const last=raw.at(-1);const d=last?.date;const age=ageDays(c,d);const stale=d&&(Date.now()-Date.parse(d))/864e5>(c.staleDays||8);if(!d)miss++;else if(stale)late++;const B=FREQ_BASIS[c.frequency]||['기준일',''];
+  return `<tr class="${!d?'ao-miss':stale?'ao-late':''}"><td>${esc(c.name)}</td><td class="ao-d"><b>${esc(basisLabel(c,d))}</b></td><td>${esc(c.frequency)} · ${esc(B[1])}</td><td class="num">${age==null?'–':age+'일'}</td><td>${!d?'미수집':stale?'지연':'정상'}</td><td><small>${esc(kst(last?.collectedAt))}</small></td><td><small>${esc(last?.source||c.sourceHint||'')}</small></td></tr>`;}).join('');}).join('');
+ const O=payload.nuclearOH,oc=payload.oilCurve,run=payload.db.runs.at(-1);
+ const extra=[['원전 계획예방정비 일정',O?.updatedAt||'–','한수원 게시 일정 확인일(일정 자체는 미래 계획)'],['유가 선물 커브',oc?.asOf?kst(oc.asOf):'–','거래소 월물 시세 조회 시각(장중이면 지연 시세)'],['실시간 현황 띠',payload.static?'배포 시점 스냅샷':'5분마다 조회','KPX 수급·원전 운전 현황'],['추정치(E)·통합 차트 계산',kst(payload.builtAt),'이 화면 데이터를 만든 시각 기준으로 재계산'],['마지막 공개 원천 수집',kst(run?.at),`원천 ${(run?.results||[]).filter(r=>r.ok).length}/${(run?.results||[]).length} 성공`]];
+ el.innerHTML=`<details class="asof" open><summary>데이터 기준일 <small>지표 ${payload.catalog.length}개 · 지연 ${late} · 미수집 ${miss} · 화면 데이터 ${esc(kst(payload.builtAt))} 기준</small></summary>
+ <ul class="ao-note"><li><b>기준일</b> = 값이 가리키는 날짜(관측일·기준월). <b>수집시각</b>(대시보드가 가져온 때)과 다릅니다. 월간 지표는 날짜가 ‘그 달 1일’로 저장되며 그 달 전체 평균·합계를 뜻합니다.</li>
+ <li><b>경과</b> = 오늘 − 기준일(월간은 기준월 말일, 연간은 연말). 발표 주기상 정상 지연을 넘으면 <span class="ao-late-t">지연</span>으로 표시합니다. 일간 시세는 한국 시각 기준 전 거래일 종가가 최신인 경우가 많습니다.</li>
+ <li>통합 차트의 E(점선)는 추정치이며 실측 기준일 이후 구간입니다.</li></ul>
+ <div class="table-wrap"><table class="ao-x"><thead><tr><th>항목</th><th>기준 시점</th><th>의미</th></tr></thead><tbody>${extra.map(x=>`<tr><td>${esc(x[0])}</td><td><b>${esc(x[1])}</b></td><td>${esc(x[2])}</td></tr>`).join('')}</tbody></table></div>
+ <div class="table-wrap"><table class="ao-t"><thead><tr><th>지표</th><th>기준일(최신 값)</th><th>주기 · 기준일 의미</th><th>경과</th><th>상태</th><th>수집시각</th><th>출처</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+ refreshState();}
+{const _r=render;render=function(){_r();try{renderAsOf();}catch(e){console.warn('asof',e);}};}
+
+// ── 2026-10-30 현재 화면 PDF 저장(브라우저 인쇄 → PDF, 차트는 SVG라 벡터로 저장)
+$('pdf').onclick=()=>{const t=document.title,tab=(typeof group!=='undefined'?group:'전체'),d=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
+ document.title=`유틸리티매크로_${tab}_${d}`;document.body.classList.add('printing');const done=()=>{document.title=t;document.body.classList.remove('printing');window.removeEventListener('afterprint',done);};window.addEventListener('afterprint',done);setTimeout(()=>window.print(),60);};

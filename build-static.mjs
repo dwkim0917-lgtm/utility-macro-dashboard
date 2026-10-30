@@ -15,7 +15,7 @@ const rewrite=s=>s
  .replace(/\/analysis\?indicator=/g,'analysis.html?indicator=')
  .replace(/(href|src)="\/([a-z-]+\.(css|js|svg))"/g,'$1="$2"');
 for(const f of await fs.readdir(DIST)){let s=await fs.readFile(path.join(DIST,f),'utf8');if(/\.(html|js|css)$/.test(f))s=rewrite(s);
- if(f==='index.html')s=s.replace('</head>','<style>#refresh,#import,#paste-import,#csv,#paste-csv,label[for=csv]{display:none!important}</style></head>');
+ if(f==='index.html')s=s.replace('</head>','<style>#import,#paste-import,#csv,#paste-csv,label[for=csv]{display:none!important}</style></head>');
  await fs.writeFile(path.join(SITE,f),s);}
 const write=(name,obj)=>fs.writeFile(path.join(SITE,'api',name),typeof obj==='string'?obj:JSON.stringify(obj));
 await write('data.json',await dataPayload({analysisBase:'analysis.html',isStatic:true}));
