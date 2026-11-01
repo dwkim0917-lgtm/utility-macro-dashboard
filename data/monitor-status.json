@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-10-10T02:57:29.926Z",
-  "status": "complete",
-  "note": "BigFinance 2026-10-10 로그인 복구, 5계열 최근 2개월 재검증(원천 신규 월 없음: 한전 7월·가스/두바이 8월이 최신). Investing 4계열 10/9까지 반영.",
+  "checkedAt": "2026-11-01T22:27:44.774Z",
+  "status": "partial",
+  "note": "저장 잠금으로 collector 및 웹9행 import 실패. BigFinance 세션 만료. Telegram08:30 단일 대기. 기존 관측으로 분석 실행 중.",
   "missing": [
     "jkm",
     "lpg_cp",
@@ -303,16 +303,23 @@
       "last": "2025-12-01"
     }
   ],
-  "failures": [],
-  "imported": 14,
+  "failures": [
+    {
+      "source": "collector/import",
+      "at": "2026-11-01T22:27:44.774Z",
+      "error": "write.lock 저장 잠금"
+    },
+    {
+      "source": "BigFinance",
+      "at": "2026-11-01T22:27:44.774Z",
+      "error": "기관 세션 만료"
+    }
+  ],
+  "imported": 0,
   "importDetails": {
-    "webNew": 2,
-    "webRevised": 0,
-    "webVerified": 2,
-    "bigfinanceVerified": 10,
-    "publicCollectorAt": "2026-10-06T06:01:42.191Z",
-    "publicJobs": 25,
-    "publicProcessedRows": 88575
+    "rows": 0,
+    "pendingRows": 9,
+    "file": "data/manual-verified-2026-11-02.json"
   },
   "knownHistoricalLimitations": [
     {
@@ -325,7 +332,7 @@
     }
   ],
   "analysis": {
-    "status": "complete",
+    "status": "running",
     "generatedAt": "2026-10-07T00:07:09.086833+00:00",
     "asOfMonth": "2026-09",
     "hypothesisCount": 17287
@@ -338,11 +345,11 @@
     "recMonthlyLast": "2025-12-01"
   },
   "telegram": {
-    "date": "2026-10-07",
-    "status": "sent",
-    "messageId": 3887,
-    "at": "2026-10-06T23:56:42.773Z",
-    "messagePath": "C:\\Users\\park jiyeon\\Desktop\\김동욱\\5. 섹터 리서치\\utility-macro-dashboard\\data\\telegram-brief-2026-10-07.txt"
+    "date": "2026-11-02",
+    "pid": 18976,
+    "state": "waiting",
+    "due": "2026-11-01T23:30:00.000Z",
+    "updatedAt": "2026-11-01T22:27:22.254Z"
   },
   "lastCheck": {
     "at": "2026-10-06T01:05:57.208Z",
