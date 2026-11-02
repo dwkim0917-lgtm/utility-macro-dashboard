@@ -13,7 +13,7 @@ import {environmentalJobs} from './environmental-source.mjs';
 import {catalog} from './catalog.mjs';
 import {mergeRows,mutate,today,ROOT,seriesRows} from './store.mjs';
 import {pathToFileURL} from 'node:url';
-import {settledBars} from './yahoo-bars.mjs';
+import {settledBars} from './yahoo-bars.mjs';import {fetchCapacity} from './capacity-source.mjs';
 const clean=s=>s.replace(/<[^>]*>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ').trim();
 export const tables=html=>[...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map(m=>[...m[1].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map(c=>clean(c[1])));
 const num=s=>Number(s.replaceAll(',','').trim());
@@ -103,6 +103,7 @@ export async function refresh(){const jobs=catalog.filter(x=>x.fred).map(x=>({na
  jobs.push({name:'GIMNI 인니 CPO HR',ids:['cpo_hr','cpo_duty'],run:async()=>{const r=await fetch('https://gimni.org/harga-cpo',{signal:AbortSignal.timeout(25000),headers:{'User-Agent':browserUA}});if(!r.ok)throw Error('HTTP '+r.status);return parseGimniHr(await r.text());}});
  jobs.push(...environmentalJobs);
  // 2026-10-13: 국내 연료비·정산단가, 해외(일본·미국) 지표
+ jobs.push({name:'KPX EPSIS 연료원별 설비용량(신재생 월 신규 설치)',ids:['cap_solar','cap_wind','cap_fcell','cap_total','add_solar','add_wind','add_fcell','add_solar_12m'],run:()=>fetchCapacity(browserUA)});
  jobs.push({name:'KPX EPSIS 연료비단가·열량단가',ids:['fuel_lng','fuel_coal','fuel_nuc','lng_heat'],run:async()=>parseEpsisFuel(await fetchText('https://epsis.kpx.or.kr/epsisnew/selectEkmaFucUpfChart.do?menuId=040100'))});
  jobs.push({name:'KPX EPSIS 연료원별 정산단가',ids:['settle_nuc','settle_coal','settle_lng'],run:async()=>parseEpsisSettle(await fetchText('https://epsis.kpx.or.kr/epsisnew/selectEkmaUpsBftChart.do?menuId=040701'))});
  for(const c of catalog.filter(x=>x.yahoo))jobs.push({name:'Yahoo '+c.yahoo,ids:[c.id],run:()=>fetchYahooDaily(c.yahoo,c.id,c.yahoo,Math.floor(Date.now()/1000)-400*86400)});
