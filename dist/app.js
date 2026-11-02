@@ -33,7 +33,7 @@ function legend(rows,item){const vals=chartVals(rows);if(!vals.length)return '';
  return `<div class="legend"><span><i class="sw line"></i>${esc(lg.series||item.sourceHint||'관측값')}</span><span><i class="sw dot"></i>최신 ${esc(dlab(vals.at(-1).date,item))}</span><span><i class="sw dash"></i>기간 평균 ${n(mean,dec)}</span></div>`;}
 // 변동 표기: 주 뱃지는 직전 관측 대비(일간=전 거래일, 월간=전월, 연간=전년). 보조 줄은 1W·1M·3M·1Y(월간 1M·3M·1Y).
 const primaryLabel=(f,id)=>f==='일간'?'전일':f==='주간'?(id==='rec'?'직전 거래일':'전주'):f==='격주'?'직전 고시':f==='월간'?'전월':f==='분기'?'전분기':f==='연간'?'전년':'직전';
-function diffText(a,b,unit){const c=a.value-b.value,f=(v,d,u)=>{const r=Number(v.toFixed(d));return (r>0?'+':'')+n(r===0?0:r,d)+u;};if(unit==='%')return f(c,2,'%p');if(unit==='°C')return f(c,1,'°C');if(unit==='USD/MMBtu'&&(a.id==='jkm_fei'||a.id==='jkm_hh'))return f(c,2,' $');/* 2026-10-13: 부호가 바뀌는 스프레드는 % 대신 절대 변화 */if(['spark_spread','dark_spread','tariff_smp','jp_spark','pjm_spark'].includes(a.id))return f(c,1,' '+unit.split('/')[0].replace('JPY','엔'));return b.value!==0?f(c/Math.abs(b.value)*100,2,'%'):'비교 불가';}
+function diffText(a,b,unit){const c=a.value-b.value,f=(v,d,u)=>{const r=Number(v.toFixed(d));return (r>0?'+':'')+n(r===0?0:r,d)+u;};if(unit==='%')return f(c,2,'%p');if(unit==='°C')return f(c,1,'°C');if(unit==='USD/MMBtu'&&(a.id==='jkm_fei'||a.id==='jkm_hh'||a.id==='jkm_ttf'))return f(c,2,' $');/* 2026-10-13: 부호가 바뀌는 스프레드는 % 대신 절대 변화 */if(['spark_spread','dark_spread','tariff_smp','jp_spark','pjm_spark'].includes(a.id))return f(c,1,' '+unit.split('/')[0].replace('JPY','엔'));return b.value!==0?f(c/Math.abs(b.value)*100,2,'%'):'비교 불가';}
 function baseBefore(rows,last,days,tol){const target=Date.parse(last.date)-days*86400000;const b=rows.findLast(r=>Date.parse(r.date)<=target);return b&&b!==last&&target-Date.parse(b.date)<=tol*86400000?b:null;}
 function compareList(rows,item){const last=rows.at(-1),f=item.frequency,out=[];const add=(label,b)=>{if(b)out.push({label,from:b.date,text:diffText(last,b,item.unit),cls:last.value>b.value?'rise':last.value<b.value?'fall':'neutral'});};
  if(f==='일간'||f==='주간'){add('1W',baseBefore(rows,last,7,6));add('1M',baseBefore(rows,last,30,10));add('3M',baseBefore(rows,last,91,14));add('1Y',baseBefore(rows,last,365,15));}
@@ -156,6 +156,10 @@ const PANELS=[
  {id:'jkm_hh',title:'JKM · Henry Hub · 스프레드',group:'에너지',codes:['036460','047050','018670'],src:'S&P Global Platts JKM · CME NYMEX',subs:[
   {title:'JKM vs Henry Hub',from:'2024-01-01',unit:'USD/MMBtu',series:[{id:'jkm_futures',type:'line',color:'blue',label:'JKM 최근월 선물'},{id:'hh_ng1',type:'line',color:'green',label:'Henry Hub NG1'}]},
   {title:'스프레드 JKM − HH (미국산 LNG 아시아 차익)',from:'2024-01-01',unit:'USD/MMBtu',h:.62,series:[{id:'jkm_hh',type:'area',color:'purple',label:'JKM − HH'}]}]},
+ {id:'jkm_ttf',title:'JKM · TTF · 스프레드',group:'에너지',codes:['036460','047050','018670','015760'],src:'CME JKM·TTF 최근월 확정 정산가 · Yahoo EUR/USD (TTF = EUR/MWh × EURUSD ÷ 3.412)',subs:[
+  {title:'JKM vs TTF (USD/MMBtu 환산)',from:'2021-01-01',unit:'USD/MMBtu',series:[{id:'jkm_futures',type:'line',color:'blue',label:'JKM 최근월 선물'},{id:'ttf_usd',type:'line',color:'orange',label:'TTF (USD 환산)'}]},
+  {title:'스프레드 JKM − TTF (+ 아시아 프리미엄 / − 유럽 프리미엄)',from:'2021-01-01',unit:'USD/MMBtu',h:.62,series:[{id:'jkm_ttf',type:'bars',label:'JKM − TTF'}]},
+  {title:'TTF 원단위 (EUR/MWh)',from:'2021-01-01',unit:'EUR/MWh',h:.55,series:[{id:'ttf',type:'line',color:'orange',label:'TTF 최근월 선물'}]}]},
  {id:'jkm',title:'JKM 가격',group:'에너지',codes:['036460','015760','018670'],src:'S&P Global Platts JKM(CME 최근월 선물)',subs:[
   {title:'JKM 최근월 선물 · 분기 평균',from:'2023-01-01',unit:'USD/MMBtu',series:[{id:'jkm_futures',type:'line',color:'blue',label:'JKM 최근월 선물'},{id:'jkm_futures',type:'qstep',color:'ink',label:'분기 평균'}]}]},
  {id:'jkm_fei',title:'JKM − FEI 스프레드 현황',group:'에너지',codes:['018670','017940'],src:'Argus Media · CME (FEI ÷ 47.7 MMBtu/t)',subs:[
