@@ -20,7 +20,7 @@ export function parseEpsisCapacity(js){
  // 미공표 꼬리 제거
  let end=monthly.length;while(end>1&&COLS.every(k=>Math.abs(monthly[end-1].v[k]-monthly[end-2].v[k])<1e-6))end--;
  const pub=monthly.slice(0,end),dropped=monthly.slice(end).map(r=>r.date);
- const r3=x=>Math.round(x*1000)/1000;const out=[];
+ const r3=x=>Math.round(x*10)/10;const out=[];
  for(const r of pub)for(const [id,c] of CAP_SERIES)out.push({id,date:r.date,value:r3(r.v[c]),source:SRC,url:CAP_URL});
  for(let i=1;i<pub.length;i++){if(monthsBetween(pub[i-1].date,pub[i].date)!==1)continue;
   for(const [id,c] of [['add_solar','c93'],['add_wind','c94'],['add_fcell','c91']])out.push({id,date:pub[i].date,value:r3(pub[i].v[c]-pub[i-1].v[c]),source:DSRC,url:CAP_URL});}

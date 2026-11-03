@@ -140,3 +140,5 @@ header .hdr-tools button.ht:hover{border-color:var(--accent);color:var(--accent)
 @media print{@page{size:A4 portrait;margin:7mm}body{zoom:.58}header{height:auto;padding:4px 0;border:0}.hdr-tools,header .topnav,header .local{display:none!important}
  .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}.grid .card.panel{grid-column:1/-1}.card{padding:8px!important}
  .ao-t,.ao-x,.k-qt2,.k-up{font-size:9.5px!important}.ao-t td,.ao-t th{padding:2px 4px!important}}
+/* 2026-11-03 카드 제목이 버튼 줄(복사·PNG·XLSX·CSV·데이터)에 밀려 세로로 꺾이지 않게: 좁으면 버튼을 다음 줄로 */
+.card-top{flex-wrap:wrap;row-gap:4px}.card-top>div:first-child{flex:1 1 150px;min-width:150px}.card-top .tools{flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
