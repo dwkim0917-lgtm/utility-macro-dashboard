@@ -8,7 +8,8 @@ import {mutate,today} from './store.mjs';
 import {settledBars} from './yahoo-bars.mjs';
 const UA={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36'};
 const YAHOO=[['wti_cl1','CL=F','Yahoo Finance · NYMEX CL1 확정 종가'],['brent_b1','BZ=F','Yahoo Finance · ICE B1 확정 종가'],['hh_ng1','NG=F','Yahoo Finance · NYMEX NG1 확정 종가'],
- ['fei','A7E=F','Yahoo Finance · CME Argus 프로판 FEI 연속(A7E=F) 종가'],['cpo','CPO=F','Yahoo Finance · CME CPO=F 종가'],['copper','HG=F','Yahoo Finance · HG=F 종가'],['iron_ore','TIO=F','Yahoo Finance · TIO=F 종가']];
+ ['fei','A7E=F','Yahoo Finance · CME Argus 프로판 FEI 연속(A7E=F) 종가'],['cpo','CPO=F','Yahoo Finance · CME CPO=F 종가'],['copper','HG=F','Yahoo Finance · HG=F 종가'],['iron_ore','TIO=F','Yahoo Finance · TIO=F 종가'],
+ /* 2026-11-03: EUR/USD도 서머타임 종료 날짜 밀림 정정 대상 */['eurusd','EURUSD=X','Yahoo Finance · EUR/USD 일간 종가']];
 const RENAME={'Yahoo Finance · NYMEX CL1 종가(당일 장중 포함)':'Yahoo Finance · NYMEX CL1 확정 종가','Yahoo Finance · ICE B1 종가(당일 장중 포함)':'Yahoo Finance · ICE B1 확정 종가','Yahoo Finance · NYMEX NG1 종가(당일 장중 포함)':'Yahoo Finance · NYMEX NG1 확정 종가'};
 // 거래일만 존재하는 시장 계열(주말 날짜는 오류). SMP·전력수요·기온·JEPX·원전·PJM(주말 인도분) 등 달력일 계열은 제외.
 const MARKET=['jkm_futures','fei','hh_ng1','coal','wti_cl1','brent_b1','wti_m12','brent_m12','wti','dubai_d','ttf','usdkrw','kr3y','credit','us10y','hh','brent','kau','cpo','copper','iron_ore','usdjpy','jkm_fei','jkm_hh'];
