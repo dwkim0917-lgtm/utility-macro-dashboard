@@ -167,8 +167,8 @@ const PANELS=[
   {title:'TTF 원단위 (EUR/MWh)',from:'2021-01-01',unit:'EUR/MWh',h:.55,series:[{id:'ttf',type:'line',color:'orange',label:'TTF 최근월 선물'}]}]},
  {id:'jkm',title:'JKM 가격',group:'에너지',codes:['036460','015760','018670'],src:'S&P Global Platts JKM(CME 최근월 선물)',subs:[
   {title:'JKM 최근월 선물 · 분기 평균',from:'2023-01-01',unit:'USD/MMBtu',series:[{id:'jkm_futures',type:'line',color:'blue',label:'JKM 최근월 선물'},{id:'jkm_futures',type:'qstep',color:'ink',label:'분기 평균'}]}]},
- {id:'jkm_fei',title:'JKM − FEI 스프레드 현황',group:'에너지',codes:['018670','017940'],src:'Argus Media · CME (FEI ÷ 47.7 MMBtu/t)',subs:[
-  {title:'JKM vs FEI(열량 환산)',from:'2024-07-01',unit:'USD/MMBtu',series:[{id:'jkm_futures',type:'line',color:'blue',label:'JKM'},{id:'fei',k:1/47.7,type:'line',color:'teal',label:'FEI 프로판 ÷ 47.7'}]},
+ {id:'jkm_fei',title:'JKM − FEI 스프레드 현황',group:'에너지',codes:['018670','017940'],extra:()=>jkmFeiExtra('base'),src:'Argus Media · CME (FEI ÷ 47.7 MMBtu/t)',subs:[
+  {title:'JKM vs FEI',from:'2024-07-01',unit:'USD/MMBtu',series:[{id:'jkm_futures',type:'line',color:'blue',label:'JKM'},{id:'fei',k:1/47.7,type:'line',color:'teal',label:'FEI 프로판 ÷ 47.7'}]},
   {title:'스프레드 JKM − FEI (+ = LPG가 열량당 저렴)',from:'2024-07-01',unit:'USD/MMBtu',h:.62,series:[{id:'jkm_fei',type:'bars',label:'JKM − FEI'}]}]},
  {id:'skgas_ir',title:'SK가스 투자 지표 · JKM–FEI 스프레드 · FEI/Brent 상대가',group:'에너지',codes:['018670','017940'],extra:()=>jkmFeiExtra(),src:'SK가스 3Q26 IR p.7 정의(FEI÷47.8 MMBtu/t, FEI÷8.21÷Brent) · 대시보드 = CME JKM·A7E FEI·ICE Brent 선물 최근월, 점 = SK가스 IR 공표(LPG Daily 월평균)',subs:[
   {title:'① JKM–FEI 스프레드 월평균 ($/MMBtu, ÷47.8, + = LPG가 열량당 저렴) · 점 = SK가스 IR 공표',from:'2022-01-01',unit:'USD/MMBtu',series:[{id:'jkm_fei_m',type:'bars',monthly:true,label:'대시보드 월평균(IR 환산)'},{id:'skgas_ir_jkm_fei',type:'dots',color:'ink',label:'SK가스 IR 공표'}]},
@@ -432,7 +432,7 @@ function jfMonthsBack(d,m){const [y,mo,da]=d.slice(0,10).split('-').map(Number);
 function jfAt(rows,d){let r=null;for(const x of rows){if(x.date.slice(0,10)<=d)r=x;else break;}return r;}
 function jfRows(id){return [...points(id)].filter(r=>Number.isFinite(r.value)).sort((a,b)=>a.date<b.date?-1:1);}
 function jfDay(d){const w='일월화수목금토'[new Date(d.slice(0,10)+'T00:00:00Z').getUTCDay()];return d.slice(0,10)+'('+w+')';}
-function jkmFeiExtra(){try{
+function jkmFeiExtra(mode){try{
  const fmt=(v,dp)=>v==null?'—':n(v,dp);const chg=(a,b,dp,pct)=>{if(a==null||b==null)return '<td>—</td>';const c=a-b;const cls=c>0?'up':c<0?'dn':'';const s=(c>0?'+':'')+n(Number(c.toFixed(dp)),dp)+(pct&&b?` <span class="d">${(c/Math.abs(b)*100>0?'+':'')}${(c/Math.abs(b)*100).toFixed(1)}%</span>`:'');return `<td class="${cls}">${s}</td>`;};
  const cell=(r,dp,mon)=>r?`<td>${fmt(r.value,dp)}<span class="d">${mon?r.date.slice(0,7):jfDay(r.date)}</span></td>`:'<td>—</td>';
  const base=jfRows('jkm_fei');const L=base.at(-1);if(!L)return '<p class="p-sum">JKM–FEI 관측치 없음</p>';
@@ -448,9 +448,9 @@ function jkmFeiExtra(){try{
  const head='<thead><tr><th>지표</th><th>최신 관측</th><th>1M 전</th><th>1M 변화</th><th>3M 전</th><th>3M 변화</th></tr></thead>';
  const body=[
   line('JKM − FEI · 기존 방식 (÷47.7)','jkm_fei',2,{note:'일간 · 대시보드 기본 계열'}),
-  line('JKM − FEI · SK가스 IR 환산 (÷47.8)','jkm_fei_ir',2,{note:'일간'}),
+  ...(mode==='base'?[]:[line('JKM − FEI · SK가스 IR 환산 (÷47.8)','jkm_fei_ir',2,{note:'일간'}),
   line('JKM − FEI · 월평균 (÷47.8)','jkm_fei_m',2,{monthly:true,note:`월 단순평균 · ${curM||''} 진행 중(${nDays}일)`}),
-  line('JKM − FEI · SK가스 IR 공표','skgas_ir_jkm_fei',1,{monthly:true,note:'LPG Daily 월평균 · 분기 IR 때 갱신'}),
+  line('JKM − FEI · SK가스 IR 공표','skgas_ir_jkm_fei',1,{monthly:true,note:'LPG Daily 월평균 · 분기 IR 때 갱신'})]),
   '<tr><td colspan="6" class="d" style="text-align:left;padding-top:6px">구성 요소 (위 기존 방식과 같은 관측일 기준)</td></tr>',
   line('JKM 최근월 선물 ($/MMBtu)','jkm_futures',2,{sameDates:true,pct:true}),
   line('FEI 프로판 선물 ($/t)','fei',1,{sameDates:true,pct:true}),
