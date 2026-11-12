@@ -481,3 +481,28 @@ function kdhcOhExtra(){const O=payload.kdhcOH;if(!O||O.error)return `<p class="p
  const srcs=Object.values(O.sources).sort((a,b)=>a.date<b.date?1:-1).map(s=>`${esc(s.title)} (${s.date})`).join(' · ');
  return `<p class="p-sum">오늘 정비 중 <b>${n(O.offNow,0)}MW</b> / 대상 ${n(O.fleet,0)}MW ${badge}</p>${gantt}${pt}${qt}<p class="kd-n">출처: ${srcs}. 일정 갱신: 분기 실적발표(2·5·8·11월) O/H 표 → data/kdhc-oh.json 수정 → 다음 수집 때 일별 정지 용량·분기 표 자동 재계산. 시작·종료일 포함 일수, 계획 기준(실제 착수·종료와 다를 수 있음). 감익 판단은 종목 노트(3.review 261111) 참조.</p>`;
  }catch(e){return `<p class="p-sum">O/H 표 오류: ${esc(e.message)}</p>`;}}
+
+// ── 2026-11-12 카드·복합 차트 위치 조정: ▲▼ 버튼, 탭·섹션별 순서를 이 브라우저(localStorage)에 저장
+const ORD_KEY='utility-order-v1';
+function ordLoad(){try{return JSON.parse(localStorage.getItem(ORD_KEY)||'{}')||{};}catch{return {};}}
+function ordSave(o){try{localStorage.setItem(ORD_KEY,JSON.stringify(o));}catch{}}
+const ordKey=el=>el.dataset.panel?'p:'+el.dataset.panel:el.dataset.id?'c:'+el.dataset.id:null;
+const ordTab=()=>(typeof group!=='undefined'?group:'')+(typeof stock!=='undefined'&&stock?'@'+stock:'');
+function ordScope(parent){const sec=parent.closest('section');const h=(sec?.querySelector('h2')?.textContent||'').trim().slice(0,40);return ordTab()+'|'+h;}
+const ordItems=parent=>[...parent.children].filter(el=>ordKey(el)&&(el.matches('[data-panel]')||el.matches('.card[data-id]')));
+function ordButtons(el){const tools=el.querySelector('.tools');if(!tools||tools.querySelector('[data-mv]'))return;
+ tools.insertAdjacentHTML('afterbegin','<button class="tool mv" data-mv="-1" title="위로 이동 (순서는 이 브라우저에 저장)" aria-label="위로 이동">▲</button><button class="tool mv" data-mv="1" title="아래로 이동" aria-label="아래로 이동">▼</button>');}
+function ordApply(){const root=$('cards');if(!root)return;const o=ordLoad();
+ const parents=new Set([...root.querySelectorAll('[data-panel],.card[data-id]')].map(e=>e.parentElement));
+ for(const p of parents){const items=ordItems(p);if(!items.length)continue;const saved=o[ordScope(p)];
+  if(saved&&saved.length&&items.length>1){const idx=new Map(saved.map((k,i)=>[k,i]));const sorted=items.map((el,i)=>({el,k:idx.has(ordKey(el))?idx.get(ordKey(el)):1e6+i})).sort((a,b)=>a.k-b.k);
+   const anchor=document.createComment('ord');p.insertBefore(anchor,items[0]);for(const s of sorted)p.insertBefore(s.el,anchor);anchor.remove();}
+  for(const el of ordItems(p))ordButtons(el);}}
+document.addEventListener('click',ev=>{const b=ev.target.closest('[data-mv]');if(!b)return;ev.preventDefault();ev.stopPropagation();
+ const el=b.closest('[data-panel],.card[data-id]');const p=el?.parentElement;if(!p)return;const items=ordItems(p);const i=items.indexOf(el),j=i+Number(b.dataset.mv);
+ if(i<0||j<0||j>=items.length){toast(j<0?'이미 맨 위입니다':'이미 맨 아래입니다');return;}
+ if(j<i)p.insertBefore(el,items[j]);else p.insertBefore(items[j],el);
+ const o=ordLoad();o[ordScope(p)]=ordItems(p).map(ordKey);ordSave(o);el.scrollIntoView({block:'nearest',behavior:'smooth'});b.focus();},true);
+{const _r3=render;render=function(){_r3();try{ordApply();}catch(e){console.warn('order',e);}};}
+if($('order-reset'))$('order-reset').onclick=()=>{const o=ordLoad(),t=ordTab()+'|';let n0=0;for(const k of Object.keys(o))if(k.startsWith(t)){delete o[k];n0++;}ordSave(o);render();toast(n0?'이 탭의 순서를 기본값으로 되돌렸습니다':'이 탭은 기본 순서입니다');};
+try{ordApply();}catch(e){console.warn('order',e);}
