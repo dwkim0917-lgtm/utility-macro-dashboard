@@ -13,7 +13,7 @@ import {environmentalJobs} from './environmental-source.mjs';
 import {catalog} from './catalog.mjs';
 import {mergeRows,mutate,today,ROOT,seriesRows} from './store.mjs';
 import {pathToFileURL} from 'node:url';
-import {settledBars} from './yahoo-bars.mjs';import {fetchCapacity} from './capacity-source.mjs';
+import {settledBars} from './yahoo-bars.mjs';import {fetchCapacity} from './capacity-source.mjs';import {readKdhcOh,deriveKdhcOhDaily} from './kdhc-oh-source.mjs';
 const clean=s=>s.replace(/<[^>]*>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ').trim();
 export const tables=html=>[...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map(m=>[...m[1].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map(c=>clean(c[1])));
 const num=s=>Number(s.replaceAll(',','').trim());
@@ -87,6 +87,7 @@ export async function refresh(){const jobs=catalog.filter(x=>x.fred).map(x=>({na
  jobs.push({name:'KPX 장기 SMP',ids:['smp'],run:async()=>parseEpsisSmp(await fetchText('https://epsis.kpx.or.kr/epsisnew/selectEkmaSmpSmpChart.do?menuId=040201'))});
  jobs.push({name:'한수원 연간 이용률',ids:['nuclear'],run:async()=>parseNuclear(await fetchText('https://npp.khnp.co.kr/ON004004002001003'))});
  jobs.push({name:'EPSIS 원자력 전력거래량(월간)',ids:['nuclear_gwh'],run:fetchNuclearTraded});
+ jobs.push({name:'지역난방공사 O/H 일정(회사 실적발표 표)',ids:['kdhc_oh_mw'],run:async()=>deriveKdhcOhDaily(await readKdhcOh(ROOT),today())});
  jobs.push({name:'한수원 계획예방정비(본부별 공시)',ids:['nuclear_oh_gw'],run:async()=>deriveOhDaily(await refreshOh(ROOT,today()),today())});
  jobs.push({name:'IMF PortWatch 요충지 통항',ids:['hormuz','hormuz_tanker','babel','suez'],run:()=>fetchChokepoints()});
  jobs.push({name:'CFTC WTI 운용사 포지션',ids:['cftc_wti'],run:()=>fetchCftc({since:new Date(Date.now()-120*864e5).toISOString().slice(0,10)})});

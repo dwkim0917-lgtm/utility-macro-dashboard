@@ -139,6 +139,8 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-star]');
 // ===== 복합 그래프 패널 (2026-10-13) — 유틸리티_매크로_자료_20261010.pdf 2~8장 재현. ★로 핵심 지표에 추가 =====
 const PCOL={blue:'#2a78d6',green:'#1a9a73',orange:'#e0892b',purple:'#5b4fd6',ink:'#203540',grey:'#9aa5aa',red:'#d85a30',teal:'#279a8a',lav:'#8a7ce0'};
 const PANELS=[
+ {id:'kdhc_oh',title:'지역난방공사 열병합 O/H(정기점검 보수공사) 일정',group:'수요·가동',codes:['071320'],extra:()=>kdhcOhExtra(),src:'지역난방공사 분기 실적발표 O/H 표(data/kdhc-oh.json) · 설비용량: 회사 홈페이지 전력사업 · 일별 정지 용량은 일정으로 자체 산출',subs:[
+  {title:'정비 중 설비용량 (MW, 일별 · 오늘까지)',from:'2025-01-01',unit:'MW',h:.62,series:[{id:'kdhc_oh_mw',type:'area',color:'purple',label:'O/H 정지 용량'}]}]},
  {id:'nuclear',title:'원전 이용률 · 계획예방정비 기반 추정',group:'수요·가동',codes:['015760'],src:'KPX EPSIS 원자력 전력거래량 · 한수원 연간 이용률 · 한수원 계획예방정비 공시(매일) · E = 정비 반영 상한 → 실적 보정',extra:ohExtra,subs:[
   {title:'월간 이용률 (%, 공식 기준 보정 · 점선=E · 점=연간 공식치)',from:'2016-01-01',unit:'%',series:[{id:'nuclear_m',type:'area',color:'purple',w:1.4,label:'월간 이용률'},{fc:'nucE',link:'nuclear_m',type:'line',dash:true,color:'purple',label:'E(추정)'},{id:'nuclear',type:'dots',color:'ink',label:'연간 공식치'}]},
   {title:'최근 24개월 + 향후 (%) · 회색 = 정비 반영 이용률 상한(명판)',months:24,unit:'%',h:.7,series:[{id:'nuclear_m',type:'line',dots:true,color:'purple',label:'월간'},{fc:'nucE',link:'nuclear_m',type:'line',dash:true,color:'purple',label:'E(추정)'},{fc:'nucCeil',all:true,type:'line',w:1.3,color:'grey',label:'정비 반영 상한'}]},
@@ -457,3 +459,25 @@ function jkmFeiExtra(mode){try{
   line('FEI ÷ 47.7 ($/MMBtu)','fei',2,{sameDates:true,k:1/47.7})].join('');
  return `<div class="jf-wrap"><table class="jf-t">${head}<tbody>${body}</tbody></table></div><p class="jf-n">관측일 = 두 원자료(JKM CME 정산가·FEI A7E 종가)가 모두 있는 마지막 거래일. 1M·3M 전 = 최신 관측일에서 1·3개월 전 날짜 이하의 마지막 관측(월간 계열은 1·3개월 전 월). + = LPG가 열량당 저렴(울산 GPS LNG 매각·LPG 발전 유리). 최근월 교체일에는 단절이 있을 수 있음.</p>`;
 }catch(e){return `<p class="p-sum">JKM–FEI 표 오류: ${esc(e.message)}</p>`;}}
+
+// ── 2026-11-12 지역난방공사 O/H 패널: 간트(계획 포함) · 발전소 현황 · 분기 MW·일 · 출처·갱신 상태
+function kdhcOhExtra(){const O=payload.kdhcOH;if(!O||O.error)return `<p class="p-sum">O/H 일정 없음${O?.error?': '+esc(O.error):''}</p>`;
+ try{const DAY=864e5,y0=+O.events[0].start.slice(0,4),t0=Date.UTC(y0,0,1),endMax=Math.max(...O.events.map(e=>Date.parse(e.end))),t1=Math.max(Date.UTC(new Date(endMax).getUTCFullYear(),11,31),Date.parse(O.asOf)+120*DAY);
+ const W=920,L=78,R=8,RH=16,top=18,X=t=>L+(Math.min(Math.max(t,t0),t1)-t0)/(t1-t0)*(W-L-R);const rows=O.plants;let g='';
+ for(let d=new Date(t0);+d<=t1;d.setUTCMonth(d.getUTCMonth()+1)){const x=X(+d);g+=`<line x1="${x}" x2="${x}" y1="${top-4}" y2="${top+rows.length*RH}" stroke="${d.getUTCMonth()%3===0?'#cfd8dc':'#eef2f3'}"/>`;if(d.getUTCMonth()%3===0)g+=`<text x="${x+2}" y="${top-6}" font-size="9" fill="#5d6d74">${String(d.getUTCFullYear()).slice(2)}.${d.getUTCMonth()+1}</text>`;}
+ const col=e=>e.status==='진행 중'?'#c0392b':e.status==='예정'?'#e0892b':'#5b4fd6';
+ rows.forEach((u,i)=>{const y=top+i*RH;g+=`<text x="${L-4}" y="${y+11}" font-size="10" text-anchor="end" fill="#203540">${esc(u.plant)} <tspan fill="#8a989e" font-size="8.5">${u.mw}</tspan></text>`;
+  for(const e of O.events.filter(e=>e.plant===u.plant)){const a=Date.parse(e.start),b=Date.parse(e.end)+DAY;const x1=X(a),x2=Math.max(X(b),x1+2);
+   g+=`<rect x="${x1}" y="${y+3}" width="${x2-x1}" height="${RH-6}" rx="2" fill="${col(e)}" opacity="${e.note?0.55:0.85}"><title>${esc(u.plant)} ${e.start}~${e.end} (${e.days}일, ${e.mw}MW · ${e.mw*e.days} MW·일) · ${esc(e.status)}\n출처: ${esc(e.srcTitle)} (${e.srcDate})${e.note?'\n'+esc(e.note):''}</title></rect>`;}});
+ const xn=X(Date.parse(O.asOf));g+=`<line x1="${xn}" x2="${xn}" y1="${top-4}" y2="${top+rows.length*RH}" stroke="#c0392b" stroke-width="1.2"/><text x="${xn+3}" y="${top+rows.length*RH+11}" font-size="9" fill="#c0392b">오늘 ${O.asOf.slice(5)}</text>`;
+ const gantt=`<svg viewBox="0 0 ${W} ${top+rows.length*RH+16}" style="width:100%;height:auto;display:block">${g}</svg><div class="oh-lg"><span style="background:#5b4fd6"></span>완료 <span style="background:#c0392b"></span>진행 중 <span style="background:#e0892b"></span>예정 <span style="background:#5b4fd6;opacity:.5"></span>옅은 막대 = 확인 필요(비고)</div>`;
+ const f=e=>e?`${e.start.slice(2).replaceAll('-','.')}~${e.end.slice(2).replaceAll('-','.')}`:'–';
+ const pt=`<div class="kd-wrap"><table class="kd-t"><thead><tr><th>발전소</th><th>MW</th><th>상태</th><th>진행 중</th><th>다음 예정</th><th>최근 완료</th><th>일수</th><th>비고</th></tr></thead><tbody>${rows.map(u=>{const e=u.cur||u.next||u.last;return `<tr class="${u.cur?'on':''}"><td><b>${esc(u.plant)}</b></td><td class="num">${n(u.mw,0)}</td><td>${u.cur?'<b style="color:#c0392b">정비 중</b>':'운전'}</td><td>${u.cur?`${f(u.cur)} <small>잔여 ${u.remain}일</small>`:'–'}</td><td>${u.next?`${f(u.next)} <small>D-${u.toNext}</small>`:'–'}</td><td>${f(u.last)}</td><td class="num">${e?e.days:'–'}</td><td><small>${esc(e?.note||'')}</small></td></tr>`;}).join('')}</tbody></table></div>`;
+ const Q=O.quarters;const qt=`<div class="kd-wrap"><table class="kd-t"><thead><tr><th>분기</th>${Q.map(r=>`<th>${r.q.slice(2).replace('Q','.')}Q</th>`).join('')}</tr></thead><tbody>
+  <tr><td>정비 MW·일</td>${Q.map(r=>`<td class="num">${r.mwd?n(r.mwd,0):'0'}</td>`).join('')}</tr>
+  <tr><td>정비 일수(설비·블록 합)</td>${Q.map(r=>`<td class="num">${r.days}</td>`).join('')}</tr>
+  <tr><td>평균 정지 용량 (MW · 대상 대비 %)</td>${Q.map(r=>`<td class="num">${n(r.avgMw,0)}<small> ${r.pct.toFixed(1)}%</small></td>`).join('')}</tr></tbody></table></div>`;
+ const badge=O.stale?`<span class="kd-badge stale">갱신 필요 — 최신 자료 ${O.sourceAgeDays}일 경과</span>`:`<span class="kd-badge">최신 자료 ${O.lastSource} · 다음 갱신 예정 ~${O.nextSourceDue}</span>`;
+ const srcs=Object.values(O.sources).sort((a,b)=>a.date<b.date?1:-1).map(s=>`${esc(s.title)} (${s.date})`).join(' · ');
+ return `<p class="p-sum">오늘 정비 중 <b>${n(O.offNow,0)}MW</b> / 대상 ${n(O.fleet,0)}MW ${badge}</p>${gantt}${pt}${qt}<p class="kd-n">출처: ${srcs}. 일정 갱신: 분기 실적발표(2·5·8·11월) O/H 표 → data/kdhc-oh.json 수정 → 다음 수집 때 일별 정지 용량·분기 표 자동 재계산. 시작·종료일 포함 일수, 계획 기준(실제 착수·종료와 다를 수 있음). 감익 판단은 종목 노트(3.review 261111) 참조.</p>`;
+ }catch(e){return `<p class="p-sum">O/H 표 오류: ${esc(e.message)}</p>`;}}

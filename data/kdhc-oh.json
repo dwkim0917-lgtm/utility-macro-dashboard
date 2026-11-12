@@ -1,0 +1,42 @@
+{
+  "note": "지역난방공사 열병합발전소 O/H(정기점검 보수공사) 일정. 회사 분기 실적발표 자료의 O/H 표를 옮겨 적는다. 갱신 절차: 새 실적발표(2·5·8·11월) 게시 → O/H 표의 시작·종료일을 events에 반영(같은 year·plant 행은 덮어쓰기) → sources에 자료 추가 → updatedAt 변경. 일수는 시작·종료일 포함. 설비용량은 회사 홈페이지 전력사업 페이지(MW, 전기).",
+  "updatedAt": "2026-11-11",
+  "capacityUrl": "https://www.kdhc.co.kr/kdhc/main/contents.do?menuNo=200149",
+  "sources": {
+    "IR3Q26": {"title": "2026.3Q 실적발표 p4 (정기점검 보수공사(O/H) 현황)", "date": "2026-11-10", "url": "https://www.kdhc.co.kr/kdhc/main/contents.do?menuNo=200208"},
+    "CD2609": {"title": "Corporate Day 자료 p11 (4-2. 정기점검 보수공사(O/H) 현황)", "date": "2026-09-09", "url": "https://www.kdhc.co.kr/kdhc/main/contents.do?menuNo=200208"}
+  },
+  "plants": [
+    {"plant": "동탄 #1BL", "mw": 378, "site": "동탄"},
+    {"plant": "동탄 #2BL", "mw": 378, "site": "동탄"},
+    {"plant": "파주", "mw": 516},
+    {"plant": "화성", "mw": 512},
+    {"plant": "대구", "mw": 270},
+    {"plant": "청주", "mw": 270},
+    {"plant": "판교", "mw": 146},
+    {"plant": "광교", "mw": 145},
+    {"plant": "양산", "mw": 119},
+    {"plant": "삼송", "mw": 100}
+  ],
+  "events": [
+    {"year": 2025, "plant": "판교", "start": "2025-03-24", "end": "2025-05-26", "src": "IR3Q26"},
+    {"year": 2025, "plant": "동탄 #2BL", "start": "2025-04-06", "end": "2025-05-09", "src": "CD2609"},
+    {"year": 2025, "plant": "화성", "start": "2025-04-08", "end": "2025-06-29", "src": "IR3Q26"},
+    {"year": 2025, "plant": "광교", "start": "2025-04-14", "end": "2025-06-16", "src": "IR3Q26"},
+    {"year": 2025, "plant": "대구", "start": "2025-04-28", "end": "2025-06-10", "src": "IR3Q26"},
+    {"year": 2025, "plant": "양산", "start": "2025-05-01", "end": "2025-06-05", "src": "IR3Q26"},
+    {"year": 2025, "plant": "동탄 #1BL", "start": "2025-05-10", "end": "2025-06-05", "src": "CD2609"},
+    {"year": 2025, "plant": "파주", "start": "2025-05-19", "end": "2025-06-26", "src": "IR3Q26"},
+    {"year": 2025, "plant": "삼송", "start": "2025-08-21", "end": "2025-09-26", "src": "CD2609"},
+    {"year": 2026, "plant": "광교", "start": "2026-04-20", "end": "2026-06-30", "src": "IR3Q26"},
+    {"year": 2026, "plant": "양산", "start": "2026-05-01", "end": "2026-06-10", "src": "IR3Q26"},
+    {"year": 2026, "plant": "파주", "start": "2026-05-04", "end": "2026-06-25", "src": "IR3Q26"},
+    {"year": 2026, "plant": "화성", "start": "2026-05-15", "end": "2026-06-22", "src": "IR3Q26"},
+    {"year": 2026, "plant": "삼송", "start": "2026-08-18", "end": "2026-09-17", "src": "CD2609", "note": "3Q26 자료 표에서 빠짐 — 실시 여부 미확인"},
+    {"year": 2026, "plant": "판교", "start": "2026-08-31", "end": "2026-11-30", "src": "IR3Q26"},
+    {"year": 2026, "plant": "대구", "start": "2026-09-01", "end": "2026-10-29", "src": "IR3Q26"},
+    {"year": 2026, "plant": "청주", "start": "2026-09-01", "end": "2026-11-08", "src": "IR3Q26"},
+    {"year": 2026, "plant": "동탄 #2BL", "start": "2026-09-12", "end": "2026-11-06", "src": "IR3Q26", "note": "9/9 자료 대비 #1·#2 일정 맞바뀜"},
+    {"year": 2026, "plant": "동탄 #1BL", "start": "2026-10-01", "end": "2026-11-27", "src": "IR3Q26"}
+  ]
+}

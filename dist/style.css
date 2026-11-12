@@ -146,3 +146,8 @@ header .hdr-tools button.ht:hover{border-color:var(--accent);color:var(--accent)
 /* 2026-11-09 SK가스 투자 지표: JKM–FEI 관측치·1M·3M 표 */
 .jf-wrap{margin:6px 0 4px;overflow-x:auto}.jf-t{border-collapse:collapse;font-size:11.5px;width:100%;min-width:620px}.jf-t th,.jf-t td{padding:3px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}.jf-t th:first-child,.jf-t td:first-child{text-align:left}.jf-t thead th{color:var(--muted);font-weight:600}.jf-t .d{color:var(--muted);font-size:10.5px;display:block}.jf-t .up{color:#2a78d6}.jf-t .dn{color:#d85a30}.jf-n{font-size:10.5px;color:var(--muted);margin:2px 0 6px}
 @media print{.jf-t{font-size:9.5px!important}}
+
+/* 2026-11-12 지역난방공사 O/H 패널 */
+.kd-badge{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:9px;margin-left:6px;background:#e8f3ec;color:#2d6a4f}.kd-badge.stale{background:#fdeee8;color:#c0392b}
+.kd-t{border-collapse:collapse;font-size:11.5px;width:100%;margin:6px 0}.kd-t th,.kd-t td{padding:3px 6px;border-bottom:1px solid var(--line);white-space:nowrap}.kd-t th{color:var(--muted);font-weight:600;text-align:right}.kd-t th:first-child,.kd-t td:first-child{text-align:left}.kd-t td.num{text-align:right}.kd-t tr.on td{background:#f3f0fd}.kd-wrap{overflow-x:auto}.kd-n{font-size:10.5px;color:var(--muted);margin:2px 0 6px}
+@media print{.kd-t{font-size:9.5px!important}}

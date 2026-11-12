@@ -38,4 +38,5 @@ data/ici/*.png
 !data/audit-latest.json
 !data/nuclear-oh-ceiling.json
 !data/khnp-oh.json
+!data/kdhc-oh.json
 !data/skgas-ir-indicators.json
