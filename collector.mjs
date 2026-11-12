@@ -13,7 +13,7 @@ import {environmentalJobs} from './environmental-source.mjs';
 import {catalog} from './catalog.mjs';
 import {mergeRows,mutate,today,ROOT,seriesRows} from './store.mjs';
 import {pathToFileURL} from 'node:url';
-import {settledBars} from './yahoo-bars.mjs';import {fetchCapacity} from './capacity-source.mjs';import {readKdhcOh,deriveKdhcOhDaily} from './kdhc-oh-source.mjs';
+import {settledBars} from './yahoo-bars.mjs';import {fetchCapacity} from './capacity-source.mjs';import {readKdhcOh,deriveKdhcOhDaily} from './kdhc-oh-source.mjs';import {parseEpsisMix,MIX_COLS,fetchSolarEst,fetchKepcoAnnual} from './epsis-stats-source.mjs';import {fetchPtdText} from './drivers-source.mjs';
 const clean=s=>s.replace(/<[^>]*>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ').trim();
 export const tables=html=>[...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map(m=>[...m[1].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map(c=>clean(c[1])));
 const num=s=>Number(s.replaceAll(',','').trim());
@@ -87,6 +87,9 @@ export async function refresh(){const jobs=catalog.filter(x=>x.fred).map(x=>({na
  jobs.push({name:'KPX 장기 SMP',ids:['smp'],run:async()=>parseEpsisSmp(await fetchText('https://epsis.kpx.or.kr/epsisnew/selectEkmaSmpSmpChart.do?menuId=040201'))});
  jobs.push({name:'한수원 연간 이용률',ids:['nuclear'],run:async()=>parseNuclear(await fetchText('https://npp.khnp.co.kr/ON004004002001003'))});
  jobs.push({name:'EPSIS 원자력 전력거래량(월간)',ids:['nuclear_gwh'],run:fetchNuclearTraded});
+ jobs.push({name:'KPX EPSIS 연료원별 전력거래량(발전 믹스·비중)',ids:[...MIX_COLS.map(x=>x[0]),'sh_nuc','sh_coal','sh_lng','sh_renew'],run:async()=>parseEpsisMix(await fetchPtdText())});
+ jobs.push({name:'KPX EPSIS 태양광 발전량 추계(전력시장·한전PPA·자가용)',ids:['solar_mkt','solar_ppa','solar_self','solar_total'],run:fetchSolarEst});
+ jobs.push({name:'KPX EPSIS 한전 계약종별 판매단가·판매량(연)',ids:['kp_price_res','kp_price_com','kp_price_ind','kp_price_avg','kp_sales_res','kp_sales_com','kp_sales_ind','kp_sales_tot'],run:fetchKepcoAnnual});
  jobs.push({name:'지역난방공사 O/H 일정(회사 실적발표 표)',ids:['kdhc_oh_mw'],run:async()=>deriveKdhcOhDaily(await readKdhcOh(ROOT),today())});
  jobs.push({name:'한수원 계획예방정비(본부별 공시)',ids:['nuclear_oh_gw'],run:async()=>deriveOhDaily(await refreshOh(ROOT,today()),today())});
  jobs.push({name:'IMF PortWatch 요충지 통항',ids:['hormuz','hormuz_tanker','babel','suez'],run:()=>fetchChokepoints()});
@@ -114,7 +117,7 @@ export async function refresh(){const jobs=catalog.filter(x=>x.fred).map(x=>({na
  jobs.push({name:'GIMNI 인니 CPO HR',ids:['cpo_hr','cpo_duty'],run:async()=>{const r=await fetch('https://gimni.org/harga-cpo',{signal:AbortSignal.timeout(25000),headers:{'User-Agent':browserUA}});if(!r.ok)throw Error('HTTP '+r.status);return parseGimniHr(await r.text());}});
  jobs.push(...environmentalJobs);
  // 2026-10-13: 국내 연료비·정산단가, 해외(일본·미국) 지표
- jobs.push({name:'KPX EPSIS 연료원별 설비용량(신재생 월 신규 설치)',ids:['cap_solar','cap_wind','cap_fcell','cap_total','add_solar','add_wind','add_fcell','add_solar_12m'],run:()=>fetchCapacity(browserUA)});
+ jobs.push({name:'KPX EPSIS 연료원별 설비용량(신재생 월 신규 설치)',ids:['cap_solar','cap_wind','cap_fcell','cap_total','add_solar','add_wind','add_fcell','add_solar_12m','cap_renew','add_renew','cap_lng','cap_coal','cap_nuc'],run:()=>fetchCapacity(browserUA)});
  jobs.push({name:'KPX EPSIS 연료비단가·열량단가',ids:['fuel_lng','fuel_coal','fuel_nuc','lng_heat'],run:async()=>parseEpsisFuel(await fetchText('https://epsis.kpx.or.kr/epsisnew/selectEkmaFucUpfChart.do?menuId=040100'))});
  jobs.push({name:'KPX EPSIS 연료원별 정산단가',ids:['settle_nuc','settle_coal','settle_lng'],run:async()=>parseEpsisSettle(await fetchText('https://epsis.kpx.or.kr/epsisnew/selectEkmaUpsBftChart.do?menuId=040701'))});
  for(const c of catalog.filter(x=>x.yahoo))jobs.push({name:'Yahoo '+c.yahoo,ids:[c.id],run:()=>fetchYahooDaily(c.yahoo,c.id,c.yahoo,Math.floor(Date.now()/1000)-400*86400)});

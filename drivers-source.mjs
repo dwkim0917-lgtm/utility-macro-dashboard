@@ -14,9 +14,11 @@ export function parseEpsisNuclearTraded(js){const parts=js.split('gridData.push'
   if(cur.loc==='소계'&&cur.per){const v=Number(cur.c1);if(Number.isFinite(v)&&v>0)out.set(cur.per,v);}}
  if(out.size<100)throw Error('EPSIS 원자력 거래량 소계 행 부족: '+out.size);
  return [...out].map(([m,v])=>({id:'nuclear_gwh',date:m+'-01',value:Math.round(v*10)/10,source:'KPX EPSIS · 원자력 전력거래량(전력시장)',url:'https://epsis.kpx.or.kr/epsisnew/selectEkmaPtdBftChart.do?menuId=040501'}));}
-export async function fetchNuclearTraded(){const page=await get('https://epsis.kpx.or.kr/epsisnew/selectEkmaPtdBftChart.do?menuId=040501');const cookie=(page.headers.getSetCookie?.()||[]).map(c=>c.split(';')[0]).join('; ');await page.text();
+let PTD=null;// 2026-11-12 같은 수집 실행 안에서 응답 공유(원전·발전믹스)
+export function fetchPtdText(){return PTD??=(async()=>{const page=await get('https://epsis.kpx.or.kr/epsisnew/selectEkmaPtdBftChart.do?menuId=040501');const cookie=(page.headers.getSetCookie?.()||[]).map(c=>c.split(';')[0]).join('; ');await page.text();
  const r=await get('https://epsis.kpx.or.kr/epsisnew/selectEkmaPtdBft.ajax',{method:'POST',body:new URLSearchParams({selYear:'N',selRegion:'0'}),headers:{'Content-Type':'application/x-www-form-urlencoded','X-Requested-With':'XMLHttpRequest',Cookie:cookie}},120000);
- return parseEpsisNuclearTraded(await r.text());}
+ return await r.text();})().catch(e=>{PTD=null;throw e;});}
+export async function fetchNuclearTraded(){return parseEpsisNuclearTraded(await fetchPtdText());}
 // 공식 연간 이용률(한수원)로 연도별 '거래량 기준 유효설비'를 역산해 월간 이용률을 만든다. 공식치가 없는 해는 직전 해 유효설비 × 설비 변동.
 // 설비 변동(명판 MW, 공식 이용률 산정 기준 포함 시점): 고리2 계속운전 재가동 2026-04-10.
 export const NUC_CHANGES=[{from:'2026-04',mw:650,note:'고리2 계속운전 재가동'}];
