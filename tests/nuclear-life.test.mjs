@@ -1,0 +1,15 @@
+import test from 'node:test';import assert from 'node:assert/strict';import path from 'node:path';import {fileURLToPath} from 'node:url';
+import {readLifeExt,lifeExtOutages,deriveLifeDaily,lifeSummary} from '../nuclear-life-source.mjs';
+import {ohCeiling,ohSummary} from '../oh-source.mjs';
+const ROOT=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+test('life-extension: stop windows minus KHNP OH; open-ended stop counted in ceiling and status',async()=>{const life=await readLifeExt(ROOT);
+ const oh={events:[{unit:'고리3',no:'X',start:'2024-09-28',end:'2027-03-18'},{unit:'한빛2',no:'28',start:'2026-09-11',end:'2027-03-25'},{unit:'월성2',no:'23',start:'2025-09-01',end:'2026-11-01'}],unplanned:[]};
+ const seg=lifeExtOutages(life,oh);const w2=seg.filter(s=>s.unit==='월성2');
+ assert.equal(w2.length,1);assert.equal(w2[0].start,'2026-11-01');assert.ok(w2[0].open);
+ assert.ok(!seg.some(s=>s.unit==='고리3'&&s.start<'2027-03-18'),'OH-covered span is not double counted');
+ assert.ok(!seg.some(s=>s.unit==='고리3'),'approved unit follows KHNP planned restart');
+ assert.ok(seg.some(s=>s.unit==='한빛2'&&s.start==='2027-03-25'&&s.open),'unapproved unit stays stopped after KHNP plan until approval/restart is entered');const st={...oh,lifeExt:seg};const s=ohSummary(st,'2026-11-17');assert.equal(s.units.find(u=>u.unit==='월성2').status,'정지(계속운전 심사)');
+ const c=ohCeiling(st,'2026-11-17',{from:'2026-12',ahead:1}).find(r=>r.month==='2026-12');assert.ok(c.lifeMWd>=700*31);
+ const d=deriveLifeDaily(life,'2026-11-17');const at=x=>d.find(r=>r.date===x).value;
+ assert.equal(at('2026-11-17'),950*4+700);assert.equal(at('2026-03-01'),650+950+950+950);assert.equal(at('2026-05-01'),950*3);
+ const L=lifeSummary(life,'2026-11-17',s.units);assert.equal(L.stoppedMW,4500);assert.equal(L.approvedWaitingMW,1900);});

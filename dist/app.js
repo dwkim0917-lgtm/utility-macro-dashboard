@@ -141,10 +141,11 @@ const PCOL={blue:'#2a78d6',green:'#1a9a73',orange:'#e0892b',purple:'#5b4fd6',ink
 const PANELS=[
  {id:'kdhc_oh',title:'지역난방공사 열병합 O/H(정기점검 보수공사) 일정',group:'수요·가동',codes:['071320'],extra:()=>kdhcOhExtra(),src:'지역난방공사 분기 실적발표 O/H 표(data/kdhc-oh.json) · 설비용량: 회사 홈페이지 전력사업 · 일별 정지 용량은 일정으로 자체 산출',subs:[
   {title:'정비 중 설비용량 (MW, 일별 · 오늘까지)',from:'2025-01-01',unit:'MW',h:.62,series:[{id:'kdhc_oh_mw',type:'area',color:'purple',label:'O/H 정지 용량'}]}]},
- {id:'nuclear',title:'원전 이용률 · 계획예방정비 기반 추정',group:'수요·가동',codes:['015760'],src:'KPX EPSIS 원자력 전력거래량 · 한수원 연간 이용률 · 한수원 계획예방정비 공시(매일) · E = 정비 반영 상한 → 실적 보정',extra:ohExtra,subs:[
+ {id:'nuclear',title:'원전 이용률 · 계획예방정비 기반 추정',group:'수요·가동',codes:['015760'],src:'KPX EPSIS 원자력 전력거래량 · 한수원 연간 이용률 · 한수원 계획예방정비 공시(매일) · E = 정비 반영 상한 → 실적 보정',extra:()=>ohExtra()+lifeExtra(),subs:[
   {title:'월간 이용률 (%, 공식 기준 보정 · 점선=E · 점=연간 공식치)',from:'2016-01-01',unit:'%',series:[{id:'nuclear_m',type:'area',color:'purple',w:1.4,label:'월간 이용률'},{fc:'nucE',link:'nuclear_m',type:'line',dash:true,color:'purple',label:'E(추정)'},{id:'nuclear',type:'dots',color:'ink',label:'연간 공식치'}]},
   {title:'최근 24개월 + 향후 (%) · 회색 = 정비 반영 이용률 상한(명판)',months:24,unit:'%',h:.7,series:[{id:'nuclear_m',type:'line',dots:true,color:'purple',label:'월간'},{fc:'nucE',link:'nuclear_m',type:'line',dash:true,color:'purple',label:'E(추정)'},{fc:'nucCeil',all:true,type:'line',w:1.3,color:'grey',label:'정비 반영 상한'}]},
-  {title:'정비·정지 용량 (GW, 일간)',months:24,unit:'GW',h:.5,series:[{id:'nuclear_oh_gw',type:'area',color:'orange',label:'정지 GW'}]}]},
+  {title:'정비·정지 용량 (GW, 일간)',months:24,unit:'GW',h:.5,series:[{id:'nuclear_oh_gw',type:'area',color:'orange',label:'정지 GW'}]},
+  {title:'계속운전(수명연장) 심사·재가동 대기로 정지 중인 설비 (MW, 일간)',from:'2023-01-01',unit:'MW',h:.5,series:[{id:'nuclear_life_off_mw',type:'area',color:'ink',label:'계속운전 정지 MW'}]}]},
  {id:'oil',title:'유가와 공급 요충지 · 수급 변수',group:'유가',codes:['015760','036460','047050','018670'],src:'ICE·NYMEX(Yahoo) · 한국석유공사 · IMF PortWatch(AIS) · EIA(FRED) · CFTC',subs:[
   {title:'Brent · WTI · Dubai (USD/bbl)',from:'2024-01-01',unit:'USD/bbl',series:[{id:'brent_b1',type:'line',color:'blue',label:'Brent'},{id:'wti_cl1',type:'line',color:'green',w:1.2,label:'WTI'},{id:'dubai_d',type:'line',color:'orange',w:1.2,label:'Dubai'}]},
   {title:'호르무즈 해협 일 통과 선박 (척, 계단=월평균)',from:'2024-01-01',unit:'척',h:.62,series:[{id:'hormuz',type:'line',color:'red',w:.8,label:'전체(일)'},{id:'hormuz',type:'mstep',color:'ink',label:'전체 월평균'},{id:'hormuz_tanker',type:'line',color:'orange',w:.8,label:'탱커(일)'}]},
@@ -314,17 +315,17 @@ PANELS.unshift({id:'kepco',title:'한전 판매단가 · SMP · 스프레드',gr
 // ── 2026-10-22 원전 계획예방정비 현황(한수원 공시 매일 수집) · 간트 · 월별 이용률 상한 → E
 function ohExtra(){const O=payload.nuclearOH;if(!O||O.error)return `<p class="p-sum">정비 일정 없음${O?.error?': '+esc(O.error):''}</p>`;
  const DAY=864e5,t0=Date.parse(O.asOf)-120*DAY,t1=Date.parse(O.asOf)+460*DAY,W=920,L=64,R=8,RH=15,top=18,X=t=>L+(Math.min(Math.max(t,t0),t1)-t0)/(t1-t0)*(W-L-R);
- const col=e=>e.kind==='불시정지'?'#d85a30':e.kind==='추정'?'#e0892b':((e.days||0)>150?'#203540':'#5b4fd6');
+ const col=e=>e.kind==='계속운전'?'#8a6d3b':e.kind==='불시정지'?'#d85a30':e.kind==='추정'?'#e0892b':((e.days||0)>150?'#203540':'#5b4fd6');
  const rows=O.units;let g='';const ticks=[];for(let d=new Date(t0);d<=t1;d.setUTCMonth(d.getUTCMonth()+1)){d.setUTCDate(1);if(d<t0)continue;ticks.push(new Date(d));}
  for(const d of ticks){const x=X(+d);g+=`<line x1="${x}" x2="${x}" y1="${top-4}" y2="${top+rows.length*RH}" stroke="#e3e8ea"/>`;if(d.getUTCMonth()%3===0)g+=`<text x="${x+2}" y="${top-6}" font-size="9" fill="#5d6d74">${String(d.getUTCFullYear()).slice(2)}.${d.getUTCMonth()+1}</text>`;}
  rows.forEach((u,i)=>{const y=top+i*RH;g+=`<text x="${L-4}" y="${y+11}" font-size="10" text-anchor="end" fill="#203540">${esc(u.unit)}</text>`;
   for(const e of O.events.filter(e=>e.unit===u.unit)){const a=Date.parse(e.start),b=Date.parse(e.end);if(b<t0||a>t1)continue;const x1=X(a),x2=Math.max(X(b),x1+2);
    g+=`<rect x="${x1}" y="${y+3}" width="${x2-x1}" height="${RH-5}" rx="2" fill="${col(e)}" opacity="${e.kind==='추정'?0.45:0.85}"><title>${esc(u.unit)} ${esc(e.no||'')}${e.kind==='OH'?'차 OH':' '+e.kind} ${e.start}~${e.end} (${Math.round(e.days||0)}일)${e.work?'\n'+esc(e.work):''}</title></rect>`;}});
  const xn=X(Date.parse(O.asOf));g+=`<line x1="${xn}" x2="${xn}" y1="${top-4}" y2="${top+rows.length*RH}" stroke="#c0392b" stroke-width="1.2"/><text x="${xn+3}" y="${top+rows.length*RH+11}" font-size="9" fill="#c0392b">오늘 ${O.asOf.slice(5)}</text>`;
- const gantt=`<svg viewBox="0 0 ${W} ${top+rows.length*RH+16}" style="width:100%;height:auto;display:block">${g}</svg><div class="oh-lg"><span style="background:#5b4fd6"></span>정상 주기 OH <span style="background:#203540"></span>장기 OH(계속운전·설비개선) <span style="background:#d85a30"></span>불시정지 <span style="background:#e0892b;opacity:.5"></span>미공시 차기 OH 추정(직전 종료+${O.est.gapMonths}개월, ${O.est.days}일)</div>`;
- const fmt=e=>e?`${e.start.slice(2).replaceAll('-','.')}~${e.end.slice(2).replaceAll('-','.')}`:'–';
+ const gantt=`<svg viewBox="0 0 ${W} ${top+rows.length*RH+16}" style="width:100%;height:auto;display:block">${g}</svg><div class="oh-lg"><span style="background:#5b4fd6"></span>정상 주기 OH <span style="background:#203540"></span>장기 OH(계속운전·설비개선) <span style="background:#d85a30"></span>불시정지 <span style="background:#8a6d3b"></span>계속운전 심사·재가동 대기 <span style="background:#e0892b;opacity:.5"></span>미공시 차기 OH 추정(직전 종료+${O.est.gapMonths}개월, ${O.est.days}일)</div>`;
+ const fmt=e=>e?`${e.start.slice(2).replaceAll('-','.')}~${e.end>'2090'?'미정':e.end.slice(2).replaceAll('-','.')}`:'–';
  const ut=rows.map(u=>{const e=u.cur||u.next;return `<tr class="${u.cur?'oh-on':''}"><td><b>${esc(u.unit)}</b></td><td>${esc(u.hq)}</td><td class="num">${n(u.mw,0)}</td><td><span class="oh-st ${u.status==='운전'?'ok':u.status==='불시정지'?'bad':'on'}">${esc(u.status)}</span></td>
-  <td>${u.cur?`${fmt(u.cur)} <small>${esc(u.cur.no||'')}${u.cur.kind==='OH'?'차':''} · 잔여 ${u.remain}일</small>`:'–'}</td><td>${u.next?`${fmt(u.next)} <small>${u.next.kind==='추정'?'(추정)':esc(u.next.no)+'차'} · D-${u.toNext}</small>`:'–'}</td><td class="num">${e?Math.round(e.days||0):'–'}</td><td><small>${esc(u.long||'정상 주기')}${e?.work&&e.kind!=='추정'?' · '+esc(e.work):''}</small></td></tr>`;}).join('');
+  <td>${u.cur?`${fmt(u.cur)} <small>${u.cur.open?'재가동 미정':`${esc(u.cur.no||'')}${u.cur.kind==='OH'?'차':''} · 잔여 ${u.remain}일`}</small>`:'–'}</td><td>${u.next?`${fmt(u.next)} <small>${u.next.kind==='추정'?'(추정)':esc(u.next.no)+'차'} · D-${u.toNext}</small>`:'–'}</td><td class="num">${e?Math.round(e.days||0):'–'}</td><td><small>${esc(u.long||'정상 주기')}${e?.work&&e.kind!=='추정'?' · '+esc(e.work):''}</small></td></tr>`;}).join('');
  const C=O.ceiling||[],E=Object.fromEntries((O.estimate||[]).map(r=>[r.month,r])),A=Object.fromEntries(points('nuclear_m').map(r=>[r.date.slice(0,7),r.value]));
  const cm=C.filter(r=>r.month>='2026-01').slice(0,24);const nd=k=>(Date.UTC(+k.slice(0,4),+k.slice(5),1)-Date.UTC(+k.slice(0,4),+k.slice(5)-1,1))/DAY;
  const ct=`<table class="k-qt2"><thead><tr><th>월</th>${cm.map(r=>`<th>${r.month.slice(2).replace('-','.')}</th>`).join('')}</tr></thead><tbody>
@@ -516,3 +517,17 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-mv]');if
 {const _r3=render;render=function(){_r3();try{ordApply();}catch(e){console.warn('order',e);}};}
 if($('order-reset'))$('order-reset').onclick=()=>{const o=ordLoad(),t=ordTab()+'|';let n0=0;for(const k of Object.keys(o))if(k.startsWith(t)){delete o[k];n0++;}ordSave(o);render();toast(n0?'이 탭의 순서를 기본값으로 되돌렸습니다':'이 탭은 기본 순서입니다');};
 try{ordApply();}catch(e){console.warn('order',e);}
+
+// ── 2026-11-17 원전 계속운전(수명연장) 심사 현황표 — 원전 이용률 패널 하단
+function lifeExtra(){const L=payload.nuclearLife;if(!L)return '';if(L.error)return `<p class="p-sum">계속운전 현황 오류: ${esc(L.error)}</p>`;
+ try{const f=d=>d?d.slice(2).replaceAll('-','.'):'–';
+ const st=r=>{const c=r.stopped?(r.approved?'#e0892b':'#c0392b'):r.restart?'#2d6a4f':'#5d6d74';return `<b style="color:${c}">${esc(r.status)}</b>`;};
+ const kh=r=>r.khnp?(r.khnp.cur?`${esc(r.khnp.status)} <small>${f(r.khnp.cur.start)}~${r.khnp.cur.end>'2090'?'미정':f(r.khnp.cur.end)}${r.khnp.cur.kind==='OH'?' (한수원 정비 공시)':''}</small>`:esc(r.khnp.status)):'–';
+ const rows=L.rows.map(r=>`<tr class="${r.stopped?'on':''}"><td><b>${esc(r.unit)}</b></td><td class="num">${n(r.mw,0)}</td><td>${f(r.expiry)}${r.toExpiry>0?` <small>D-${r.toExpiry}</small>`:''}</td><td>${st(r)}</td><td>${r.approved?f(r.approved):'–'}</td><td>${r.extendedTo?f(r.extendedTo):'–'}</td><td>${r.restart?f(r.restart)+' <small>재개</small>':r.stopped?`정지 ${n(r.stoppedDays,0)}일`:'–'}</td><td>${kh(r)}</td><td><small>${esc(r.plan||'')}${r.srcs.length?' · 출처: '+r.srcs.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title.split('(')[0].trim())}</a>`).join(', '):''}</small></td></tr>`).join('');
+ const badge=L.stale?`<span class="kd-badge stale">현황 ${L.ageDays}일 경과 — 원안위·한수원 발표 확인 필요</span>`:`<span class="kd-badge">현황 기준 ${L.updatedAt}</span>`;
+ const check=(L.checkAt||[]).map(c=>`<li><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.name)}</a> — ${esc(c.what)}</li>`).join('');
+ return `<h4 style="margin:12px 0 4px">계속운전(수명연장) 심사 현황 ${badge}</h4><p class="p-sum">지금 계속운전 사유로 정지: <b>${n(L.stoppedMW,0)}MW</b> (허가 후 재가동 준비 ${n(L.approvedWaitingMW,0)} · 심사 중 ${n(L.reviewStoppedMW,0)}) · 24개월 안에 설계수명 만료 예정 ${n(L.expiring24mMW,0)}MW</p>
+ <div class="kd-wrap"><table class="kd-t"><thead><tr><th>호기</th><th>MW</th><th>설계수명 만료</th><th>심사 단계</th><th>원안위 허가</th><th>연장 운전 기한</th><th>정지·재개</th><th>한수원 운영 상태</th><th>계획·출처</th></tr></thead><tbody>${rows}</tbody></table></div>
+ <p class="kd-n">이용률 상한(회색 선)과 정지 용량에는 설계수명 만료 후 재가동 전 기간 중 한수원 정비 공시가 없는 구간을 '계속운전' 정지로 넣었다(예: 월성2 11/1 만료 후). 원안위 허가 호기(고리3·4)는 한수원이 게시한 설비개선 정비 종료일(2027년 3~4월)을 재가동 예정으로 따르고, 허가 전 호기(한빛1·2·월성2)는 한수원 게시 계획과 무관하게 허가·재가동이 입력될 때까지 정지로 계산(보수적).</p>
+ <details><summary class="kd-n" style="cursor:pointer">계속 받아보려면 어디를 확인하나</summary><ul class="kd-n">${check}</ul><p class="kd-n">갱신: data/nuclear-life-ext.json의 해당 호기 status·approved·extendedTo·restart 수정 → 다음 수집 때 정지 용량·이용률 상한 자동 재계산. 운전/정지 실제 상태는 한수원 공시로 매일 반영.</p></details>`;
+ }catch(e){return `<p class="p-sum">계속운전 표 오류: ${esc(e.message)}</p>`;}}

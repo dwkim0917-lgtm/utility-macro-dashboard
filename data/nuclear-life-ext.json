@@ -1,0 +1,31 @@
+{
+  "note": "원전 계속운전(수명연장) 심사 현황. 설계수명(최초 운영허가) 만료 → 정지 → 원안위 계속운전 허가(운영변경허가) → 설비개선·현장확인 → 재가동. 갱신 절차: 원안위 회의 의결(보도자료)·한수원 발표가 나오면 해당 호기의 status·approved·extendedTo·restart를 고치고 updatedAt·sources를 갱신. 운전/정지 실제 상태는 한수원 계획예방정비 공시(대시보드 일일 수집)와 합쳐 화면에 표시된다. stop = 계속운전 사유로 정지한 날(기본 = 설계수명 만료일), restart = 실제 발전 재개일(재개 전에는 null).",
+  "updatedAt": "2026-11-17",
+  "checkAt": [
+    {"name": "원자력안전위원회 위원회 회의 의결·보도자료", "url": "https://www.nssc.go.kr", "what": "계속운전 허가안·사고관리계획서 의결, 회의 안건(차기 상정 호기)"},
+    {"name": "원자력안전정보공개센터(NSIC)", "url": "https://nsic.nssc.go.kr", "what": "원안위 회의 자료·심사 진행 공개"},
+    {"name": "한수원 열린원전운영정보 — 계획예방정비·운영현황", "url": "https://npp.khnp.co.kr", "what": "호기별 정지/운전, 계속운전 설비개선 정비 기간·재가동 계획(대시보드 매일 수집)"},
+    {"name": "한수원 보도자료", "url": "https://www.khnp.co.kr", "what": "계속운전 신청·발전 재개 발표"},
+    {"name": "DART 한전KPS·두산에너빌리티 등 단일판매·공급계약", "url": "https://dart.fss.or.kr", "what": "계속운전 설비개선 공사 수주(호기·기간, 예: 한빛2 '계속운전 승인목표일시 2026년 12월 중')"}
+  ],
+  "sources": {
+    "N251113": {"title": "원안위 제224회 회의 — 고리2 계속운전 허가(뉴시스 2025-11-13)", "url": "https://www.newsis.com/view/NISX20251113_0003402060"},
+    "N260404": {"title": "고리2 발전 재개 2026-04-04(헤럴드경제·서울신문)", "url": "https://m.seoul.co.kr/news/2026/04/05/20260405500105"},
+    "N261015": {"title": "원안위 — 고리3·4·한빛1·2 사고관리계획서 승인(한국일보 2026-10-15)", "url": "https://www.hankookilbo.com/news/article/A2026101512570004485"},
+    "N261027": {"title": "원안위 — 고리3·4 계속운전 허가, 찬성5·반대2(뉴스핌·세계일보 2026-10-27)", "url": "https://www.newspim.com/news/view/20261027001275"},
+    "N261012": {"title": "월성2 설계수명 11/1 종료·계속운전 심사 장기화(매일신문·노컷뉴스 2026-10)", "url": "https://www.imaeil.com/page/view/2026101215402236154"},
+    "N2608": {"title": "원안위 — 한빛1·2 내년 상반기 상정 계획(서플·네이트 2026-08)", "url": "https://supple.kr/news/cmsebao3x007nb2dey55jkk5b"}
+  },
+  "units": [
+    {"unit": "고리2", "mw": 650, "expiry": "2023-04-08", "stop": "2023-04-08", "status": "재가동", "applied": null, "approved": "2025-11-13", "extendedTo": "2033-04-08", "restart": "2026-04-04", "plan": "", "src": ["N251113", "N260404"]},
+    {"unit": "고리3", "mw": 950, "expiry": "2024-09-28", "stop": "2024-09-28", "status": "허가 — 재가동 준비", "applied": null, "approved": "2026-10-27", "extendedTo": "2034-09-28", "restart": null, "plan": "2027년 상반기 재가동(허가 후 약 3개월 설비 확인)", "src": ["N261015", "N261027"]},
+    {"unit": "고리4", "mw": 950, "expiry": "2025-08-06", "stop": "2025-08-06", "status": "허가 — 재가동 준비", "applied": null, "approved": "2026-10-27", "extendedTo": "2035-08-06", "restart": null, "plan": "2027년 상반기 재가동", "src": ["N261015", "N261027"]},
+    {"unit": "한빛1", "mw": 950, "expiry": "2025-12-22", "stop": "2025-12-22", "status": "심사 중 — 정지", "applied": null, "approved": null, "extendedTo": null, "restart": null, "plan": "원안위 2027년 상반기 상정 계획, 사고관리계획서 2026-10-15 승인", "src": ["N261015", "N2608"]},
+    {"unit": "한빛2", "mw": 950, "expiry": "2026-09-11", "stop": "2026-09-11", "status": "심사 중 — 정지", "applied": null, "approved": null, "extendedTo": null, "restart": null, "plan": "원안위 2027년 상반기 상정 계획, 사고관리계획서 2026-10-15 승인", "src": ["N261015", "N2608"]},
+    {"unit": "월성2", "mw": 700, "expiry": "2026-11-01", "stop": "2026-11-01", "status": "심사 중 — 정지", "applied": null, "approved": null, "extendedTo": null, "restart": null, "plan": "원안위 의결 일정 미정, 업계는 2030년 전후 재가동 예상(보도)", "src": ["N261012"]},
+    {"unit": "한울1", "mw": 950, "expiry": "2027-12-22", "stop": null, "status": "심사 중 — 운전", "applied": null, "approved": null, "extendedTo": null, "restart": null, "plan": "", "src": ["N2608"]},
+    {"unit": "월성3", "mw": 700, "expiry": "2027-12-29", "stop": null, "status": "심사 중 — 운전", "applied": null, "approved": null, "extendedTo": null, "restart": null, "plan": "", "src": ["N261012"]},
+    {"unit": "한울2", "mw": 950, "expiry": "2028-12-28", "stop": null, "status": "심사 중 — 운전", "applied": null, "approved": null, "extendedTo": null, "restart": null, "plan": "", "src": ["N2608"]},
+    {"unit": "월성4", "mw": 700, "expiry": "2029-02-07", "stop": null, "status": "심사 중 — 운전", "applied": null, "approved": null, "extendedTo": null, "restart": null, "plan": "", "src": ["N261012"]}
+  ]
+}

@@ -12,4 +12,4 @@ test('EPSIS solar estimate: three channels in MWh → GWh, total = sum, duplicat
 test('EPSIS annual contract table: year blocks → series, first occurrence wins',()=>{let h='';
  for(let y=2000;y<=2025;y++){const b=`if("${y}" >= beginDate){ c1 = textFormmat("${100+y-2000}",count); c2 = textFormmat("150",count); c4 = textFormmat("120",count); c8 = textFormmat("130",count);\n gridData.push({"year":"${y}",`;h+=b+b;}
  const r=parseEpsisAnnualContract(h,[['kp_price_res','c1'],['kp_price_avg','c8']],1,'t','https://x.test');
- assert.equal(r.filter(x=>x.id==='kp_price_res').length,26);assert.equal(r.find(x=>x.id==='kp_price_res'&&x.date==='2025-01-01').value,125);});
+ assert.equal(r.filter(x=>x.id==='kp_price_res').length,26);assert.equal(r.find(x=>x.id==='kp_price_res'&&x.date==='2025-12-31').value,125);});

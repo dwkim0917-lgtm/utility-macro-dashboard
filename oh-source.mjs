@@ -85,11 +85,12 @@ export async function refreshOh(root, asOf) {
 
 // 정지 이벤트 = 공시 OH + 불시정지(수기) + 미공시 차기 OH 추정
 export function ohEvents(state, asOf, horizonEnd) {
-  const ev = [...(state.events || []).map(e => ({...e, kind: 'OH'})), ...(state.unplanned || []).map(e => ({...e, kind: '불시정지'}))].filter(e => OH_UNITS[e.unit]);
+  const ev = [...(state.events || []).map(e => ({...e, kind: 'OH'})), ...(state.unplanned || []).map(e => ({...e, kind: '불시정지'})), ...(state.lifeExt || []).map(e => ({...e, kind: '계속운전'}))].filter(e => OH_UNITS[e.unit]);
   const est = [];
   for (const u of Object.keys(OH_UNITS)) {
     let last = ev.filter(e => e.unit === u && e.kind === 'OH').map(e => e.end).sort().at(-1);
     if (!last) continue;
+    if (ev.some(e => e.unit === u && e.kind === '계속운전' && e.open)) continue; // 2026-11-17 계속운전 심사로 무기한 정지 중이면 정기 OH 추정 생략
     for (let k = 0; k < 3; k++) {
       const d = D(last); d.setUTCDate(15); d.setUTCMonth(d.getUTCMonth() + OH_EST.gapMonths);
       let start = iso(d); if (start < asOf) start = addDays(asOf, 30);
@@ -115,10 +116,10 @@ export function ohCeiling(state, asOf, {from = '2025-07', ahead = 15} = {}) {
     const a = k + '-01', b = mNext(k) + '-01', nd = days(a, b);
     const live = Object.entries(OH_UNITS).filter(([, u]) => !u.from || u.from <= k);
     const cap = live.reduce((s, [, u]) => s + u.mw, 0);
-    const off = {OH: 0, '불시정지': 0, '추정': 0};
+    const off = {OH: 0, '불시정지': 0, '추정': 0, '계속운전': 0};
     for (const e of ev) if (live.some(([n]) => n === e.unit)) off[e.kind] += OH_UNITS[e.unit].mw * overlap(e, a, b);
-    const tot = off.OH + off['불시정지'] + off['추정'];
-    rows.push({month: k, capMW: cap, offMWd: Math.round(tot), ohMWd: Math.round(off.OH), unplannedMWd: Math.round(off['불시정지']), estMWd: Math.round(off['추정']), value: Math.round((1 - tot / (cap * nd)) * 1000) / 10});
+    const tot = off.OH + off['불시정지'] + off['추정'] + off['계속운전'];
+    rows.push({month: k, capMW: cap, offMWd: Math.round(tot), ohMWd: Math.round(off.OH), unplannedMWd: Math.round(off['불시정지']), estMWd: Math.round(off['추정']), lifeMWd: Math.round(off['계속운전']), value: Math.round((1 - tot / (cap * nd)) * 1000) / 10});
   }
   return rows;
 }
@@ -129,7 +130,7 @@ export function deriveOhDaily(state, asOf, from = '2026-01-01') {
   const out = [];
   for (let d = from; d <= asOf; d = addDays(d, 1)) {
     const mw = ev.filter(e => e.start <= d && d < e.end && (!OH_UNITS[e.unit].from || OH_UNITS[e.unit].from <= d.slice(0, 7))).reduce((s, e) => s + OH_UNITS[e.unit].mw, 0);
-    out.push({id: 'nuclear_oh_gw', date: d, value: Math.round(mw / 10) / 100, source: '자체 산출 · 한수원 계획예방정비 공시(정비+불시정지)', url: OH_URL + '001'});
+    out.push({id: 'nuclear_oh_gw', date: d, value: Math.round(mw / 10) / 100, source: '자체 산출 · 한수원 계획예방정비 공시(정비+불시정지+계속운전 정지)', url: OH_URL + '001'});
   }
   return out;
 }
@@ -143,14 +144,14 @@ export function ohSummary(state, asOf) {
     const cur = mine.find(e => e.start <= asOf && asOf < e.end);
     const next = mine.find(e => e.start > asOf);
     const lastDone = mine.filter(e => e.end <= asOf && e.kind !== '추정').at(-1);
-    const status = cur ? (cur.kind === '불시정지' ? '불시정지' : '정비중') : (info.from && info.from > asOf.slice(0, 7) ? '재가동 전' : '운전');
+    const status = cur ? (cur.kind === '불시정지' ? '불시정지' : cur.kind === '계속운전' ? '정지(계속운전 심사)' : '정비중') : (info.from && info.from > asOf.slice(0, 7) ? '재가동 전' : '운전');
     return {unit: u, hq: info.hq, mw: info.mw, status, long: OH_LONG[u] || '', cur: cur || null, next: next || null, lastDone: lastDone || null,
       remain: cur ? days(asOf, cur.end) : null, toNext: next ? days(asOf, next.start) : null};
   });
   const upcoming = [];
   for (const e of ev) {
     if (e.start >= asOf && e.start <= addDays(asOf, 120)) upcoming.push({date: e.start, what: e.kind === '추정' ? '착수(추정)' : '정비 착수', unit: e.unit, mw: OH_UNITS[e.unit].mw, days: e.days, kind: e.kind});
-    if (e.end >= asOf && e.end <= addDays(asOf, 120) && e.kind !== '추정') upcoming.push({date: e.end, what: '발전 재개(예정)', unit: e.unit, mw: OH_UNITS[e.unit].mw, days: e.days, kind: e.kind});
+    if (e.end >= asOf && e.end <= addDays(asOf, 120) && e.kind !== '추정' && !e.open) upcoming.push({date: e.end, what: '발전 재개(예정)', unit: e.unit, mw: OH_UNITS[e.unit].mw, days: e.days, kind: e.kind});
   }
   upcoming.sort((a, b) => a.date.localeCompare(b.date));
   const offNow = units.filter(u => u.cur).reduce((s, u) => s + u.mw, 0);

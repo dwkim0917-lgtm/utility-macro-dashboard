@@ -30,7 +30,7 @@ export function parseEpsisSolarEst(html){const by=new Map();
 export function parseEpsisAnnualContract(html,ids,scale,src,url){const out=[];const seen=new Set();
  const re=/((?:\s*c\d+\s*=\s*textFormmat\("[^"]*",count\);)+)\s*gridData\.push\(\{"year":"(\d{4})"/g;
  for(const m of html.matchAll(re)){const y=m[2];if(seen.has(y))continue;seen.add(y);const c=Object.fromEntries([...m[1].matchAll(/(c\d+)\s*=\s*textFormmat\("([^"]*)"/g)].map(x=>[x[1],x[2]]));
-  for(const [id,k] of ids){const v=Number(c[k]);if(c[k]!==''&&Number.isFinite(v)&&v>0)out.push({id,date:y+'-01-01',value:r2(v*scale),source:src,url});}}
+  for(const [id,k] of ids){const v=Number(c[k]);if(c[k]!==''&&Number.isFinite(v)&&v>0)out.push({id,date:y+'-12-31',value:r2(v*scale),source:src,url});}}
  if(seen.size<20)throw Error('EPSIS 연간 계약종별 행 부족: '+seen.size);return out;}
 const UA={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36'};
 async function text(url,ms=60000){const r=await fetch(url,{headers:UA,signal:AbortSignal.timeout(ms)});if(!r.ok)throw Error('EPSIS HTTP '+r.status);return r.text();}
