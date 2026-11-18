@@ -155,3 +155,6 @@ header .hdr-tools button.ht:hover{border-color:var(--accent);color:var(--accent)
 /* 2026-11-12 위치 조정 버튼 */
 .tools .tool.mv{padding:1px 5px;font-size:10px;line-height:1.3;color:#5d6d74}.tools .tool.mv:hover{color:var(--accent);border-color:var(--accent)}
 @media print{.tools .tool.mv,#order-reset{display:none!important}}
+
+/* 2026-11-18 니켈 전망표 증감 색 */
+.kd-t .up{color:#2a78d6}.kd-t .dn{color:#d85a30}

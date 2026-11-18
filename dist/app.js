@@ -188,6 +188,9 @@ const PANELS=[
   {title:'② FEI / Brent 상대가 월평균 (%, 100 = 배럴당 등가) · 점 = SK가스 IR 공표',from:'2022-01-01',unit:'%',h:.75,series:[{id:'fei_brent_m',type:'line',color:'teal',w:1.8,label:'대시보드 월평균'},{id:'skgas_ir_fei_brent',type:'dots',color:'ink',label:'SK가스 IR 공표'}]},
   {title:'일간 · JKM–FEI 스프레드 (IR 환산 ÷47.8)',months:12,unit:'USD/MMBtu',h:.55,series:[{id:'jkm_fei_ir',type:'bars',label:'JKM − FEI (÷47.8)'}]},
   {title:'일간 · FEI / Brent 상대가 (%)',months:12,unit:'%',h:.55,series:[{id:'fei_brent',type:'line',color:'teal',label:'FEI ÷ 8.21 ÷ Brent'}]}]},
+ {id:'nickel_lme',title:'LME 니켈 · 가격과 기관 전망',group:'상사·원자재',codes:['001120'],extra:()=>nickelExtra(),src:'LME 공식가(Westmetall) · IMF 월평균(FRED) · 전망: 세계은행 CMO 2026-10(점) · 직전 2026-04(회색 점) · 연 실적 = 세계은행 표 · data/nickel-forecast.json',subs:[
+  {title:'LME 니켈 현물 · 월평균 · 연평균 전망 (US$/t, 점 = 연평균 전망을 해당 연도 가운데에 표시)',from:'2024-01-01',unit:'USD/t',series:[{id:'lme_ni_cash',type:'line',color:'teal',w:1,label:'LME 현물(일간)'},{id:'nickel',type:'line',color:'ink',w:1.6,label:'IMF 월평균'},{ext:'nickelFc.niActualAnnual',type:'dots',color:'blue',label:'연평균 실적(세계은행)'},{ext:'nickelFc.niWB',type:'dots',color:'orange',label:'세계은행 전망(2026-10)'},{ext:'nickelFc.niWBprev',type:'dots',color:'grey',label:'세계은행 직전(2026-04)'}]},
+  {title:'LME 니켈 재고 (t)',from:'2024-01-01',unit:'t',h:.6,series:[{id:'lme_ni_stock',type:'area',color:'purple',label:'LME 재고'}]}]},
  {id:'palm',title:'팜유(CPO) 국제가격',group:'상사·원자재',codes:['047050','001120'],src:'IMF 1차상품가격 · CME · 말레이시아 팜오일위원회 · 인도네시아 무역부',subs:[
   {title:'USD/톤 (우축: MPOB 링깃/톤)',from:'2022-01-01',unit:'USD/t',unit2:'MYR/t',series:[{id:'palm',type:'line',dots:true,color:'green',w:2.2,label:'국제가 월평균(IMF·FRED)'},{id:'cpo',type:'line',color:'orange',w:1,label:'CME CPO 스왑(일간)'},{id:'cpo_hr',type:'step',dash:true,color:'ink',label:'인니 수출 기준가 HR(월)'},{id:'cpo_mpob',axis:2,type:'line',color:'lav',w:1,label:'MPOB CPO 현물(링깃, 우축)'}]}]},
  {id:'coal_id',title:'인도네시아 석탄 가격 동향',group:'에너지',codes:['001120'],src:'인도네시아 에너지광물자원부(HBA) · ICE · coaltradeindo.com 공급사 호가',subs:[
@@ -196,7 +199,7 @@ const PANELS=[
   {title:'pt (우축: Drewry WCI USD/FEU)',from:'2023-01-01',unit:'pt',unit2:'USD/FEU',zero2:true,series:[{id:'scfi',type:'area',dots:true,color:'purple',label:'SCFI 종합(주간)'},{id:'kcci',type:'dots',color:'teal',label:'KCCI 한국발 종합(주간)'},{id:'wci',axis:2,type:'dots',shape:'sq',color:'orange',label:'Drewry WCI(우축)'}]}]},
 ];
 const pid=p=>'panel:'+p.id;
-function pRows(s){if(s.fc){const F=(payload.kepcoForecast||{})[s.fc]||[];if(s.all)return F.map(r=>({date:r.month+'-01',value:r.value}));const last=points(s.link||'smp').at(-1);const rows=F.map(r=>({date:r.month+'-01',value:r.value,lo:r.lo,hi:r.hi})).filter(r=>!last||r.date>last.date);if(s.type==='bars')return rows;return last&&rows.length?[{date:last.date,value:last.value,lo:last.value,hi:last.value},...rows]:rows;}
+function pRows(s){if(s.ext){/* 2026-11-18 전망 점 등 payload 외부 계열 */return ((payload[s.ext.split('.')[0]]||{}).series||{})[s.ext.split('.')[1]]||[];}if(s.fc){const F=(payload.kepcoForecast||{})[s.fc]||[];if(s.all)return F.map(r=>({date:r.month+'-01',value:r.value}));const last=points(s.link||'smp').at(-1);const rows=F.map(r=>({date:r.month+'-01',value:r.value,lo:r.lo,hi:r.hi})).filter(r=>!last||r.date>last.date);if(s.type==='bars')return rows;return last&&rows.length?[{date:last.date,value:last.value,lo:last.value,hi:last.value},...rows]:rows;}
  return points(s.id).map(r=>({date:r.date,value:r.value*(s.k||1)}));}
 function pAgg(rows,key){const g=new Map();for(const r of rows){const k=key(r.date);(g.get(k)||g.set(k,[]).get(k)).push(r.value);}return [...g].map(([k,v])=>({k,value:v.reduce((a,b)=>a+b,0)/v.length}));}
 const mStart=k=>Date.parse(k+'-01'),mEnd=k=>{const d=new Date(mStart(k));d.setUTCMonth(d.getUTCMonth()+1);return d.getTime();};
@@ -531,3 +534,16 @@ function lifeExtra(){const L=payload.nuclearLife;if(!L)return '';if(L.error)retu
  <p class="kd-n">이용률 상한(회색 선)과 정지 용량에는 설계수명 만료 후 재가동 전 기간 중 한수원 정비 공시가 없는 구간을 '계속운전' 정지로 넣었다(예: 월성2 11/1 만료 후). 원안위 허가 호기(고리3·4)는 한수원이 게시한 설비개선 정비 종료일(2027년 3~4월)을 재가동 예정으로 따르고, 허가 전 호기(한빛1·2·월성2)는 한수원 게시 계획과 무관하게 허가·재가동이 입력될 때까지 정지로 계산(보수적).</p>
  <details><summary class="kd-n" style="cursor:pointer">계속 받아보려면 어디를 확인하나</summary><ul class="kd-n">${check}</ul><p class="kd-n">갱신: data/nuclear-life-ext.json의 해당 호기 status·approved·extendedTo·restart 수정 → 다음 수집 때 정지 용량·이용률 상한 자동 재계산. 운전/정지 실제 상태는 한수원 공시로 매일 반영.</p></details>`;
  }catch(e){return `<p class="p-sum">계속운전 표 오류: ${esc(e.message)}</p>`;}}
+
+// ── 2026-11-18 LME 니켈 기관 전망표 · 현재가 대비 · 올해 연평균 달성에 필요한 남은 기간 평균
+function nickelExtra(){const N=payload.nickelFc;if(!N)return '';if(N.error)return `<p class="p-sum">니켈 전망 오류: ${esc(N.error)}</p>`;
+ try{const f0=v=>v==null?'–':n(Math.round(v),0);const pc=v=>v==null?'–':`<span class="${v>0?'up':v<0?'dn':''}">${v>0?'+':''}${v.toFixed(1)}%</span>`;
+ const L=N.last;const badge=N.stale?`<span class="kd-badge stale">전망 ${N.ageDays}일 경과 — 신규 발간물 확인</span>`:`<span class="kd-badge">전망 기준 ${N.updatedAt}</span>`;
+ const head=`<p class="p-sum">LME 현물 <b>${L?f0(L.value):'–'}</b> (${L?L.date:''}) · ${N.asOf.slice(0,4)}년 연초 이후 평균 <b>${f0(N.ytdAvg)}</b> (${N.ytdN}거래일)${N.years.map(y=>` · ${y.year} 평균 ${f0(y.avg)}`).join('')} ${badge}</p>`;
+ const rows=N.table.map(t=>`<tr${t.role==='현재'?'':' style="color:var(--muted)"'}><td>${esc(t.org)}<small> ${esc(t.edition)}${t.role==='직전'?' (직전)':''}</small></td><td class="num">${t.year}</td><td class="num"><b>${f0(t.value)}</b>${t.real?' <small>실질</small>':''}</td><td class="num">${t.real?'–':pc(t.vsLast)}</td><td class="num">${t.needRest!=null?f0(t.needRest):'–'}</td><td><small>${esc(t.text||t.basis||'')} · <a href="${esc(t.url)}" target="_blank" rel="noopener">원문</a></small></td></tr>`).join('');
+ const act=(N.actual||[]).map(a=>`${a.year} ${f0(a.value)}`).join(' · ');
+ const unv=(N.unverified||[]).map(u=>`<li>${esc(u.what)} — <i>${esc(u.why)}</i></li>`).join('');
+ return head+`<div class="kd-wrap"><table class="kd-t"><thead><tr><th>기관 · 발간</th><th>연도</th><th>연평균 전망</th><th>현재가 대비</th><th>올해 달성에 필요한 남은 기간 평균</th><th>기준 · 출처</th></tr></thead><tbody>${rows}</tbody></table></div>
+ <p class="kd-n">연평균 실적(세계은행 표): ${act}. '현재가 대비'는 전망 연평균 ÷ 최신 LME 현물 − 1. '남은 기간 평균'은 올해 연평균이 전망치가 되려면 남은 거래일(연 252일 가정)에 필요한 평균. 실질 전망은 명목 LME와 직접 비교하지 않음.</p>
+ ${unv?`<details><summary class="kd-n" style="cursor:pointer">반영하지 않은 전망(교차확인 안 됨)</summary><ul class="kd-n">${unv}</ul></details>`:''}`;
+ }catch(e){return `<p class="p-sum">니켈 전망표 오류: ${esc(e.message)}</p>`;}}

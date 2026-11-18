@@ -1,0 +1,22 @@
+{
+  "note": "LME 니켈 가격 전망(연평균, US$/t). 기관 발간물 원문 수치만 입력. 갱신: 세계은행 CMO(4·10월), 호주 산업과학자원부 REQ(3·6·9·12월), Reuters 분기 폴(1·4·7·10월말) 발간 시 행 추가 후 updatedAt 변경. 같은 기관은 최신 발간본을 '현재', 직전 발간본을 '직전'으로 둔다.",
+  "updatedAt": "2026-11-18",
+  "sources": {
+    "WB2610": {"org": "세계은행 Commodity Markets Outlook", "edition": "2026-10", "published": "2026-10", "basis": "LME 연평균, 명목 US$/t (데이터 마감 2026-10-14)", "url": "https://thedocs.worldbank.org/en/doc/2ac43f46629cf90c2ea5b8929a343593-0050012026/related/CMO-October-2026-Forecasts.pdf"},
+    "WB2604": {"org": "세계은행 Commodity Markets Outlook", "edition": "2026-04", "published": "2026-04", "basis": "LME 연평균, 명목 US$/t (2026-10호 표의 '직전 전망' 열)", "url": "https://thedocs.worldbank.org/en/doc/2ac43f46629cf90c2ea5b8929a343593-0050012026/related/CMO-October-2026-Forecasts.pdf"},
+    "REQ2609": {"org": "호주 산업과학자원부 Resources and Energy Quarterly", "edition": "2026-09", "published": "2026-10", "basis": "실질 US$/t(장기) — 명목 LME와 직접 비교 불가. 연도별 전망은 원문 xlsx(이 PC에서 내려받기 불가) [미확보]", "url": "https://www.industry.gov.au/publications/resources-and-energy-quarterly-september-2026#nickel"}
+  },
+  "actual": [{"year": 2024, "value": 16814, "src": "WB2610"}, {"year": 2025, "value": 15162, "src": "WB2610"}],
+  "forecasts": [
+    {"src": "WB2610", "role": "현재", "year": 2026, "value": 17200},
+    {"src": "WB2610", "role": "현재", "year": 2027, "value": 17250},
+    {"src": "WB2610", "role": "현재", "year": 2028, "value": 17500},
+    {"src": "WB2604", "role": "직전", "year": 2026, "value": 17000},
+    {"src": "WB2604", "role": "직전", "year": 2027, "value": 17500},
+    {"src": "REQ2609", "role": "현재", "year": 2031, "value": 17000, "real": true, "text": "2031년까지 약 US$17,000(실질)로 수렴, 공급과잉 최소 2033년까지 지속"}
+  ],
+  "unverified": [
+    {"what": "Reuters 분기 폴(2026-07): 4Q26 LME 현물 평균 $17,250, 2026 공급과잉 110,056t", "why": "원문 접근 불가, 검색 요약 1곳만 확인 — 대시보드 표에 넣지 않음"},
+    {"what": "Goldman Sachs 2026 평균 $18,500", "why": "2차 기사 1곳 — 미반영"}
+  ]
+}
