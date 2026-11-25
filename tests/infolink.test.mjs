@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {parseInfolink,infolinkSummary,IL_ITEMS} from '../infolink-source.mjs';
+const blk=(n,items)=>`<script type="application/json" id="trend-${n}">${JSON.stringify({from:'2026-08-25',items})}</script>`;
+const pts=(a,b)=>[["2026-11-18",0,0,a],["2026-11-25",0,0,b]];
+const all=IL_ITEMS.map(([id,title,,unit])=>({title,points:pts(...(/kg/.test(unit)?(/USD/.test(unit)?[18.5,18.5]:[40,40]):/pc/.test(unit)?(/USD/.test(unit)?[0.138,0.135]:[0.92,0.9]):/RMB/.test(unit)?[0.285,0.28]:[0.27,0.27]))}));
+test('InfoLink trend JSON → weekly average rows; locked items ignored',()=>{const h=blk(1,[...all,{title:'X (USD)',locked:true}]);const r=parseInfolink(h);
+ assert.equal(r.length,IL_ITEMS.length*2);assert.deepEqual(r.filter(x=>x.id==='il_poly_usd').map(x=>[x.date,x.value]),[['2026-11-18',18.5],['2026-11-25',18.5]]);});
+test('InfoLink format change → throws (keeps old data)',()=>{assert.throws(()=>parseInfolink(blk(1,all.slice(0,3))));});
+test('InfoLink out-of-range value → throws',()=>{const bad=all.map(x=>x.title.includes('(USD, DDP)')?{...x,points:pts(0.31,31)}:x);assert.throws(()=>parseInfolink(blk(1,bad)),/범위/);});
+test('summary: WoW change and RMB → ≈USD with USD/CNY on publish date',()=>{const rows=parseInfolink(blk(1,all));const s={};for(const r of rows)(s[r.id]||=[]).push(r);
+ const S=infolinkSummary(s,[{date:'2026-11-24',value:6.70},{date:'2026-11-25',value:6.6769},{date:'2026-11-26',value:6.9}]);
+ const w=S.rows.find(r=>r.id==='il_wafer182_usd');assert.equal(w.wow.toFixed(1),'-2.2');
+ const p=S.rows.find(r=>r.id==='il_poly_rmb');assert.equal(p.usd.toFixed(2),'5.99');assert.equal(S.asOf,'2026-11-25');assert.equal(S.fx.value,6.6769);});

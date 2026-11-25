@@ -142,6 +142,12 @@ catalog.push(item('kdhc_oh_mw','지역난방공사 · O/H 정지 용량(일별)'
  for(const [k,nm] of [['res','주택용'],['com','일반용'],['ind','산업용'],['tot','합계']])catalog.push(item('kp_sales_'+k,'한전 판매량 · '+nm+' (연)','전력·요금','TWh','연간',KA,KE(nm+' 판매량. 산업용 비중이 높아 경기·수출에 민감.'),{priority:'보완',staleDays:500}));}
 // 2026-11-17 원전 계속운전(수명연장) 심사 — nuclear-life-source.mjs, data/nuclear-life-ext.json
 catalog.push(item('nuclear_life_off_mw','원전 · 계속운전 심사·재가동 대기 정지 용량','수요·가동','MW','일간','설계수명 만료로 정지한 뒤 재가동 전인 원전의 설비용량 합(정지일~발전 재개 전날). 원안위 계속운전 허가 전(심사 중)과 허가 후 설비개선·현장확인 중을 모두 포함. 원자료 data/nuclear-life-ext.json(원안위 의결·한수원 발표 때 갱신). 2026-11 기준 고리3·4(허가, 2027 상반기 재가동 예정)·한빛1·2(2027 상반기 상정)·월성2(11/1 만료).',[e('015760','정지 원전 1기(950MW)는 연 약 7TWh 저원가 전력 손실 → LNG·석탄 대체로 한전 구입비 증가. 재가동 시 반대.','재가동 월부터 즉시',0),e('036460','원전 정지 기간 LNG 발전 대체 수요 증가.','당월',0)],{priority:'핵심',sourceHint:'원안위·한수원 발표 기반 자체 산출',staleDays:4}));
+// 2026-11-26 InfoLink 태양광 밸류체인 주간 스팟가 — 패널 '태양광 밸류체인 스팟가(InfoLink)'
+import {IL_ITEMS} from './infolink-source.mjs';
+{const ILE=id=>/^il_mod/.test(id)?[e('322000','모듈 판가(ASP) 방향. 미국向(동남아산 FOB·미국 조립 DDP)은 미국 판매 단가, 중국·유럽 가격은 글로벌 경쟁가 하한. 실제 계약가는 분기·프로젝트별(미확인).','계약 1~2분기',0),e('475150','태양광 개발·EPC 사업의 모듈 조달단가. 하락 시 신규 발전소 사업비 감소(추론).','발주 시점',0)]:[e('322000','셀·모듈 제조원가(폴리실리콘→웨이퍼→셀) 방향. 원재료 조달 구조·재고 시차 미확인.','재고 1~2분기',0)];
+ const D='InfoLink Consulting이 매주 수요일 공개하는 태양광 스팟가의 주간 평균가(직전 목~수 신규 계약·인도 가격). USD 가격은 비중국 시장 견적(위안화 환산 아님), RMB 가격은 중국 내수 견적. 공개 페이지 기준이며 유료 항목(미국산 폴리·셀 등)은 미포함.';
+ for(const [id,title,name,unit] of IL_ITEMS)catalog.push(item(id,name,'수요·가동',unit,'주간',D+' 원문 항목: '+title,ILE(id),{priority:/il_poly_usd|il_mod_us_|il_cell182_exp|il_mod_topcon_usd/.test(id)?'핵심':'보완',sourceHint:'InfoLink · spot-price',staleDays:10}));
+ catalog.push(item('usdcny','USD/CNY · 위안 환율','금리·환율','CNY/USD','일간','달러당 위안 일간 종가(Yahoo CNY=X). InfoLink 위안화 태양광 가격의 ≈달러 환산에 사용.',[e('322000','위안 약세는 중국산 웨이퍼·셀·모듈의 달러 환산 가격 하락.','즉시',0)],{priority:'보완',sourceHint:'Yahoo Finance · CNY=X',staleDays:6}));}
 // 2026-11-18 LME 니켈 일간(Westmetall) — 전망은 data/nickel-forecast.json(패널 표·점)
 {const NIE=[e('001120','인니 니켈 광산(AKP) 지분 매출·이익 방향. 판가는 LME 니켈 연동(시차·할인율은 계약별, 미확인).','분기',8),e('8053.T','스미토모상사 니켈(Ambatovy 등) 지분 이익.','분기',0)];const NID='LME 공식가(Westmetall 게재, 런던 거래일). 세계은행·호주 REQ 등 기관 연평균 전망은 상사·원자재 탭 \'LME 니켈 · 가격과 기관 전망\' 차트에서 비교.';
  catalog.push(item('lme_ni_cash','니켈 · LME 현물(Cash-Settlement)','상사·원자재','USD/t','일간','LME 니켈 현물 공식 정산가(일간). '+NID,NIE,{priority:'핵심',sourceHint:'Westmetall · LME Nickel Cash',staleDays:5}),
