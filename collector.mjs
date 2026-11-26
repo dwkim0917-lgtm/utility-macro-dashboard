@@ -13,7 +13,7 @@ import {environmentalJobs} from './environmental-source.mjs';
 import {catalog} from './catalog.mjs';
 import {mergeRows,mutate,today,ROOT,seriesRows} from './store.mjs';
 import {pathToFileURL} from 'node:url';
-import {settledBars} from './yahoo-bars.mjs';import {fetchCapacity} from './capacity-source.mjs';import {readKdhcOh,deriveKdhcOhDaily} from './kdhc-oh-source.mjs';import {readLifeExt,lifeExtOutages,deriveLifeDaily} from './nuclear-life-source.mjs';import {fetchNickel} from './nickel-source.mjs';import {fetchInfolink,IL_ITEMS} from './infolink-source.mjs';import {parseEpsisMix,MIX_COLS,fetchSolarEst,fetchKepcoAnnual} from './epsis-stats-source.mjs';import {fetchPtdText} from './drivers-source.mjs';
+import {settledBars} from './yahoo-bars.mjs';import {fetchCapacity} from './capacity-source.mjs';import {readKdhcOh,deriveKdhcOhDaily} from './kdhc-oh-source.mjs';import {readLifeExt,lifeExtOutages,deriveLifeDaily} from './nuclear-life-source.mjs';import {fetchNickel} from './nickel-source.mjs';import {fetchInfolink,IL_ITEMS} from './infolink-source.mjs';import {fetchAces} from './census-telecom-source.mjs';import {parseEpsisMix,MIX_COLS,fetchSolarEst,fetchKepcoAnnual} from './epsis-stats-source.mjs';import {fetchPtdText} from './drivers-source.mjs';
 const clean=s=>s.replace(/<[^>]*>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ').trim();
 export const tables=html=>[...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map(m=>[...m[1].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map(c=>clean(c[1])));
 const num=s=>Number(s.replaceAll(',','').trim());
@@ -92,6 +92,7 @@ export async function refresh(){const jobs=catalog.filter(x=>x.fred).map(x=>({na
  jobs.push({name:'KPX EPSIS 한전 계약종별 판매단가·판매량(연)',ids:['kp_price_res','kp_price_com','kp_price_ind','kp_price_avg','kp_sales_res','kp_sales_com','kp_sales_ind','kp_sales_tot'],run:fetchKepcoAnnual});
  jobs.push({name:'지역난방공사 O/H 일정(회사 실적발표 표)',ids:['kdhc_oh_mw'],run:async()=>deriveKdhcOhDaily(await readKdhcOh(ROOT),today())});
  jobs.push({name:'한수원 계획예방정비(본부별 공시)',ids:['nuclear_oh_gw'],run:async()=>{const st=await refreshOh(ROOT,today());try{st.lifeExt=lifeExtOutages(await readLifeExt(ROOT),st);}catch{}return deriveOhDaily(st,today());}});
+ jobs.push({name:'Census ACES 통신사 설비투자(유선·무선)',ids:['aces_wired_capex','aces_wireless_capex','aces_tel_capex','aces_wired_share','aces_tel_struct','aces_tel_equip','aces_wired_struct','aces_wireless_struct'],run:()=>fetchAces(browserUA)});
  jobs.push({name:'InfoLink 태양광 주간 스팟가',ids:IL_ITEMS.map(x=>x[0]),run:()=>fetchInfolink(browserUA)});
  jobs.push({name:'Yahoo USDCNY (CNY=X)',ids:['usdcny'],run:async()=>{const r=await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/CNY%3DX?period1=1577836800&period2=${Math.floor(Date.now()/1000)+86400}&interval=1d`,{signal:AbortSignal.timeout(25000),headers:{'User-Agent':browserUA}});if(!r.ok)throw Error('HTTP '+r.status);return parseYahoo(await r.json(),'usdcny','Yahoo Finance · USD/CNY 일간 종가','https://finance.yahoo.com/quote/CNY%3DX/').filter(x=>x.value>5&&x.value<10);}});
  jobs.push({name:'Westmetall LME 니켈(현물·3개월·재고)',ids:['lme_ni_cash','lme_ni_3m','lme_ni_stock'],run:()=>fetchNickel(2019,browserUA)});
