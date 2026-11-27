@@ -142,18 +142,6 @@ catalog.push(item('kdhc_oh_mw','지역난방공사 · O/H 정지 용량(일별)'
  for(const [k,nm] of [['res','주택용'],['com','일반용'],['ind','산업용'],['tot','합계']])catalog.push(item('kp_sales_'+k,'한전 판매량 · '+nm+' (연)','전력·요금','TWh','연간',KA,KE(nm+' 판매량. 산업용 비중이 높아 경기·수출에 민감.'),{priority:'보완',staleDays:500}));}
 // 2026-11-17 원전 계속운전(수명연장) 심사 — nuclear-life-source.mjs, data/nuclear-life-ext.json
 catalog.push(item('nuclear_life_off_mw','원전 · 계속운전 심사·재가동 대기 정지 용량','수요·가동','MW','일간','설계수명 만료로 정지한 뒤 재가동 전인 원전의 설비용량 합(정지일~발전 재개 전날). 원안위 계속운전 허가 전(심사 중)과 허가 후 설비개선·현장확인 중을 모두 포함. 원자료 data/nuclear-life-ext.json(원안위 의결·한수원 발표 때 갱신). 2026-11 기준 고리3·4(허가, 2027 상반기 재가동 예정)·한빛1·2(2027 상반기 상정)·월성2(11/1 만료).',[e('015760','정지 원전 1기(950MW)는 연 약 7TWh 저원가 전력 손실 → LNG·석탄 대체로 한전 구입비 증가. 재가동 시 반대.','재가동 월부터 즉시',0),e('036460','원전 정지 기간 LNG 발전 대체 수요 증가.','당월',0)],{priority:'핵심',sourceHint:'원안위·한수원 발표 기반 자체 산출',staleDays:4}));
-// 2026-11-26 미국 통신망 투자(Census) — 패널 'us_telecom_build'
-{const A='Census Annual Capital Expenditures Survey(ACES) 표 4a, 고용 기업의 연간 설비투자(구조물+장비, 백만달러). ';const C='2020년 조사부터 NAICS 2022 적용으로 유선(5171)·무선(5172)이 5173 하나로 통합되어 유선/무선 구분은 2019년까지만 존재. ACES는 2022년 조사 이후 AIES로 통합(AIES 공개 표에는 업종별 설비투자 없음).';const opt={priority:'보완',staleDays:1200};
- catalog.push(item('us_con_comm','미국 건설투자 · 통신(전체)','해외·미국','USD mn(연율)','월간','Census 건설투자(Value of Construction Put in Place) 중 통신 시설(전화·케이블·인터넷·데이터 전송망, 기지국·광케이블 포함), 계절조정 연율, 백만달러. 유선/무선 구분 없음.',[],{fred:'TLCOMCONS',priority:'핵심',sourceHint:'FRED · TLCOMCONS (Census C30)',staleDays:70}),
-  item('us_con_comm_pr','미국 건설투자 · 통신(민간)','해외·미국','USD mn(연율)','월간','Census 건설투자 중 민간 통신 시설, 계절조정 연율, 백만달러.',[],{fred:'PRCOMCONS',priority:'보완',sourceHint:'FRED · PRCOMCONS (Census C30)',staleDays:70}),
-  item('aces_wired_capex','미국 통신사 설비투자 · 유선(NAICS 5171)','해외·미국','USD mn','연간',A+'유선 통신·케이블·브로드밴드 사업자. '+C,[],{...opt,sourceHint:'Census ACES 표 4a'}),
-  item('aces_wireless_capex','미국 통신사 설비투자 · 무선(NAICS 5172)','해외·미국','USD mn','연간',A+'무선 통신 사업자(위성 제외). '+C,[],{...opt,sourceHint:'Census ACES 표 4a'}),
-  item('aces_tel_capex','미국 통신사 설비투자 · 유선+무선 합계','해외·미국','USD mn','연간',A+'2019년까지 5171+5172, 2020년부터 5173. '+C,[],{...opt,sourceHint:'Census ACES 표 4a'}),
-  item('aces_wired_share','미국 통신사 설비투자 · 유선 비중','해외·미국','%','연간',A+'유선 ÷ (유선+무선). '+C,[],{...opt,sourceHint:'Census ACES 표 4a(계산)'}),
-  item('aces_tel_struct','미국 통신사 설비투자 · 구조물(망 공사)','해외·미국','USD mn','연간',A+'구조물 투자(광케이블·관로·기지국 철탑 등 시설 공사). '+C,[],{...opt,sourceHint:'Census ACES 표 4a'}),
-  item('aces_tel_equip','미국 통신사 설비투자 · 장비','해외·미국','USD mn','연간',A+'장비 투자(교환·전송·무선 장비 등). '+C,[],{...opt,sourceHint:'Census ACES 표 4a'}),
-  item('aces_wired_struct','미국 통신사 구조물 투자 · 유선','해외·미국','USD mn','연간',A+'유선 사업자 구조물 투자. '+C,[],{...opt,sourceHint:'Census ACES 표 4a'}),
-  item('aces_wireless_struct','미국 통신사 구조물 투자 · 무선','해외·미국','USD mn','연간',A+'무선 사업자 구조물 투자. '+C,[],{...opt,sourceHint:'Census ACES 표 4a'}));}
 // 2026-11-26 InfoLink 태양광 밸류체인 주간 스팟가 — 패널 '태양광 밸류체인 스팟가(InfoLink)'
 import {IL_ITEMS} from './infolink-source.mjs';
 {const ILE=id=>/^il_mod/.test(id)?[e('322000','모듈 판가(ASP) 방향. 미국向(동남아산 FOB·미국 조립 DDP)은 미국 판매 단가, 중국·유럽 가격은 글로벌 경쟁가 하한. 실제 계약가는 분기·프로젝트별(미확인).','계약 1~2분기',0),e('475150','태양광 개발·EPC 사업의 모듈 조달단가. 하락 시 신규 발전소 사업비 감소(추론).','발주 시점',0)]:[e('322000','셀·모듈 제조원가(폴리실리콘→웨이퍼→셀) 방향. 원재료 조달 구조·재고 시차 미확인.','재고 1~2분기',0)];

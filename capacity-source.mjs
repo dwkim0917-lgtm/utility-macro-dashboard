@@ -61,7 +61,7 @@ export function buildCapacity(pub,kpx=new Map(),dropped=[]){
 // 기존 호환: EPSIS 응답만으로
 export function parseEpsisCapacity(js,kpx){const {pub,dropped}=parseEpsisMonths(js);return buildCapacity(pub,kpx||new Map(),dropped);}
 let XLSXlib=null;
-export function sheetjs(){if(XLSXlib)return XLSXlib;const p=path.join(path.dirname(fileURLToPath(import.meta.url)),'dist','xlsx.min.js');const ctx={};ctx.self=ctx;ctx.window=ctx;vm.createContext(ctx);vm.runInContext(fs.readFileSync(p,'utf8'),ctx);return XLSXlib=ctx.XLSX;}
+function sheetjs(){if(XLSXlib)return XLSXlib;const p=path.join(path.dirname(fileURLToPath(import.meta.url)),'dist','xlsx.min.js');const ctx={};ctx.self=ctx;ctx.window=ctx;vm.createContext(ctx);vm.runInContext(fs.readFileSync(p,'utf8'),ctx);return XLSXlib=ctx.XLSX;}
 export function readKpxXlsx(buf){const X=sheetjs();const wb=X.read(buf,{type:'buffer'});return parseKpxRenewRows(X.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:null}));}
 // KPX 게시판 최근 n개 게시물의 XLSX → 월별 Map(최신 게시물 우선)
 export async function fetchKpxRenew(ua='Mozilla/5.0',n=3){
